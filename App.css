@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: "Noto Sans KR", serif;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/*--------------------------------------------------- nav -------------------------------------------*/
+
+.nav{
+  position :fixed;
+  top: 0;
+  padding: 20px;
+  left: 0;
+  width: 100%;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+img{
+  width: 35%;
+}
+
+.nav a {
+  color: black;
+  margin: 0 15px;
+  font-size: 18px;
+}
+
+.nav-links{
+  margin-right: 50px;
+}
+
+
+/*--------------------------------------------------- cafelist -------------------------------------------*/
+
+.cafelist-container{
+  margin-top: 200px;
+  margin-left: 50px;
+}
+
+.cafe-button{
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.search-input {
+  width: 300px;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 2px;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input:focus{
+  border-color: lightslategray;
+  box-shadow: 0 0 5px lightblue;
+}
+
+.cafe-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 30px;
+  border-top: 1px solid #e0e0e0;
+  padding: 20px;
+}
+
+.cafe-item-img img{
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.cafe-item-detail p{
+  color: #e0e0e0;
+}
+
+
+/*--------------------------------------------------- cafedetail -------------------------------------------*/
+
+
+
+
+/*--------------------------------------------------- cafeupload -------------------------------------------*/
+
+
+
+
+
+
+
+/*--------------------------------------------------- footer -------------------------------------------*/
+
+.footer{
+  padding: 50px;
+  width: 100%;
+  background-color: #e0e0e0;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+}

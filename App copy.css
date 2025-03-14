@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+body{
+  font-family: "Noto Sans KR", serif;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/*--------------------------------------------------- nav -------------------------------------------*/
+
+.nav{
+  position :fixed;
+  top: 0;
+  padding: 20px;
+  width: 100%;
+  background-color: #f5dcb7;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav .nav-logo {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nav a {
+  color: black;
+  margin: 0 15px;
+  font-size: 18px;
+}
+
+.nav-links{
+  margin-right: 50px;
+}
+
+
+/*--------------------------------------------------- header -------------------------------------------*/
+
+.cafe-button {
+  padding-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-btn {
+  background-color: #622a0f;
+  color: #fff;
+}
+
+.search-cotainer {
+  align-items: center;
+}
+
+.search-input {
+  width: 300px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #bdc3c7;
+  border-radius: 2px;
+  outline: none;
+  margin-right: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input:focus{
+  border-color: lightslategray;
+  box-shadow: 0 0 5px lightblue;
+}
+
+.search-btn{
+  background-color: gray;
+  color: #fff;
+  font-size: 16px;
+  padding: 11px 15px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.search-btn:hover{
+  background-color: #2c3e50;
+}
+
+
+/*--------------------------------------------------- search box -------------------------------------------*/
+
+.cafe-list{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cafe-card{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  text-align: center;
+  width: calc(20% - 15px);
+  max-width: 300px;
+  padding: 10px;
+}
+
+.cafe-image{
+  width: 300px;
+  height: 200px;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.cafe-info {
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px;
+}
+
+.cafe-title{
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: bolder;
+  white-space: nowrap;
+}
+
+.cafe-description{
+  flex-grow: 1;
+  font-size: 15px;
+  font-weight: 300;
+  text-align: justify;  
+}
+
+.view{
+  white-space: nowrap;
+}
+
+/*--------------------------------------------------- footer -------------------------------------------*/
+
+.footer{
+  position :fixed;
+  bottom: 0;
+  padding: 50px;
+  width: 100%;
+  background-color: #e0e0e0;
+  text-align: center;
+}
