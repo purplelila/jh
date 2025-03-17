@@ -6,6 +6,7 @@ let CafeUpload = () => {
     let {addCafe} = useContext(CafeContext)
   
     const [img, setImg] = useState("")
+    const [work, setWork] = useState("")
     const [title, setTitle] = useState("")
     const [place, setPlace] = useState("")
     const [content, setContent] = useState("")
@@ -25,8 +26,8 @@ let CafeUpload = () => {
     function handleSubmit(e){
       e.preventDefault()
 
-      if(img && title && place && content){
-        addCafe(img, title, place, content)
+      if(img && work && title && place && content){
+        addCafe(img, work, title, place, content)
         
         navigate("/cafelist")
       }
@@ -42,6 +43,7 @@ let CafeUpload = () => {
             <input type="file" accept="image/*" onChange={handleImageChange}/>
               {/* 이미지 미리보기 */}
               {img && <img src={img} alt="미리보기" width="250" height="250" />}
+            <input type="text" placeholder='영업일' onChange={(e)=> setWork(e.target.value)} value={work}/>
             <input type="text" placeholder='제목' onChange={(e)=> setTitle(e.target.value)} value={title}/>
             <input type="text" placeholder='카페위치'onChange={(e)=> setPlace(e.target.value)} value={place}/>
             <textarea placeholder='내용' onChange={(e)=> setContent(e.target.value)} value={content}></textarea>

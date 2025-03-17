@@ -9,9 +9,14 @@
 body{
   font-family: "Noto Sans KR", serif;
   background-color: #fff;
-  margin: 0;
-  padding: 0;
+  /* margin: 0;
+  padding: 0; */
   height: 100%;
+}
+
+.container{
+  min-height: calc(100vh - 300px);      /* footer 조정 */
+  padding-top: 150px;
 }
 
 /*--------------------------------------------------- nav -------------------------------------------*/
@@ -19,35 +24,35 @@ body{
 .nav{
   position :fixed;
   top: 0;
-  padding: 20px;
-  left: 0;
   width: 100%;
-  background-color: #e0e0e0;
+  background-color: rgba(89, 148, 104, 0.5);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 20px 20px;
+  
+}
+
+.nav-links :link{
+  margin-left: 30px;
 }
 
 img{
-  width: 35%;
+  width: 30%;
 }
 
 .nav a {
   color: black;
-  margin: 0 15px;
   font-size: 18px;
 }
 
-.nav-links{
-  margin-right: 50px;
-}
+
 
 
 /*--------------------------------------------------- cafelist -------------------------------------------*/
 
 .cafelist-container{
-  margin-top: 200px;
-  margin-left: 50px;
+  margin-left: 100px;
 }
 
 .cafe-button{
@@ -55,6 +60,7 @@ img{
   display: flex;
   justify-content: space-between;
   font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .search-input {
@@ -71,6 +77,10 @@ img{
   box-shadow: 0 0 5px lightblue;
 }
 
+.cafe-list{
+  padding-bottom: 20px;
+}
+
 .cafe-item{
   display: flex;
   flex-direction: row;
@@ -84,7 +94,7 @@ img{
   width: 250px;
   height: 250px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 2px;
 }
 
 .cafe-item-detail p{
@@ -94,7 +104,28 @@ img{
 
 /*--------------------------------------------------- cafedetail -------------------------------------------*/
 
+.cafe-detail{
+  margin: 0 auto;
+}
 
+.cafe-detail-context{
+  display: flex;
+  justify-content: center;
+}
+
+.cafe-detail-left img{
+  width: 250px;
+  height: 250px;
+  border-radius: 2px;
+}
+
+.cafe-detail-left p{
+  font-size: 14px;
+}
+
+.cafe-detail-right{
+  font-size: 14px;
+}
 
 
 /*--------------------------------------------------- cafeupload -------------------------------------------*/
@@ -110,8 +141,9 @@ img{
 .footer{
   padding: 50px;
   width: 100%;
-  background-color: #e0e0e0;
+  height: 150px;
+  background-color: #808080;
+  color: #fff;
   text-align: center;
-  position: fixed;
-  bottom: 0;
+  position: absolute;
 }

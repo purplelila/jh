@@ -14,13 +14,14 @@ let CafeDetail = () => {
 
     return(
       <>
-        <div>
+        <div className="cafe-detail">
             <h3>{p.title}</h3>
-            <div className='cafe-detail'>
-                <div className="cafe-detail-img">
+            <div className='cafe-detail-context'>
+                <div className="cafe-detail-left">
                     <img src={p.img} />
+                    <p>{p.work}</p>
                 </div>
-                <div className="cafe-detail-text">
+                <div className="cafe-detail-right">
                     <h4>{p.title}</h4>
                     <p>{p.content}</p>
                     <span>카페위치 : {p.place}</span>

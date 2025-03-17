@@ -10,7 +10,7 @@ let Nav = () => {
         <div className='nav-links'>
           <Link to="/cafelist">카페정보</Link>
           <Link to="/community">커뮤니티</Link>
-          <Link to="/login">로그인</Link>
+          <Link to="/login">LOGIN</Link>
         </div>
       </nav>
     )
