@@ -1,0 +1,116 @@
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+
+}
+
+body{
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+a{
+    color:#333;
+    text-decoration: none;
+}
+
+header{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+nav{
+    width: 1200px;
+    margin: 0 20px;
+}
+
+.menu{
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-logo{
+    width: 120px;
+}
+
+.menu-logo h1 img{                 
+    width: 100%;
+}
+
+.menu-center a{
+    margin: 50px 50px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.menu-center a:hover{
+    color: #599468;
+}
+
+.hero{
+    width: 100%;
+    height: 500px;
+    background-image: url('./images/store.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    /* opacity: 0.9;                            이미지 희미하게*/ 
+}
+
+.hero-section{
+    width: 1200px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-content{
+    text-align: center;
+    color: #eee;
+    line-height: 1.8;
+}
+
+.hero-content h1{
+    font-size: 45px;
+}
+
+.second{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.second-section{
+    width: 1200px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.second-section a{
+    font-size: 18px;
+    margin: 30px;
+}
+
+.second-section a:hover{
+    color: #599468;
+}
+
+hr{
+    border: 0;
+    border-top : 2px solid #c7c7c7;
+}
