@@ -14,9 +14,9 @@ let CafeDetail = () => {
 
     return(
       <>
-        <div className="cafe-detail">
-            <h3>{p.title}</h3>
-            <div className='cafe-detail-context'>
+      <div className="cafedetail-board">
+        <h3>{p.title}</h3>
+            <div className='cafe-detail'>
                 <div className="cafe-detail-left">
                     <img src={p.img} />
                     <p>{p.work}</p>
@@ -30,7 +30,7 @@ let CafeDetail = () => {
             <Link to={'/cafelist'}>
                 <button>목록</button>
             </Link>
-        </div>
+      </div>
       </>
     )
   }

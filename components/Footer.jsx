@@ -1,6 +1,6 @@
 let Footer = () => {
     return (
-      <footer className="footer">
+      <footer>
         <p>© 2025 My Cafe App. All rights reserved.</p>
       </footer>
     );
