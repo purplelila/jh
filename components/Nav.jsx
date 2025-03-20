@@ -7,19 +7,28 @@ let Nav = () => {
         <header>
           <nav>
               <div className="menu">
-                  <div className="menu-logo">
-                      <h1>
+                  <div className="menu-left">
+                      <div className="menu-logo">
                         <Link to={'/cafelist'}>
-                          <img src="/image.png" alt="로고" />
+                          <img src="/logo.png" alt="로고" />
                         </Link>
-                      </h1>
-                  </div>
-                  <div className="menu-center">
-                    <Link to={'/cafelist'}>STORE</Link>
-                    <Link to={'/community'}>COMMUNITY</Link>
+                      </div>
+                      <div className="menu-store">
+                        <Link to={'/cafelist'}>STORE</Link>
+                        <Link to={'/community'}>COMMUNITY</Link>
+                      </div>
                   </div>
                   <div className="menu-right">
-                    <Link to={'/login'}><i className="fa-solid fa-user"></i></Link>
+                    <div className="menu-login">
+                      <Link to={'/login'}>LOGIN</Link>
+                      <Link to={'/register'}>JOIN</Link>
+                      <Link to={'/mypage'}>MY PAGE</Link>
+                    </div>
+                    <div className="social-icons">
+                      <Link to='https://www.instagram.com/'><i class="fa-brands fa-instagram"></i></Link>
+                      <Link to='https://www.facebook.com/'><i class="fa-brands fa-square-facebook"></i></Link>
+                      <Link to='https://x.com/'><i class="fa-brands fa-square-x-twitter"></i></Link>
+                    </div>
                   </div>
               </div>
           </nav>
@@ -28,7 +37,7 @@ let Nav = () => {
         <div className="hero">
           <div className="hero-section">
               <div className="hero-content">
-                  <h1>STORE</h1>
+                  <p>STORE</p>
                   <p>좋은 커피와 서비스를 제공하는 카페 정보를 제공합니다</p>
               </div>
           </div>
@@ -37,7 +46,6 @@ let Nav = () => {
         <div className="second">
             <div className="second-section">
               <Link to={'/cafelist'}>카페정보</Link>
-              <Link to={'/'}>메뉴</Link>
             </div>
         </div>
         <hr />

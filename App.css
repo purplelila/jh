@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 * {
   margin: 0;
@@ -8,6 +9,10 @@
 }
 
 body{
+  font-family: "Montserrat", sans-serif;
+}
+
+body:lang(ko) {
   font-family: "Noto Sans KR", serif;
 }
 
@@ -24,7 +29,6 @@ header {
   display: flex;
   justify-content: center;
   position: fixed;
-  left: 0;
   top: 0;
   background-color: #fff;
   z-index: 1000;
@@ -32,7 +36,6 @@ header {
 
 nav{
   width: 1200px;
-  margin: 0 20px;
 }
 
 .menu{
@@ -43,27 +46,80 @@ nav{
 }
 
 .menu-logo{
-  width: 120px;
+  width: 350px;
+  margin-top: 20px;
 }
 
-.menu-logo h1 img{                 
+.menu-logo img{                 
   width: 100%;
 }
 
-.menu-center a{
-  margin: 50px 50px;
-  font-size: 20px;
-  font-weight: bold;
+.menu-left{
+  display: flex;
+  align-items: center;
 }
 
-.menu-center a:hover{
+.menu-left a{
+  font-size: 16px;
+}
+
+.menu-left a:hover{
   color: #599468;
+}
+
+.menu-store{
+  width: 580px;
+  text-align: center;
+}
+
+.menu-store a{
+  margin : 40px 40px;
+  /* font-weight: bold; */
+}
+
+.menu-right{
+  display: flex;
+  align-items: center;
+  height: auto;
+}
+
+.menu-right a:hover{
+  color: #599468;
+}
+
+.menu-login{
+  height: 100%;
+  font-size: 13px;
+}
+
+.menu-login a{
+  padding: 0 5px;
+}
+
+.menu-login a:nth-child(1) {
+  border-right: 1px solid #bbb;
+}
+
+.menu-login a:nth-child(2) {
+  border-right: 1px solid #bbb;
+}
+
+.social-icons{
+  display: flex;
+  gap: 5px;
+  margin-right: 15px;
+}
+
+.social-icons i{
+  font-size: 20px;
+  margin-left: 5px;
 }
 
 .hero{
   width: 100%;
   height: 500px;
-  background-image: url('/store.jpg');
+  background-image: url('/img2.jpg');
+  /* background-color: #333; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -71,6 +127,7 @@ nav{
   justify-content: center;
   /* opacity: 0.9;                            이미지 희미하게*/ 
   position: absolute;
+  z-index: 999;
   top: 100px;
   left: 0;
 }
@@ -89,8 +146,14 @@ nav{
   line-height: 1.8;
 }
 
-.hero-content h1{
+.hero-content p:nth-child(1){
   font-size: 45px;
+  font-weight: bold;
+  /* color: #333; */
+}
+
+.hero-content p:nth-child(2){
+  /* color: #333; */
 }
 
 .second{
@@ -99,6 +162,7 @@ nav{
   display: flex;
   justify-content: center;
   position: absolute;
+  z-index: 998;
   top: 600px;
 }
 
@@ -123,33 +187,40 @@ hr{
   border: 0;
   border-top : 2px solid #c7c7c7;
   position: absolute;
+  z-index: 998;
   top: 660px;
   width: 100%;
 }
 
 /*--------------------------------------------------- cafelist -------------------------------------------*/
 
-.cafelist-container{
-  padding: 30px 30px;
-  margin-top: 660px;
+.cafe-search{
   width: 100%;
+  top: 660px;
   display: flex;
   justify-content: center;
-  
+  position: absolute;
+  z-index: 998;
 }
 
-.cafe-button{
-  margin-top: 30px;
+.cafelist-top {
+  width: 1200px;
+  margin: 0 20px;
+}
+
+.cafelist-top h2 {
+  text-align: center;
+  font-size: 30px;
+}
+
+.cafe-btn{
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 20px;
 }
 
 .search-input {
   width: 200px;
   padding: 10px;
-  font-size: 14px;
   border: 1px solid #e0e0e0;
   border-radius: 2px;
   transition: all 0.2s ease-in-out;
@@ -160,28 +231,44 @@ hr{
   box-shadow: 0 0 5px lightblue;
 }
 
+.cafelist-info{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 750px;
+  z-index: 997;
+}
+
 .cafe-list{
   display: flex;
   flex-wrap: wrap;
-  width: 1200px;
   justify-content: center;
-  gap: 15px;
-  background-color: #333;
+  width: 1200px;
 }
 
 .cafe-item{
   border-top: 1px solid #e0e0e0;
   padding: 20px;
   display: flex;
-  gap: 20px;
   flex-basis: calc(50% - 10px);       /* 2열 */
 }
 
+.cafe-item-img {
+  width: 350px;
+  height: 350px;
+  margin-right: 20px;
+}
+
 .cafe-item-img img{
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 2px;
+}
+
+.cafe-item-text{
+  font-size: 18px;
 }
 
 .cafe-item-detail p{
@@ -189,16 +276,16 @@ hr{
 }
 
 .load-more{
-  display: block;
   border-radius: 1px solid #e0e0e0;
-  cursor: pointer;
   font-size: 14px;
+  position: absolute;
+
 }
 
 .scroll-to-top{
   position: fixed;
   right: 50px;
-  bottom: 170px;
+  bottom: 50px;
   z-index: 1000;
 }
 
@@ -206,8 +293,11 @@ hr{
 
 .cafedetail-board{
   padding: 30px 30px;
-  margin-top: 660px;
   width: 100%;
+  justify-content: center;
+  position: absolute;
+  top: 660px;
+  background-color: #599468;
 }
 
 .cafe-detail{
@@ -241,14 +331,109 @@ hr{
 /*--------------------------------------------------- cafeupload -------------------------------------------*/
 
 .board{
-  padding: 30px 30px;
-  margin-top: 660px;
+  padding: 20px;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  top: 660px;
+  box-sizing: border-box;
 }
 
+.board h2{
+  text-align: left;
+  margin: 30px 30px;
+  width: 1200px;
+}
 
+.form-container{
+  width: 1200px;
+  box-shadow: 0 4 8 rgba(0,0, 0,0.1);
+}
 
+.form-container h3{
+  text-align: left;
+  padding-bottom:20px;
+  border-bottom: 2px solid #333;
+}
 
+.form-content{
+  display: flex;
+  flex-direction: column;
+  width: 1200px;
+  border-radius: 2px;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-form label{
+  width: 10%;
+}
+
+.form-form input, .form-form textarea{
+  width: 90%;
+  padding: 10px;
+  margin: 20px 0;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+}
+
+.form-form textarea{
+  min-height: 200px;
+}
+
+.form-img{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 1200px;
+  margin-bottom: 20px;
+}
+
+.form-img label{
+  width: 10%;
+}
+
+.form-input{
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-input input{
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.form-filename{
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+}
+
+.choose-file{
+  width: 10%;
+  margin: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-btn{
+  display: flex;
+  justify-content: center;
+}
 
 /*--------------------------------------------------- footer -------------------------------------------*/
 
