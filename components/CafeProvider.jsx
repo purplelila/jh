@@ -5,8 +5,8 @@ export let CafeContext = createContext()
 let CafeProvider = ({children}) => {
   const [cafes, setCafes] = useState([])
 
-  function addCafe(img, work, title, place, content){
-    let newPost = {id: Date.now(), img, work, title, place, content}
+  function addCafe(imgURL, imgName, work, title, place, content){
+    let newPost = {id: Date.now(), imgURL, imgName, work, title, place, content}
     setCafes([...cafes, newPost])
   }
 

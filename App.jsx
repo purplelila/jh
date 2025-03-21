@@ -1,4 +1,10 @@
 import './App.css'
+import './style/Nav.css'
+import './style/CafeList.css'
+import './style/CafeDetail.css'
+import './style/CafeUpload.css'
+import './style/Footer.css'
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CafeProvider from "./components/CafeProvider";
 import Nav from "./components/Nav";

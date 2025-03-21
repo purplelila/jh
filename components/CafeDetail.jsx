@@ -18,7 +18,7 @@ let CafeDetail = () => {
         <h3>{p.title}</h3>
             <div className='cafe-detail'>
                 <div className="cafe-detail-left">
-                    <img src={p.img} />
+                    <img src={p.imgURL} alt={p.imgName}/>
                     <p>{p.work}</p>
                 </div>
                 <div className="cafe-detail-right">

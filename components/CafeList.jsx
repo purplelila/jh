@@ -58,12 +58,12 @@ let CafeList = () => {
                 return(
                   <div key={idx} className='cafe-item'>
                     <div className="cafe-item-img">
-                      <p><img src={p.img} /></p>
+                      <p><img src={p.imgURL} alt={p.imgName}/></p>
                     </div>
                     <div className="cafe-item-text">
-                      <h3>카페명 : {p.title}</h3>
+                      <h3>{p.title}</h3>
                       <p>{p.content}</p>
-                      <p>카페위치 : {p.place}</p>
+                      <p>{p.place}</p>
                       <div className="cafe-item-detail">
                         <Link to={`/cafedetail/${p.id}`}>
                           <p>자세히 보기+</p>
@@ -77,9 +77,11 @@ let CafeList = () => {
             })
           )}
         </div>
-        <div className="load-more">
-          <button onClick={loadMore}>더보기</button>
-        </div>
+        {cafes.length > 0 && (
+          <div className="cafelist-load-more">
+            <button onClick={loadMore}>더보기</button>
+          </div>
+        )}
       </div>
 
       {

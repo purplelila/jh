@@ -1,7 +1,13 @@
 let Footer = () => {
     return (
       <footer>
-        <p>© 2025 My Cafe App. All rights reserved.</p>
+        <hr/>
+        <div class="bottom-section">
+            <div class="bottom-utils">
+                <p>footer</p>
+            </div>
+        </div>
+        <hr/>
       </footer>
     );
   };

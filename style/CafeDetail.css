@@ -1,0 +1,35 @@
+.cafedetail-board{
+    padding: 30px 30px;
+    width: 100%;
+    justify-content: center;
+    position: absolute;
+    top: 660px;
+    background-color: #599468;
+  }
+  
+  .cafe-detail{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    border-top: 1px solid #e0e0e0;
+    padding: 20px;
+  }
+  
+  .cafe-detail-left{
+    border-right: 1px solid #e0e0e0;
+    padding-right: 20px;
+  }
+  
+  .cafe-detail-left img{
+    width: 300px;
+    height: 300px;
+    border-radius: 2px;
+  }
+  
+  .cafe-detail-left p{
+    font-size: 14px;
+  }
+  
+  .cafe-detail-right{
+    font-size: 14px;
+  }

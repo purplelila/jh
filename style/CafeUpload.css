@@ -1,0 +1,104 @@
+.cafeupload-board{
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    top: 660px;
+    box-sizing: border-box;
+  }
+  
+  .cafeupload-board h2{
+    text-align: left;
+    margin: 30px 30px;
+    width: 1200px;
+  }
+  
+  .upload-form-container{
+    width: 1200px;
+    box-shadow: 0 4 8 rgba(0,0, 0,0.1);
+  }
+  
+  .upload-form-container h3{
+    text-align: left;
+    padding-bottom:20px;
+    border-bottom: 2px solid #333;
+  }
+  
+  .upload-form-content{
+    display: flex;
+    flex-direction: column;
+    width: 1200px;
+    border-radius: 2px;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .upload-form-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .upload-form-form label{
+    width: 10%;
+  }
+  
+  .upload-form-form input, .upload-form-form textarea{
+    width: 90%;
+    padding: 10px;
+    margin: 20px 0;
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+  }
+  
+  .upload-form-form textarea{
+    min-height: 200px;
+  }
+  
+  .upload-form-img{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1200px;
+    margin-bottom: 20px;
+  }
+  
+  .upload-form-img label{
+    width: 10%;
+  }
+  
+  .upload-form-input{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .upload-form-input input{
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+  }
+  
+  .upload-form-filename{
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #e0e0e0;
+    box-sizing: border-box;
+  }
+  
+  .upload-choose-file{
+    width: 10%;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .upload-form-btn{
+    display: flex;
+    justify-content: center;
+  }
