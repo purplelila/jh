@@ -1,35 +1,58 @@
 .cafedetail-board{
-    padding: 30px 30px;
     width: 100%;
     justify-content: center;
     position: absolute;
     top: 660px;
-    background-color: #599468;
+  }
+
+  .cafedetail-board h3 {
+    width: 1200px;
+    margin: 0 auto;
   }
   
   .cafe-detail{
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    width: 1200px;
+    margin: 0 auto;
     border-top: 1px solid #e0e0e0;
-    padding: 20px;
   }
   
   .cafe-detail-left{
     border-right: 1px solid #e0e0e0;
-    padding-right: 20px;
+    width: 40%;
   }
+
   
-  .cafe-detail-left img{
-    width: 300px;
+  .cafe-detail-mainimg{
+    width: 400px;
     height: 300px;
-    border-radius: 2px;
+    margin-bottom: 10px;
   }
-  
+
+  .cafe-detail-mainimg img{
+    width: 100%;
+    height: 100%;
+  }
+
+  .cafe-detail-subimg{
+    display: flex;
+    gap: 5px;
+    width: 100px;
+    height: 60px;
+  }
+
+  .cafe-detail-subimg img{
+    width: 100%;
+    height: 100%;
+    height: auto;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
   .cafe-detail-left p{
     font-size: 14px;
   }
   
   .cafe-detail-right{
-    font-size: 14px;
+    width: 60%;
   }

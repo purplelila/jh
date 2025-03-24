@@ -58,7 +58,8 @@ let CafeList = () => {
                 return(
                   <div key={idx} className='cafe-item'>
                     <div className="cafe-item-img">
-                      <p><img src={p.imgURL} alt={p.imgName}/></p>
+                      {/* 이미지 표시 */}
+                      <p><img src={p.imgURL[0]} alt={p.imgName[0]}/></p>
                     </div>
                     <div className="cafe-item-text">
                       <h3>{p.title}</h3>

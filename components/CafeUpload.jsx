@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 let CafeUpload = () => {
     let {addCafe} = useContext(CafeContext)
   
-    const [imgURL, setImgURL] = useState(null); // 이미지 URL을 저장
-    const [imgName, setImgName] = useState(""); // 이미지 파일명을 저장
-    // const [img, setImg] = useState(null)
+    const [imgURL, setImgURL] = useState([]); // 이미지 URL을 저장
+    const [imgName, setImgName] = useState([]); // 이미지 파일명을 저장
     const [name, setName] = useState("")
     const [work, setWork] = useState("")
     const [title, setTitle] = useState("")
@@ -16,14 +15,34 @@ let CafeUpload = () => {
 
     const navigate = useNavigate()
 
-    // img 업로드
+    // img 업로드 (파일 선택)
     let handleImageChange = (e) => {
-      let file = e.target.files[0];
+      let files = Array.from(e.target.files);
   
-      if (file) {
-        //setImg(URL.createObjectURL(file));        // url 로 저장
-        setImgURL(URL.createObjectURL(file)); // 이미지 URL 저장
-        setImgName(file.name); // 파일명 저장
+      if (files.length + imgURL.length <=4) {
+        const newImgURLs = files.map(file=> URL.createObjectURL(file))
+        const newImgNames = files.map(file => file.name)
+
+        setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
+        setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
+      }else{
+        alert("4개의 이미지까지 선택가능합니다.")
+      }
+    }
+
+    // img 업로드 (파일 드래그 앤 드롭)
+    let handleDrop = (e) => {
+      e.preventDefault();
+      let files = Array.from(e.dataTransfer.files);
+  
+      if (files.length + imgURL.length <=4) {
+        const newImgURLs = files.map(file=> URL.createObjectURL(file))
+        const newImgNames = files.map(file => file.name)
+
+        setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
+        setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
+      }else{
+        alert("4개의 이미지까지 선택가능합니다.")
       }
     }
   
@@ -55,7 +74,7 @@ let CafeUpload = () => {
         return;
       }
 
-      if(!imgURL){
+      if(imgURL.length ===0){
         alert("이미지를 선택해주세요.");
         return;
       }
@@ -104,9 +123,11 @@ let CafeUpload = () => {
             <div className="upload-form-img">
               <label>첨부파일</label>
               <div className="upload-form-input">
-                <input type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} id="file-upload"/>
+                <input type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} id="file-upload" multiple/>
                 {/* 이미지 제목표시 */}
-                <div className="upload-form-filename"><input type="text" value={imgName} disabled placeholder="선택된 파일이 없습니다."/></div>
+                <div className="upload-form-filename" onDrop={handleDrop} onDragOver={(e)=> e.preventDefault()}>
+                  <input type="text" value={imgName.length > 0 ? imgName.join(","): " 선택된 파일이 없습니다."} disabled placeholder="선택된 파일이 없습니다."/>
+                </div>
                 {/* 이미지 선택 버튼 */}
                 <button type="button" className="upload-choose-file" onClick={()=> document.getElementById('file-upload').click()}>파일선택</button>
               </div>
