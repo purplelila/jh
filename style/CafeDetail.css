@@ -1,8 +1,8 @@
 .cafedetail-board{
     width: 100%;
     justify-content: center;
-    position: absolute;
-    top: 660px;
+    box-sizing: border-box;
+    padding: 50px 0;
   }
 
   .cafedetail-board h3 {
@@ -15,44 +15,112 @@
     width: 1200px;
     margin: 0 auto;
     border-top: 1px solid #e0e0e0;
+    gap: 20px;
   }
   
   .cafe-detail-left{
-    border-right: 1px solid #e0e0e0;
-    width: 40%;
+    width: 50%;
+    padding: 40px 0;
   }
 
   
   .cafe-detail-mainimg{
-    width: 400px;
-    height: 300px;
+    width: 100%;
+    height: 400px;
     margin-bottom: 10px;
   }
 
   .cafe-detail-mainimg img{
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
   }
 
   .cafe-detail-subimg{
     display: flex;
-    gap: 5px;
-    width: 100px;
-    height: 60px;
+    gap: 10px;
+    width: 100%;
+    height: 150px;
+    overflow-x: auto;
   }
 
   .cafe-detail-subimg img{
     width: 100%;
-    height: 100%;
+    height: 150px;
     height: auto;
     object-fit: cover;
     cursor: pointer;
-  }
-
-  .cafe-detail-left p{
-    font-size: 14px;
+    border-radius: 5px;
   }
   
   .cafe-detail-right{
-    width: 60%;
+    width: 50%;
+    padding: 40px 20px;           /* 상하 좌우*/
   }
+
+  .cafe-detail-right h1{
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+
+  .cafe-detail-right p{
+    font-size: 20px;
+  }
+
+  .cafe-detail-hr{
+    border : 1px solid #e0e0e0;
+    margin: 20px 0;
+  }
+
+  .cafe-detail-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cafe-detail-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .cafe-detail-item p{
+    width: 30%;
+  }
+
+  .cafe-detail-item ul, .cafe-detail-item span{
+    width: 70%;
+  }
+
+  .cafe-detail-item ul{
+    list-style: none;
+  }
+  
+  .cafe-detail-item ul li{
+    margin-bottom: 10px;
+  }
+
+  .cafe-detail-item ul li span {
+    margin-right: 20px;
+}
+
+/*--------------------------------------------------------------------------------*/
+.cafedetail-btn{
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.cafedetail-btn button{
+  background-color: #e0e0e0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 50px;
+}
+
+.cafedetail-btn button:hover {
+  background-color: #45a049;
+}

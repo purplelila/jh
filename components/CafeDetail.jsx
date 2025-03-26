@@ -28,7 +28,7 @@ let CafeDetail = () => {
     return(
       <>
       <div className="cafedetail-board">
-        <h3>{p.title}</h3>
+        {/* <h3>{p.title}</h3> */}
             <div className='cafe-detail'>
                 <div className="cafe-detail-left">
                     {/* 큰 이미지 */}
@@ -41,17 +41,48 @@ let CafeDetail = () => {
                             <img key={idx} src={imgURL} alt={p.imgName[idx]} onClick={()=> handleImageClick(imgURL)}/>
                         ))}
                     </div>
-                    <p>{p.work}</p>
+                    
                 </div>
                 <div className="cafe-detail-right">
-                    <h4>{p.title}</h4>
+                    <h1>{p.title}</h1>
                     <p>{p.content}</p>
-                    <span>카페위치 : {p.place}</span>
+                    
+                    <hr className="cafe-detail-hr"/>
+
+                    <div className="cafe-detail-item">
+                        <p>영업일</p>
+                        <ul>
+                            {Object.entries(p.cafeHours).map(([day, hours])=>{
+                                return(
+                                    <li key={day}>
+                                        <span>{day}</span>  {hours}
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                    <hr className="cafe-detail-hr"/>
+                    <div className="cafe-detail-item">
+                        <p>카페위치</p>
+                        <span>{p.place}</span>
+                    </div>
+                    <hr className="cafe-detail-hr"/>
+                    <div className="cafe-detail-item">
+                        <p>연락처</p>
+                        <span>{p.phone}</span>
+                    </div>
+                    <hr className="cafe-detail-hr"/>
+                    <div className="cafe-detail-item">
+                        <p>SNS</p>
+                        <span>{p.sns}</span>
+                    </div>
                 </div>
             </div>
-            <Link to={'/cafelist'}>
-                <button>목록</button>
-            </Link>
+            <div className="cafedetail-btn">
+                <Link to={'/cafelist'}>
+                    <button>목록</button>
+                </Link>
+            </div>
       </div>
       </>
     )

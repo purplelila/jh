@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 let CafeList = () => {
     let { cafes } = useContext(CafeContext);
     const [scrollTop, setScrollTop] = useState(false)
-    const [numofRows, setNumOfRows] = useState(4)
+    const [numofRows, setNumOfRows] = useState(6)
 
+    // 더보기 보여주는 갯수
     let loadMore = () => {
-      setNumOfRows(prevNum => prevNum + 4);
+      setNumOfRows(prevNum => prevNum + 6);
     }
 
     let handleScroll = ()=>{
@@ -35,7 +36,7 @@ let CafeList = () => {
       <>
       <div className="cafe-search">
         <div className="cafelist-top">
-          <h2>카페목록</h2>
+          <h2>ALL LISTINGS</h2>
           <div className="cafe-btn">
             <div className="cafe-upload">
               <Link to="/cafeupload">
@@ -59,12 +60,14 @@ let CafeList = () => {
                   <div key={idx} className='cafe-item'>
                     <div className="cafe-item-img">
                       {/* 이미지 표시 */}
-                      <p><img src={p.imgURL[0]} alt={p.imgName[0]}/></p>
+                      <Link to={`/cafedetail/${p.id}`}>
+                        <p><img src={p.imgURL[0]} alt={p.imgName[0]}/></p>
+                      </Link>
                     </div>
                     <div className="cafe-item-text">
                       <h3>{p.title}</h3>
                       <p>{p.content}</p>
-                      <p>{p.place}</p>
+                      {/* <p>{p.place}</p> */}
                       <div className="cafe-item-detail">
                         <Link to={`/cafedetail/${p.id}`}>
                           <p>자세히 보기+</p>
@@ -79,9 +82,7 @@ let CafeList = () => {
           )}
         </div>
         {cafes.length > 0 && (
-          <div className="cafelist-load-more">
-            <button onClick={loadMore}>더보기</button>
-          </div>
+          <button onClick={loadMore}>더보기</button>
         )}
       </div>
 

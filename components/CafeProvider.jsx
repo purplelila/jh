@@ -6,8 +6,8 @@ let CafeProvider = ({children}) => {
   const [cafes, setCafes] = useState([])
 
   // 카페 추가
-  function addCafe(imgURL, imgName, work, title, place, content){
-    let newPost = {id: Date.now(), imgURL, imgName, work, title, place, content}
+  function addCafe(imgURL, imgName, cafeHours, title, place, content, phone, sns){
+    let newPost = {id: Date.now(), imgURL, imgName, cafeHours, title, place, content, phone, sns}
     setCafes([...cafes, newPost])
   }
 
@@ -19,7 +19,12 @@ let CafeProvider = ({children}) => {
   // 카페 상태 가져오는
   useEffect(()=> {
     let savedCafe = JSON.parse(localStorage.getItem("cafes"))
-    setCafes(savedCafe)
+    if(savedCafe){
+      setCafes(savedCafe)  
+    }else{
+      setCafes([])
+    }
+    
   }, [])
 
   function deleteCafe(id){
@@ -28,7 +33,7 @@ let CafeProvider = ({children}) => {
   }
 
   return(
-    <CafeContext.Provider value={{cafes, addCafe, deleteCafe}}>
+    <CafeContext.Provider value={{cafes, addCafe, deleteCafe, setCafes}}>
       {children}
     </CafeContext.Provider>
   )
