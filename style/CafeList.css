@@ -4,6 +4,7 @@
     display: flex;
     justify-content: center;
     box-sizing: border-box;
+    padding: 0 20px;
   }
   
   .cafelist-top {
@@ -38,10 +39,13 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #F5DCB7;
+    color: #333;
   }
 
   .cafe-upload button:hover {
-    background-color: #45a049;
+    background-color: #FFA128;
+    color: #eee;
   }
 
   .search-container {
@@ -69,10 +73,13 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #F5DCB7;
+    color: #333;
   }
 
   .search-btn:hover {
-    background-color: #45a049;
+    background-color: #FFA128;
+    color: #eee;
   }
   
 /*--------------------------------------------------------------------------------------------------*/
@@ -80,6 +87,7 @@
   .cafelist-info{
     width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
   }
 
   .cafe-list{
@@ -87,13 +95,14 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 15px;
+    margin-top: 10px;
   }
   
   .cafe-item{
     flex-basis: calc(33.33% - 10px);       /* 3열 */
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    margin-top: 30px;
+    margin-top: 20px;
   }
 
   .cafe-item:hover {
@@ -137,16 +146,19 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #F5DCB7;
+    color: #333;
   }
 
   .cafelist-info button:hover {
-    background-color: #45a049;
+    background-color: #FFA128;
+    color: #eee;
   }
   
   .scroll-to-top{
     position: fixed;
     right: 50px;
-    bottom: 40px;
+    bottom: 350px;
     z-index: 1000;
     background-color: #e0e0e0;
     padding: 10px 10px;
@@ -154,8 +166,11 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #F5DCB7;
+    color: #333;
   }
 
   .scroll-to-top:hover {
-    background-color: #45a049;
+    background-color: #FFA128;
+    color: #eee;
   }

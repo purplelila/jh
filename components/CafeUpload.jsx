@@ -172,10 +172,12 @@ let CafeUpload = () => {
                 <div className="upload-form-filename" onDrop={handleDrop} onDragOver={(e)=> e.preventDefault()}>
                   <input type="text" value={imgName.length > 0 ? imgName.join(","): " 선택된 파일이 없습니다."} disabled placeholder="선택된 파일이 없습니다."/>
                 </div>
+                <p className="upload-form-imgtext">*파일(jpg, jpeg, fif, gif, tif, tiff, png, zip)은 최대 4개까지 선택 가능합니다.</p>
               </div>
               {/* 이미지 선택 버튼 */}
               <button type="button" onClick={()=> document.getElementById('file-upload').click()}>파일선택</button>
             </div>
+
 
             <div className="upload-form-btn">
               <button type='submit'>게시글 등록</button>

@@ -10,6 +10,7 @@ header {
     top: 0;
     background-color: #fff;
     z-index: 1000;
+    position: fixed;
   }
   
   nav{
@@ -44,7 +45,7 @@ header {
   }
   
   .menu-left a:hover{
-    color: #599468;
+    color: #AB865C;
   }
   
   .menu-store{
@@ -65,7 +66,7 @@ header {
   }
   
   .menu-right a:hover{
-    color: #599468;
+    color: #AB865C;
   }
   
   .menu-login{

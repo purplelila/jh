@@ -5,7 +5,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    position: absolute;
     box-sizing: border-box;
   }
   
@@ -14,6 +13,7 @@
     margin: 30px 30px;
     width: 1200px;
     font-size: 40px;
+    padding: 0 20px;
   }
   
 /*---------------------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
   
   .upload-form-img label{
@@ -102,9 +102,9 @@
   }
   
   .upload-form-input{
-    width: 76.3%;
+    width: 76.7%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
   }
   
   .upload-form-input input{
@@ -129,10 +129,17 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 17px;
   }
   
   .upload-form-img button:hover {
     background-color: #45a049;
+  }
+
+  .upload-form-imgtext{
+    font-size: 12px;
+    color: #ccc;
+    text-align: left;
   }
   
   .upload-form-btn{

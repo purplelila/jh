@@ -27,6 +27,8 @@ const Main = () => {
   // Cafemain 페이지에서만 Nav를 숨김
   const showNav = location.pathname !== '/';
   const showNav2 = location.pathname !== '/login';
+
+  const showfooter = location.pathname !== '/'
   
   return (
     <div className="container">
@@ -40,7 +42,9 @@ const Main = () => {
         <Route path='/cafedetail/:id' element={<CafeDetail />} />
         <Route path='/community' element={<CommunityPage />} />
         {/* <Route path='/login' element={<Login />} /> */}
+
       </Routes>
+      {showfooter && <Footer/>}
     </div>
   );
 };

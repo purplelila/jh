@@ -29,6 +29,7 @@ let CafeDetail = () => {
       <>
       <div className="cafedetail-board">
         {/* <h3>{p.title}</h3> */}
+        <hr className="cafe-detail-first-hr"/>
             <div className='cafe-detail'>
                 <div className="cafe-detail-left">
                     {/* 큰 이미지 */}
