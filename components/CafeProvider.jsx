@@ -8,7 +8,7 @@ let CafeProvider = ({children}) => {
   // 카페 추가
   function addCafe(imgURL, imgName, cafeHours, title, place, content, phone, sns){
     let newPost = {id: Date.now(), imgURL, imgName, cafeHours, title, place, content, phone, sns}
-    setCafes([...cafes, newPost])
+    setCafes(prevCafes => [...prevCafes, newPost])
   }
 
   // 카페 상태 저장
@@ -21,11 +21,15 @@ let CafeProvider = ({children}) => {
     let savedCafe = JSON.parse(localStorage.getItem("cafes"))
     if(savedCafe){
       setCafes(savedCafe)  
-    }else{
-      setCafes([])
     }
     
   }, [])
+
+  useEffect(()=> {
+    if(cafes.length>0){
+      localStorage.setItem("cafes", JSON.stringify(cafes))
+    }
+  }, [cafes])
 
   function deleteCafe(id){
     let filteredCafes = cafes.filter((p)=> p.id !== id)

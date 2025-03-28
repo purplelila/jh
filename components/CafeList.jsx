@@ -1,11 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import { CafeContext } from "./CafeProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 let CafeList = () => {
     let { cafes } = useContext(CafeContext);
     const [scrollTop, setScrollTop] = useState(false)
     const [numofRows, setNumOfRows] = useState(6)
+
+    const navigate = useNavigate()
 
     // 더보기 보여주는 갯수
     let loadMore = () => {
@@ -32,6 +34,10 @@ let CafeList = () => {
       })
     }
 
+    const handleUploadClick = () => {
+      navigate("/cafeupload");
+    }
+
     return(
       <>
       <div className="cafe-search">
@@ -39,9 +45,9 @@ let CafeList = () => {
           <h2>ALL LISTINGS</h2>
           <div className="cafe-btn">
             <div className="cafe-upload">
-              <Link to="/cafeupload">
-                <button>등록</button>
-              </Link> 
+
+                <button onClick={handleUploadClick}>등록</button>
+
             </div>
             <div className="search-cotainer">
               <input type="text" placeholder='카페를 입력하세요.' className='search-input' />
@@ -81,13 +87,14 @@ let CafeList = () => {
             })
           )}
         </div>
-        {cafes.length > 0 && (
+        {cafes.length > 6 && (
           <button onClick={loadMore}>더보기</button>
         )}
       </div>
 
       {
-      scrollTop && (<button className='scroll-to-top' onClick={scrollToTop}>위로</button>)
+      scrollTop && (<button className='scroll-to-top' onClick={scrollToTop}>
+        <i class="fa-solid fa-chevron-up"></i></button>)
       }
       </>
     )

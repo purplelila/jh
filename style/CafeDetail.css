@@ -20,6 +20,8 @@
     margin: 0 auto;
     /* gap: 20px; */
   }
+
+  /*---------------------------------------------------------------------------------------*/
   
   .cafe-detail-left{
     width: 50%;
@@ -29,7 +31,7 @@
   
   .cafe-detail-mainimg{
     width: 100%;
-    height: 400px;
+    height: 450px;
     margin-bottom: 10px;
   }
 
@@ -56,6 +58,8 @@
     cursor: pointer;
     border-radius: 5px;
   }
+
+  /*-------------------------------------------------------------------------------------------*/
   
   .cafe-detail-right{
     width: 50%;
@@ -123,8 +127,11 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 50px;
+  background-color: #F5DCB7;
+  color: #333;
 }
 
 .cafedetail-btn button:hover {
-  background-color: #45a049;
+  background-color: #FFA128;
+  color: #eee;
 }

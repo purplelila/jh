@@ -130,10 +130,13 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 17px;
+    background-color: #F5DCB7;
+    color: #333;
   }
   
   .upload-form-img button:hover {
-    background-color: #45a049;
+    background-color: #FFA128;
+    color: #eee;
   }
 
   .upload-form-imgtext{
@@ -153,8 +156,11 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #F5DCB7;
+    color: #333;
   }
   
   .upload-form-btn button:hover {
-    background-color: #218838;
+    background-color: #FFA128;
+    color: #eee;
   }

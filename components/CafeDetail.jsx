@@ -37,12 +37,13 @@ let CafeDetail = () => {
                         <img src={mainImage} alt={p.imgName[0]}/>
                     </div>
                     {/* 서브 이미지 */}
-                    <div className="cafe-detail-subimg">
-                        {p.imgURL.map((imgURL,idx) => (
-                            <img key={idx} src={imgURL} alt={p.imgName[idx]} onClick={()=> handleImageClick(imgURL)}/>
-                        ))}
-                    </div>
-                    
+                    {p.imgURL.length >1 && (
+                        <div className="cafe-detail-subimg">
+                            {p.imgURL.map((imgURL,idx) => (
+                                <img key={idx} src={imgURL} alt={p.imgName[idx]} onClick={()=> handleImageClick(imgURL)}/>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <div className="cafe-detail-right">
                     <h1>{p.title}</h1>
