@@ -158,6 +158,7 @@
     transition: background-color 0.3s ease;
     background-color: #F5DCB7;
     color: #333;
+    font-size: 17px;
   }
   
   .upload-form-btn button:hover {

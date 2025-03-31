@@ -1,9 +1,12 @@
+import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { CafeContext } from "./CafeProvider";
 
 let Nav = () => {
  
   // store랑 community 경로마다 배경 이미지 및 텍스트 설정
   const location = useLocation()
+  const {handleResetFilter} = useContext(CafeContext)
 
   // 기본값 설정
   let heroImage;
@@ -38,7 +41,7 @@ let Nav = () => {
                       </Link>
                     </div>
                     <div className="menu-store">
-                      <Link to={'/cafelist'}>STORE</Link>
+                      <Link to={'/cafelist'} onClick={handleResetFilter}>STORE</Link>
                       <Link to={'/community'}>COMMUNITY</Link>
                     </div>
                 </div>
