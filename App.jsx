@@ -1,25 +1,42 @@
 import './App.css'
 import './style/Nav.css'
-import './style/CafeList.css'
-import './style/CafeDetail.css'
-import './style/CafeUpload.css'
 import './style/Footer.css'
+import './style/Cafemain.css'
 
-import './Cafemain.css'
-import './CommunityPage.css'
-// import './login.css'
+import './style/admin/login.css'
+import './style/admin/Signup.css'
+
+import './style/cafe/CafeList.css'
+import './style/cafe/CafeDetail.css'
+import './style/cafe/CafeUpload.css'
+
+
+import './style/community/NoticePage.css'
+import './style/community/AddBoard.css'
+import './style/community/DetailBoard.css'
+import './style/community/Tabs.css'
+
 
 import { BrowserRouter as Router, Routes, Route, useLocation  } from "react-router-dom";
-import CafeProvider from "./components/CafeProvider";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import CafeList from "./components/CafeList";
-import CafeUpload from "./components/CafeUpload";
-import CafeDetail from "./components/CafeDetail";
+import Cafemain from './components/Cafemain'
 
-import Cafemain from './Cafemain'
-import CommunityPage from './CommunityPage'
-// import Login from './login'
+import Login from './components/admin/login'
+import Signup from './components/admin/Signup'
+
+import CafeProvider from "./components/CafeProvider";
+import CafeList from "./components/cafe/CafeList";
+import CafeUpload from "./components/cafe/CafeUpload";
+import CafeDetail from "./components/cafe/CafeDetail";
+
+import NoticePage from './components/community/NoticePage';
+import ChatPage from './components/community/ChatPage';
+import FaqPage from './components/community/FaqPage';
+import AddBoard from './components/community/AddBoard';
+import DetailBoard from './components/community/DetailBoard';
+
+
 
 const Main = () => {
   const location = useLocation();  // useLocation 훅은 Router 내에서 사용해야 함
@@ -27,21 +44,27 @@ const Main = () => {
   // Cafemain 페이지에서만 Nav를 숨김
   const showNav = location.pathname !== '/';
   const showNav2 = location.pathname !== '/login';
+  const showNav3 = location.pathname !== '/signup';
 
-  const showfooter = location.pathname !== '/'
+  const showfooter = location.pathname !== '/';
   
   return (
     <div className="container">
       {/* Nav가 'Cafemain' 페이지에서만 숨겨지도록 조건부 렌더링 */}
-      {showNav && showNav2 && <Nav />}
+      {showNav && showNav2 && showNav3 && <Nav />}
   
       <Routes>
         <Route path='/' element={<Cafemain />} />
         <Route path='/cafelist' element={<CafeList />} />
         <Route path='/cafeupload' element={<CafeUpload />} />
         <Route path='/cafedetail/:id' element={<CafeDetail />} />
-        <Route path='/community' element={<CommunityPage />} />
-        {/* <Route path='/login' element={<Login />} /> */}
+        <Route path="/community/notice" element={<NoticePage />} />
+        <Route path="/community/chat" element={<ChatPage />} />
+        <Route path="/community/faq" element={<FaqPage />} />
+        <Route path='/write' element={<AddBoard />} />
+        <Route path="/community/:postId" element={<DetailBoard />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
 
       </Routes>
       {showfooter && <Footer/>}

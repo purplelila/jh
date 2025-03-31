@@ -42,9 +42,9 @@ let Footer = () => {
             </div>
             <div className="footer-util-navmenu">
               <p>COMMUNITY</p>
-              <Link to='#'>공지사항</Link>
-              <Link to='#'>소통창</Link>
-              <Link to='#'>FAQ</Link>
+              <Link to='/community/notice'>공지사항</Link>
+              <Link to='/community/chat'>소통창</Link>
+              <Link to='/community/faq'>FAQ</Link>
             </div>
             <div className="footer-util-icon">
               <Link to='https://www.instagram.com/'><i class="fa-brands fa-instagram"></i></Link>

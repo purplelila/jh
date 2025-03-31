@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { CafeContext } from "./CafeProvider";
+import { CafeContext } from "../CafeProvider";
 import { useParams, Link } from "react-router-dom";
 
 let CafeDetail = () => {

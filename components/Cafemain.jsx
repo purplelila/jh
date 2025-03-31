@@ -1,5 +1,5 @@
 import React from 'react';
-import './Cafemain.css'; // CSS 파일을 임포트
+
 import { useNavigate } from 'react-router-dom';
 
 
@@ -12,7 +12,7 @@ const Cafemain = () => {
   };
 
   const navigateToComm = () => {
-    navigate('/community'); // CommunityPage로 이동 (예시: /community)
+    navigate('/community/notice'); // CommunityPage로 이동 (예시: /community)
   };
 
   return (

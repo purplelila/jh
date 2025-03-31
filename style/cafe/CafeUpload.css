@@ -112,6 +112,7 @@
     width: 100%;
     box-sizing: border-box;
     background-color: #fff;
+    height: 100%;
   }
   
   .upload-form-filename{
@@ -121,6 +122,7 @@
     border: 1px solid #e0e0e0;
     box-sizing: border-box;
     border-radius: 5px;
+    height: 55px;
   }
   
   .upload-form-img button{

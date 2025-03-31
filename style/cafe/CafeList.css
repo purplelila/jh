@@ -53,15 +53,17 @@
     align-items: center;
   }
   
-  .search-input {
-    width: 200px;
-    padding: 15px;
+  .cafesearch-input {
+    width: 280px;
+    padding: 0 10px;
     border: 1px solid #e0e0e0;
     border-radius: 2px;
     transition: all 0.2s ease-in-out;
+    height: 43px;
+    font-size: 14px;
   }
   
-  .search-input:focus{
+  .cafesearch-input:focus{
     border-color: lightslategray;
     box-shadow: 0 0 5px lightblue;
   }

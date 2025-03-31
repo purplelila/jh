@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { CafeContext } from "./CafeProvider";
+import { CafeContext } from "../CafeProvider";
 import { useNavigate } from "react-router-dom";
 
 let CafeUpload = () => {

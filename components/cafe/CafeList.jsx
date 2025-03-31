@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { CafeContext } from "./CafeProvider";
+import { CafeContext } from "../CafeProvider";
 import { Link, useNavigate } from "react-router-dom";
 
 let CafeList = () => {
@@ -73,7 +73,7 @@ let CafeList = () => {
 
             </div>
             <div className="search-cotainer">
-              <input type="text" placeholder='카페를 입력하세요.' className='search-input' onChange={(e)=> setSearchTerm(e.target.value)} value={searchTerm}/>
+              <input type="text" placeholder='카페를 입력하세요.' className='cafesearch-input' onChange={(e)=> setSearchTerm(e.target.value)} value={searchTerm}/>
               <button className='search-btn' onClick={handleSearch}>검색</button>
             </div>
           </div>

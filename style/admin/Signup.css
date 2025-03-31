@@ -1,0 +1,143 @@
+/* Signup.module.css */
+
+.signup-total-box{
+  background-color: #555;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Noto Sans KR", sans-serif;
+  height: 90vh;
+}
+.signup-container {
+    background-color: #ffffff;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 380px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    margin: 50px;
+  }
+  
+  .signup-h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 25px;
+    font-weight: 600;
+  }
+  
+  .signup-text,
+  .signup-email,
+  .signup-pwd,
+  .signup-pwd-ck,
+  .signup-niname,
+  .signup-address,
+  .signup-adr-p,
+  .zipcode {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  .signup-text:focus,
+  .signup-email:focus,
+  .signup-pwd:focus,
+  .signup-pwd-ck:focus,
+  .signup-niname:focus {
+    border-color: #964b25;
+    outline: none;
+  }
+  
+  .sigh-submit {
+    background-color: #F5DCB7;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sigh-submit:hover {
+    background-color: #FFA128;
+  }
+  .signup-user-type {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .signup-user-type label {
+    display: inline-block;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .address-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .address-container .zipcode,
+  .adr-btn{
+    height: 40px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  .address-container .zipcode {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .adr-btn {
+    background-color: #622a0f;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+    width: 120px;
+    padding: 10px 0;
+  }
+  
+  .adr-btn:hover {
+    background-color: #974f2b;
+  }
+  
+  .address-container .signup-address,
+  .address-container #detailAddress {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+  }
+  
+  .sigh-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+  }
+  
+  .sigh-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #777;
+  }
+  
+  .sigh-footer a {
+    color: #964b25;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .sigh-footer a:hover {
+    text-decoration: underline;
+  }
+  

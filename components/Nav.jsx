@@ -18,8 +18,8 @@ let Nav = () => {
       title : 'STORE',
       subtitle : '좋은 커피와 서비스를 제공하는 카페 정보를 제공합니다'
     }
-  }else if(location.pathname == '/community'){
-    heroImage = 'url(c.jpg)';
+  }else if (location.pathname == '/community/notice' || location.pathname == '/community/chat' || location.pathname == '/community/faq'|| location.pathname == '/community' || location.pathname == '/write' || location.pathname.startsWith ('/community/')){
+    heroImage = 'url(/main1.jpg)';
     heroText = {
       title : 'COMMUNITY',
       subtitle : '정보를 공유하고 서로 의견을 주고받아보세요'
@@ -42,13 +42,13 @@ let Nav = () => {
                     </div>
                     <div className="menu-store">
                       <Link to={'/cafelist'} onClick={handleResetFilter}>STORE</Link>
-                      <Link to={'/community'}>COMMUNITY</Link>
+                      <Link to={'/community/notice'}>COMMUNITY</Link>
                     </div>
                 </div>
                 <div className="menu-right">
                   <div className="menu-login">
                     <Link to={'/login'}>LOGIN</Link>
-                    <Link to={'/register'}>JOIN</Link>
+                    <Link to={'/signup'}>JOIN</Link>
                     <Link to={'/mypage'}>MY PAGE</Link>
                   </div>
                   <div className="social-icons">
