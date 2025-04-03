@@ -1,6 +1,6 @@
 
 /*------------------------------------------------ notice-board -----------------------------------------------------------*/
-.notice-top {
+.community-top {
   display: flex;
   justify-content: space-between;
   margin: 40px 0;
@@ -9,20 +9,20 @@
 
 /*------------------------------------------------ notice-top -----------------------------------------------------------*/
 
-.notice-title h2 {
+.community-title h2 {
   font-size: 40px;
 }
 
 .search-box select {
     width: 100px;
-    height: 40px;
+    height: 50px;
     margin-right: 5px;
     font-size: 16px;
 }
   
 .search-box input {
     width: 350px;
-    height: 40px;
+    height: 50px;
     padding: 0 5px;
     outline: 0;
     font-size: 16px;
@@ -30,13 +30,14 @@
   
 .search-box button {
     width: 60px;
-    height: 40px;
-    background-color: #F5DCB7;
+    height: 50px;
+    background-color: #fab864;
     border: 0;
     margin-left: 5px;
     border-radius: 5px;
     cursor: pointer;
     color: black;
+    font-size: 16px;
 }
 
 .search-box button:hover {
@@ -46,42 +47,42 @@
 
 /*------------------------------------------------ notice-board table -----------------------------------------------------------*/
 
-.notice-board, .community-board, .faq-board {
+.community-board{
     width: 1200px;
     margin: 0 auto;
 }
   
-.notice-board table {
+.community-board table {
     width: 100%;
     border-collapse: collapse;
   }
 
-.notice-board table tr {
+.community-board table tr {
     height: 60px;
     border-top: 1px solid #ccc;
 }
 
-.notice-board table tr th {
+.community-board table tr th {
     /* border: 1px solid #ccc; */
     width: 10%;
     background-color: #f7f7f7;
     font-size: 18px;
 }
 
-.notice-board  table tr th:nth-child(2) {
+.community-board  table tr th:nth-child(2) {
     width: 40%;
 }
 
-.notice-board table tr td {
+.community-board table tr td {
     width: 10%;
 }
 
-.notice-board  table tr td {
+.community-board  table tr td {
     font-size: 18px;
     text-align: center;
 }
 
-.notice-board  table tr td:nth-child(2) {
+.community-board  table tr td:nth-child(2) {
     text-align: left;
     width: 40%;
 }
@@ -93,22 +94,23 @@
   margin: 5px auto;
 }
 
-.add-button {
+.add-btn {
   display: flex;
   justify-content: right;
 }
 
-.add-button button {
-  width: 70px;
-  height: 40px;
-  background-color: #F5DCB7;
+.add-btn button {
+  width: 80px;
+  height: 50px;
+  background-color: #fab864;
   color: black;
   border: 0;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.add-button button:hover {
+.add-btn button:hover {
   background-color: #FFA128;
   color: #eee;
 }
@@ -144,6 +146,9 @@
   color: #2c3e50;
 }
 
-.pagination span.active {
+.pagination button.active {
   font-weight: bold;
+  background-color: #FFA128; /* 원하는 배경 색상 */
+  color: white;  /* 글자 색상 */
+  border-radius: 5px;
 }

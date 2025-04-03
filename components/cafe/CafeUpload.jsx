@@ -39,14 +39,14 @@ let CafeUpload = () => {
     let handleImageChange = (e) => {
       let files = Array.from(e.target.files);
   
-      if (files.length + imgURL.length <=4) {
+      if (files.length + imgURL.length <=3) {
         const newImgURLs = files.map(file=> URL.createObjectURL(file))
         const newImgNames = files.map(file => file.name)
 
         setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
         setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
       }else{
-        alert("4개의 이미지까지 선택가능합니다.")
+        alert("3개의 이미지까지 선택가능합니다.")
       }
     }
 
@@ -55,14 +55,14 @@ let CafeUpload = () => {
       e.preventDefault();
       let files = Array.from(e.dataTransfer.files);
   
-      if (files.length + imgURL.length <=4) {
+      if (files.length + imgURL.length <=3) {
         const newImgURLs = files.map(file=> URL.createObjectURL(file))
         const newImgNames = files.map(file => file.name)
 
         setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
         setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
       }else{
-        alert("4개의 이미지까지 선택가능합니다.")
+        alert("3개의 이미지까지 선택가능합니다.")
       }
     }
   
@@ -113,6 +113,13 @@ let CafeUpload = () => {
   
     return(
       <div className='cafeupload-board'>
+        <div className="breadcrumb-list">
+          <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+          <span className="breadcrumb-list-arrow">&gt;</span>
+          <span className="breadcrumb-list-info">카페정보</span>
+          <span className="breadcrumb-list-arrow">&gt;</span>
+          <span className="breadcrumb-list-info">카페등록</span>
+        </div>
         <h2>카페 등록</h2>
 
         <div className="upload-form-container">
@@ -120,22 +127,22 @@ let CafeUpload = () => {
           <form onSubmit={handleSubmit}>
             <div className="upload-form-content">
               <div className="upload-form-cafe">
-                <label>작성자</label>
+                <label>작성자<span className="upload-required">*</span></label>
                 <input type="text" placeholder='작성자' onChange={(e)=> setName(e.target.value)} value={name}/>
               </div>
             
               <div className="upload-form-cafe">
-                <label>매장명</label>
+                <label>매장명<span className="upload-required">*</span></label>
                 <input type="text" placeholder='매장명을 입력해주세요' onChange={(e)=> setTitle(e.target.value)} value={title}/>
               </div>
 
               <div className="upload-form-cafe">
-                <label>영업일</label>
+                <label>영업일<span className="upload-required">*</span></label>
                 <div className="upload-cafehour">
                   {['월','화','수','목','금','토','일'].map((day,idx) =>(
                     <div key={idx} className="upload-cafehour-item">
                       <p>{day}</p>
-                      <input type="text" placeholder='영업일을 입력해주세요' onChange={handleCafeHoursChange}
+                      <input type="text" placeholder='영업시간을 입력해주세요' onChange={handleCafeHoursChange}
                       value={cafeHours[day]} name={day}/>
                     </div>
                   ))}
@@ -143,12 +150,12 @@ let CafeUpload = () => {
                 </div>
 
               <div className="upload-form-cafe">
-                <label>카페위치</label>
+                <label>카페위치<span className="upload-required">*</span></label>
                 <input type="text" placeholder='카페위치를 입력해주세요'onChange={(e)=> setPlace(e.target.value)} value={place}/>
               </div>
 
               <div className="upload-form-cafe">
-                <label>연락처</label>
+                <label>연락처<span className="upload-required">*</span></label>
                 <input type="text" placeholder='가게연락처를 입력해주세요'onChange={(e)=> setPhone(e.target.value)} value={phone}/>
               </div>
 
@@ -158,21 +165,21 @@ let CafeUpload = () => {
               </div>
 
               <div className="upload-form-cafe">
-                <label>소개글</label>
+                <label>소개글<span className="upload-required">*</span></label>
                 <input type="text" placeholder='내용을 50자 이내로 입력해주세요' onChange={(e)=> setContent(e.target.value)} value={content} maxLength={50} />
               </div>
 
             </div>
 
             <div className="upload-form-img">
-              <label>첨부파일</label>
+              <label>첨부파일<span className="upload-required">*</span></label>
               <div className="upload-form-input">
                 <input type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} id="file-upload" multiple/>
                 {/* 이미지 제목표시 */}
                 <div className="upload-form-filename" onDrop={handleDrop} onDragOver={(e)=> e.preventDefault()}>
                   <input type="text" value={imgName.length > 0 ? imgName.join(","): " 선택된 파일이 없습니다."} disabled placeholder="선택된 파일이 없습니다."/>
                 </div>
-                <p className="upload-form-imgtext">*파일(jpg, jpeg, fif, gif, tif, tiff, png, zip)은 최대 4개까지 선택 가능합니다.</p>
+                <p className="upload-form-imgtext">*파일(jpg, jpeg, fif, gif, tif, tiff, png, zip)은 최대 3개까지 선택 가능합니다.</p>
               </div>
               {/* 이미지 선택 버튼 */}
               <button type="button" onClick={()=> document.getElementById('file-upload').click()}>파일선택</button>

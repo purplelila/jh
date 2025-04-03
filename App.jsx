@@ -5,15 +5,16 @@ import './style/Cafemain.css'
 
 import './style/admin/login.css'
 import './style/admin/Signup.css'
+import './style/admin/mypage.css'
 
 import './style/cafe/CafeList.css'
 import './style/cafe/CafeDetail.css'
 import './style/cafe/CafeUpload.css'
 
 
-import './style/community/NoticePage.css'
-import './style/community/AddBoard.css'
-import './style/community/DetailBoard.css'
+import './style/community/communityPage.css'
+import './style/community/WritePage.css'
+import './style/community/DetailPage.css'
 import './style/community/Tabs.css'
 
 
@@ -24,6 +25,7 @@ import Cafemain from './components/Cafemain'
 
 import Login from './components/admin/login'
 import Signup from './components/admin/Signup'
+import MyPage from './components/admin/mypage'
 
 import CafeProvider from "./components/CafeProvider";
 import CafeList from "./components/cafe/CafeList";
@@ -33,9 +35,8 @@ import CafeDetail from "./components/cafe/CafeDetail";
 import NoticePage from './components/community/NoticePage';
 import ChatPage from './components/community/ChatPage';
 import FaqPage from './components/community/FaqPage';
-import AddBoard from './components/community/AddBoard';
-import DetailBoard from './components/community/DetailBoard';
-
+import WritePage from './components/community/WritePage';
+import DetailPage from './components/community/DetailPage';
 
 
 const Main = () => {
@@ -47,6 +48,8 @@ const Main = () => {
   const showNav3 = location.pathname !== '/signup';
 
   const showfooter = location.pathname !== '/';
+  const showfooter2 = location.pathname !== '/login';
+  const showfooter3 = location.pathname !== '/signup';
   
   return (
     <div className="container">
@@ -61,13 +64,14 @@ const Main = () => {
         <Route path="/community/notice" element={<NoticePage />} />
         <Route path="/community/chat" element={<ChatPage />} />
         <Route path="/community/faq" element={<FaqPage />} />
-        <Route path='/write' element={<AddBoard />} />
-        <Route path="/community/:postId" element={<DetailBoard />} />
+        <Route path="/community/:category/add" element={<WritePage />} />
+        <Route path="/community/:category/:postId" element={<DetailPage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/mypage' element={<MyPage />} />
 
       </Routes>
-      {showfooter && <Footer/>}
+      {showfooter && showfooter2 && showNav3 && <Footer/>}
     </div>
   );
 };

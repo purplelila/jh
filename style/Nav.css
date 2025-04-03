@@ -124,45 +124,12 @@ header {
   
   .hero-content{
     text-align: center;
-    color: #eee;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.8;
   }
   
   .hero-content p:nth-child(1){
-    font-size: 45px;
+    font-size: 70px;
     font-weight: bold;
     /* color: #333; */
   }
-
-  /*------------------------------------------------ second -----------------------------------------------------------*/
-  
-  /* .second{
-    width: 100%;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    top: 600px;
-  }
-  
-  .second-section{
-    width: 1200px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .second-section a{
-    font-size: 18px;
-    margin: 30px;
-  }
-  
-  .second-section a:hover{
-    color: #599468;
-  }
-  
-  .nav-hr{
-    border: 0;
-    border-top : 2px solid #c7c7c7;
-    width: 100%;
-  } */

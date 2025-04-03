@@ -22,12 +22,14 @@ let Nav = () => {
     heroImage = 'url(/main1.jpg)';
     heroText = {
       title : 'COMMUNITY',
-      subtitle : '정보를 공유하고 서로 의견을 주고받아보세요'
+      subtitle : '더벤티는 2014년 3월, 부산에서 첫 선을 보이며 고객님께 합리적인가격에 좋은 커피를 제공하기위해 시작되었습니다.'
     }
   }else{
     heroImage='';
     heroText = {title : '', subtitle : ''}
   }
+
+  const hideHero = location.pathname ==='/mypage';
 
   return(
     <>
@@ -61,6 +63,7 @@ let Nav = () => {
         </nav>
       </header>
 
+      {!hideHero && (
       <div className="hero" style={{backgroundImage:heroImage}}>
         <div className="hero-section">
             <div className="hero-content">
@@ -69,14 +72,7 @@ let Nav = () => {
             </div>
         </div>
       </div>
-
-      {/* <div className="second">
-          <div className="second-section">
-            <Link to={'/cafelist'}>카페등록</Link>
-            <Link to={'/community'}>공지사항</Link>
-          </div>
-      </div> */}
-      {/* <hr className="nav-hr"/> */}
+      )}
     </>      
     )
   }

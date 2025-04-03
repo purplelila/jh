@@ -61,10 +61,10 @@ const Signup = () => {
           <div className="signup-user-type">
             <label>
               <input className='signup-radio-n' type="radio" name="userType" value="일반회원" checked={userType === '일반회원'} onChange={handleUserTypeChange} required />
-              일반회원 </label>
+               일반회원 </label>
             <label>
               <input className='signup-radio-c' type="radio" name="userType" value="카페사장" checked={userType === '카페사장'} onChange={handleUserTypeChange} required />
-              카페사장
+               카페사장
             </label> 
           </div>
           {userType === '카페사장' && (
@@ -85,7 +85,7 @@ const Signup = () => {
           {errorMessage && <div className="sigh-error">{errorMessage}</div>}
         </form>
         <div className="sigh-footer">
-          <a href="/login" id="login-link">로그인</a> |
+          <a href="/login" id="login-link">로그인</a> | 
           <a href="/" id="terms-link">메인으로</a>
         </div>
       </div>

@@ -30,6 +30,13 @@ let CafeDetail = () => {
       <div className="cafedetail-board">
         {/* <h3>{p.title}</h3> */}
         <hr className="cafe-detail-first-hr"/>
+        <div className="breadcrumb-list">
+            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">카페정보</span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">{p.title}</span>
+        </div>
             <div className='cafe-detail'>
                 <div className="cafe-detail-left">
                     {/* 큰 이미지 */}

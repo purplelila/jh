@@ -8,8 +8,6 @@ let CafeList = () => {
     const [numofRows, setNumOfRows] = useState(6)
 
 
-    // const navigate = useNavigate()
-
     // 더보기 보여주는 갯수
     let loadMore = () => {
       setNumOfRows(prevNum => prevNum + 6);
@@ -35,10 +33,6 @@ let CafeList = () => {
       })
     }
 
-    // const handleUploadClick = () => {
-    //   navigate("/cafeupload");
-    // }
-
     // 검색
     const handleSearch = ()=> {
       if(searchTerm){
@@ -63,8 +57,13 @@ let CafeList = () => {
       <>
       <div className="cafe-search">
         <div className="cafelist-top">
+          <div className="breadcrumb-list">
+            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">카페정보</span>
+          </div>
           <h2>
-            <Link to={'/cafelist'} onClick={handleResetFilter}>ALL LISTINGS</Link>
+            <Link to={'/cafelist'} onClick={handleResetFilter}>CAFE LISTINGS</Link>
           </h2>
           <div className="cafe-btn">
             <div className="cafe-upload">

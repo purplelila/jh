@@ -32,26 +32,35 @@
     padding: 10px 10px;
 }
 
-.img-preview {
-    display: flex;
-    justify-content: center;
+.content p {
+    font-size: 18px;
 }
 
-.attached-img img {
-    width: 60%;
-    margin: 15px 0;
+.attached-img {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 15px;
 }
+
+.img-preview {
+    width: 49%;
+  }
+  
+.img-preview img {
+    width: 100%;
+    height: 350px; 
+  }
 
 .attached-files {
     display: flex;
     align-items: center;
-    border-top: 1px solid #b8b4b4 ;
     border-bottom: 1px solid #b8b4b4 ;
 }
 
 .attached-files p {
-    padding: 10px 5px;
-    font-weight: bold;
+    padding: 10px 10px;
 }
 
 .attached-files ul{
@@ -59,9 +68,9 @@
     display: flex;
 }
 
-  .attached-files ul li{
+.attached-files ul li{
     margin-left: 10px;
-  }
+}
   
 /*------------------------------------------------ list -----------------------------------------------------------*/
 
@@ -74,9 +83,10 @@
     width: 90px;
     height: 40px;
     cursor: pointer;
-    background-color: #F5DCB7;
+    background-color: #fab864;
     border: 0;
     border-radius: 5px;
+    font-size: 18px;
 }
 
 
@@ -90,11 +100,12 @@
 .comment-section {
     width: 1200px;
     margin: 10px auto;
+    align-items: center;
 }
 
 .commentlist {
     border-top: 1px solid black ;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 }
 
 .commentlist h4 {
@@ -103,16 +114,26 @@
 
 .commentlist-section span {
     padding: 3px 5px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.commentlist-section p {
+    padding: 3px 10px;
 }
 
 .comments {
-    display: flex;
     align-items: center;
 }
 /*------------------------------------------------ 댓글등록 -----------------------------------------------------------*/
 
-.comment h4, .add-comment h4 {
+.commentlist h4, .add-comment h4 {
     padding: 5px 5px;
+    font-size: 18px;
+}
+
+.add-comment {
+    border-top: 1px solid black ;
 }
 
 .write-section {
@@ -135,7 +156,7 @@
 
 .write-section textarea {
     width: 100%;
-    height: 40px;
+    height: 70px;
     padding: 5px;
     resize: none;
     font-size: 14px;
@@ -143,10 +164,10 @@
   
 .write-section button {
     width: 100%;
-    height: 40px;
-    font-size: 16px;
+    height: 70px;
+    font-size: 26px;
     cursor: pointer;
-    background-color: #F5DCB7;
+    background-color: #fab864;
     border: 0;
     border-radius: 5px;
 }
