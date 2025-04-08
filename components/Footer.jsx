@@ -1,3 +1,6 @@
+import React from 'react';
+
+
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -57,7 +60,7 @@ let Footer = () => {
         <div className="footer-section-main">
           <div className="footer-utils">
             <div className="footer-utils-icon">
-              <img src="/footer.png" alt="footer로고" />
+              <Link to={'/'}><img src="/footer.png" alt="footer로고" /></Link>
             </div>
             <div className="footer-utils-info">
               <div className="footer-contact">
@@ -79,12 +82,12 @@ let Footer = () => {
               <p>COMMUNITY</p>
               <Link to='/community/notice'>공지사항</Link>
               <Link to='/community/chat'>소통창</Link>
-              <Link to='/community/faq'>FAQ</Link>
+              <Link to='/community/faq'>자주하는 질문</Link>
             </div>
             <div className="footer-util-icon">
-              <Link to='https://www.instagram.com/'><i class="fa-brands fa-instagram"></i></Link>
-              <Link to='https://www.facebook.com/'><i class="fa-brands fa-square-facebook"></i></Link>
-              <Link to='https://x.com/'><i class="fa-brands fa-square-x-twitter"></i></Link>
+              <a href='https://www.instagram.com/' target="_blank"><i class="fa-brands fa-instagram"></i></a>
+              <a href='https://www.facebook.com/' target="_blank"><i class="fa-brands fa-square-facebook"></i></a>
+              <a href='https://x.com/' target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a>
             </div>
           </div>
         </div>

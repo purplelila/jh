@@ -58,7 +58,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #fab864;
+  background-color: #FFA128;
   color: #333;
   font-size: 17px;
   display: flex;
@@ -100,7 +100,7 @@
   margin-left: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #fab864;
+  background-color: #FFA128;
   color: #333;
   font-size: 17px;
 }
@@ -164,6 +164,7 @@
   line-height: 1.7;
   margin-top: 15px;
   color: rgba(0, 0, 0,0.6);
+  text-align: justify;
 }
 
 .cafe-item-detail p{
@@ -182,7 +183,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #fab864;
+  background-color: #FFA128;
   color: #333;
   font-size: 17px;
 }
@@ -201,7 +202,7 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: #fab864;
+  background-color: #FFA128;
   color: #333;
   border-radius: 50%;
 }

@@ -1,3 +1,6 @@
+import React from 'react';  // React import 추가
+
+
 import { createContext, useState, useEffect } from "react";
 
 export let CafeContext = createContext()
@@ -24,6 +27,7 @@ let CafeProvider = ({children}) => {
     let savedCafe = JSON.parse(localStorage.getItem("cafes"))
     if(savedCafe){
       setCafes(savedCafe)  
+      setFilteredData(savedCafe)
     }
     
   }, [])
@@ -45,6 +49,7 @@ let CafeProvider = ({children}) => {
   function deleteCafe(id){
     let filteredCafes = cafes.filter((p)=> p.id !== id)
     setCafes(filteredCafes)
+    setFilteredData(filteredCafes)
   }
 
 

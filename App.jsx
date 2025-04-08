@@ -1,3 +1,6 @@
+import React from 'react';  // React를 import 해주세요
+import { useState } from 'react';
+
 import './App.css'
 import './style/Nav.css'
 import './style/Footer.css'

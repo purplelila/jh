@@ -2,10 +2,13 @@ import { useState, useContext } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate } from "react-router-dom";
 
+import axios from "axios";
+import React from "react";
+
 let CafeUpload = () => {
     let {addCafe} = useContext(CafeContext)
   
-    const [imgURL, setImgURL] = useState([]); // 이미지 URL을 저장
+    const [imgURL, setImgURL] = useState([]);   // 이미지 URL을 저장
     const [imgName, setImgName] = useState([]); // 이미지 파일명을 저장
     const [name, setName] = useState("")
     const [title, setTitle] = useState("")
@@ -66,7 +69,7 @@ let CafeUpload = () => {
       }
     }
   
-    function handleSubmit(e){
+    const handleSubmit = async (e) => {
       e.preventDefault()
 
       if(!name){
@@ -108,6 +111,37 @@ let CafeUpload = () => {
       addCafe(imgURL, imgName, cafeHours, title, place, content, phone, sns)
         
       navigate("/cafelist")
+
+      
+      const cafeData = {
+        name,
+        title,
+        place,
+        content,
+        sns,
+        phone,
+        cafeHours,
+        imgURLs: imgURL, // 이미지 URL 배열
+        imgNames: imgName // 이미지 파일명 배열
+      };
+
+      try {
+        const response = await axios.post('http://localhost:8080/api/addCafe', cafeData, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        alert(response.data); // 서버로부터의 응답 메시지 출력
+        navigate("/cafelist");
+      }catch (error) {
+      console.error("Error details:", error.response || error.message || error);
+    alert("카페 등록에 실패했습니다.");
+  }
+
+
+
+
       
     }
   

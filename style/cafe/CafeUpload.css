@@ -141,7 +141,7 @@
     transition: background-color 0.3s ease;
     margin-bottom: 17px;
     margin-right: 7px;
-    background-color: #fab864;
+    background-color: #FFA128;
     color: #333;
     font-size: 17px;
   }
@@ -169,7 +169,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    background-color: #fab864;
+    background-color: #FFA128;
     color: #333;
     font-size: 17px;
   }

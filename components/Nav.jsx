@@ -1,3 +1,6 @@
+import React from 'react';
+
+
 import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { CafeContext } from "./CafeProvider";
@@ -54,9 +57,9 @@ let Nav = () => {
                     <Link to={'/mypage'}>MY PAGE</Link>
                   </div>
                   <div className="social-icons">
-                    <Link to='https://www.instagram.com/'><i class="fa-brands fa-instagram"></i></Link>
-                    <Link to='https://www.facebook.com/'><i class="fa-brands fa-square-facebook"></i></Link>
-                    <Link to='https://x.com/'><i class="fa-brands fa-square-x-twitter"></i></Link>
+                    <a href='https://www.instagram.com/' target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href='https://www.facebook.com/' target="_blank"><i class="fa-brands fa-square-facebook"></i></a>
+                    <a href='https://x.com/' target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a>
                   </div>
                 </div>
             </div>

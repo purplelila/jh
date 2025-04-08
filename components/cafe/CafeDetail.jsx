@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useParams, Link } from "react-router-dom";
+import CafeKakaoMap from "./CafeKaKaoMap";
 
 let CafeDetail = () => {
     const[mainImage, setMainImage] = useState(null)
@@ -74,6 +75,11 @@ let CafeDetail = () => {
                     <div className="cafe-detail-item">
                         <p>카페위치</p>
                         <span>{p.place}</span>
+                    </div>
+                    <hr className="cafe-detail-hr"/>
+                    <div className="cafe-detail-item">
+                        <p>지도</p>
+                        <CafeKakaoMap address={p.place}/>
                     </div>
                     <hr className="cafe-detail-hr"/>
                     <div className="cafe-detail-item">

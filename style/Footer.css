@@ -13,7 +13,7 @@ footer{
   margin: 0 auto;
   display: flex;
   gap: 20px;
-  padding: 20px;
+  padding: 25px 10px;                               /* 이용약관 */
 }
 
 .footer-section-sub p{
@@ -38,12 +38,12 @@ footer{
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 10px 0;
 }
 
 .footer-utils{
   width: 50%;
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 
 .footer-utils-icon{

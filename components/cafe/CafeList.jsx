@@ -1,3 +1,6 @@
+import React from 'react';
+
+
 import { useContext, useState, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
 import { Link, useNavigate } from "react-router-dom";
