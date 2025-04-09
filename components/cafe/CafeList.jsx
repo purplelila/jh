@@ -1,14 +1,27 @@
 import React from 'react';
-
+import axios from "axios";
 
 import { useContext, useState, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
 import { Link, useNavigate } from "react-router-dom";
 
 let CafeList = () => {
-    let { cafes, searchTerm, setSearchTerm, filteredData, setFilteredData } = useContext(CafeContext);
+    let { cafes, setCafes, searchTerm, setSearchTerm, filteredData, setFilteredData } = useContext(CafeContext);
     const [scrollTop, setScrollTop] = useState(false)
     const [numofRows, setNumOfRows] = useState(6)
+
+    // 카페 DB저장된거 보여지기
+    useEffect(()=> {
+      axios.get("http://localhost:8080/api/cafes")
+      .then(res => {
+        console.log("카페 리스트 확인:", res.data);
+        setCafes(res.data);
+        setFilteredData(res.data);
+      })
+      .catch(err => {
+        console.error("카페 데이터 불러오기 실패:", err);
+      });
+  }, []);
 
 
     // 더보기 보여주는 갯수
@@ -96,7 +109,7 @@ let CafeList = () => {
                     <div className="cafe-item-img">
                       {/* 이미지 표시 */}
                       <Link to={`/cafedetail/${p.id}`}>
-                        <p><img src={p.imgURL[0]} alt={p.imgName[0]}/></p>
+                        <p><img src={p.imgURLs && p.imgURLs.length > 0 ? p.imgURLs[0] : "/default-image.jpg"} /></p>
                       </Link>
                     </div>
                     <div className="cafe-item-text">

@@ -113,6 +113,33 @@
     margin-right: 20px;
 }
 
+.cafe-detail-item-time{
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.cafe-detail-day {
+  max-width: 3rem;
+}
+
+.cafe-detail-hours {
+  white-space: pre-wrap;     /* 줄바꿈 */
+  flex-grow: 1;      /* 남은 공간 전부 차지 */
+}
+
+.cafe-detail-item-sns {
+  width: 70%;
+  display: flex;
+  justify-content: left;
+}
+
+.cafe-detail-item-sns:hover{
+  text-decoration: underline;
+  color: blue;
+}
+
+
 /*--------------------------------------------------------------------------------*/
 .cafedetail-btn{
   width: 1200px;
@@ -128,7 +155,7 @@
   transition: background-color 0.3s ease;
   margin-top: 50px;
   background-color: #FFA128;
-  color: #333;
+  color: #eee;
   font-size: 17px;
 }
 

@@ -16,7 +16,7 @@ let Nav = () => {
   let heroText = {title:'', subtitle:''}
 
   if (location.pathname == '/cafelist' || location.pathname == '/cafeupload' || location.pathname.startsWith('/cafedetail/')){
-    heroImage = 'url(c6.jpg)';
+    heroImage = 'url(/c6.jpg)';
     heroText = {
       title : 'STORE',
       subtitle : '좋은 커피와 서비스를 제공하는 카페 정보를 제공합니다'

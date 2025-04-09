@@ -1,63 +1,88 @@
-import { useEffect } from "react"
+// // CafeKakaoMap.jsx
+// import React, { useEffect } from 'react';
 
-export default function CafeKakaoMap({address}) {
+// const CafeKakaoMap = ({ address }) => {
+//   useEffect(() => {
+//     if (!window.kakao || !address) return;
 
-    useEffect(()=> {
-        console.log("CafeKakaoMap address:", address);  // 주소 확인
-        const mapScript = document.createElement('script');
-        mapScript.async = true;
-        // mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=50cbdf5940384b2ece2ac87d38ed7296`;
-        document.head.appendChild(mapScript);
+//     const container = document.getElementById('map');
+//     const options = {
+//       center: new window.kakao.maps.LatLng(33.450701, 126.570667), // 기본 좌표
+//       level: 3,
+//     };
 
-        const onLoadKakaoMap = () => {
-            window.kakao.maps.load(() => {
-            const mapContainer = document.getElementById('map');
-            const mapOption = {
-                center: new window.kakao.maps.LatLng(0, 0), // 지도의 중심좌표 (경도 & 위도)
-                level: 3, // 지도의 확대 레벨
-            };
-            const map = new window.kakao.maps.Map(mapContainer, mapOption);
-    
-            // 주소로 좌표 검색
-            const geocoder = new window.kakao.maps.services.Geocoder();
-    
-            geocoder.addressSearch(address, function (result, status) {
-                if (status === window.kakao.maps.services.Status.OK) {
-                    const latitude = result[0].y        // 위도
-                    const longitude = result[0].x        // 경도
-                    const coords = new window.kakao.maps.LatLng(latitude, longitude );
-                    // 해당 좌표로 지도 이동
-                    map.setCenter(coords);
-                    
-                    // 마커 표시
-                    const marker = new window.kakao.maps.Marker({
-                        map: map,
-                        position: coords,
-                    });
-                    marker.setMap(map);
-                }else{
-                    // 주소 변환 실패 시 지정한 위치로 지도 이동
-                    const defaultCoords = new window.kakao.maps.LatLng(35.170685, 129.069799); // 양정인력개발센터 좌표
-                    map.setCenter(defaultCoords);
+//     const map = new window.kakao.maps.Map(container, options);
 
-                    // 마커 표시
-                    const marker = new window.kakao.maps.Marker({
-                        map: map,
-                        position: defaultCoords,
-                    });
-                    marker.setMap(map);
-                }
-            });
-            });
-        };
-    
-        mapScript.onload = onLoadKakaoMap;
-    
-        }, [address]);
-  
-    return( 
-        <>
-        <div id="map" style={{ width: "100%", height: "200px" }}></div>
-        </>
-    )
-  }
+//     // 주소로 좌표를 검색
+//     const geocoder = new window.kakao.maps.services.Geocoder();
+//     geocoder.addressSearch(address, function (result, status) {
+//       if (status === window.kakao.maps.services.Status.OK) {
+//         const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+
+//         // 마커 찍기
+//         const marker = new window.kakao.maps.Marker({
+//           map: map,
+//           position: coords,
+//         });
+
+//         // 중심좌표 옮기기
+//         map.setCenter(coords);
+//       }
+//     });
+//   }, [address]);
+
+//   return (
+//     <div
+//       id="map"
+//       style={{ width: '100%', height: '300px', borderRadius: '12px', marginTop: '10px' }}
+//     ></div>
+//   );
+// };
+
+// export default CafeKakaoMap;
+import React, { useEffect } from 'react';
+
+const CafeKakaoMap = ({ address }) => {
+  useEffect(() => {
+    if (!window.kakao || !address) return;
+
+    const container = document.getElementById('map');
+    const options = {
+      center: new window.kakao.maps.LatLng(37.5665, 126.9780), // 서울 기본 좌표
+      level: 3,
+    };
+
+    const map = new window.kakao.maps.Map(container, options);
+
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.addressSearch(address, (result, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+
+        new window.kakao.maps.Marker({
+          map: map,
+          position: coords,
+        });
+
+        map.setCenter(coords);
+      } else {
+        console.log("주소 검색 실패 🥲", address);
+      }
+    });
+  }, [address]);
+
+  return (
+    <div
+      id="map"
+      style={{
+        width: '100%',
+        height: '300px',
+        border: '1px solid #ccc',
+        borderRadius: '12px',
+        marginTop: '10px',
+      }}
+    ></div>
+  );
+};
+
+export default CafeKakaoMap;

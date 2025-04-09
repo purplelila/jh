@@ -10,6 +10,7 @@ let CafeUpload = () => {
   
     const [imgURL, setImgURL] = useState([]);   // 이미지 URL을 저장
     const [imgName, setImgName] = useState([]); // 이미지 파일명을 저장
+    const [images, setImagesFiles] = useState([]); // ✅ 이미지 파일 객체들 저장
     const [name, setName] = useState("")
     const [title, setTitle] = useState("")
     const [place, setPlace] = useState("")
@@ -46,6 +47,7 @@ let CafeUpload = () => {
         const newImgURLs = files.map(file=> URL.createObjectURL(file))
         const newImgNames = files.map(file => file.name)
 
+        setImagesFiles(prev => [...prev, ...files]); // ✅ 파일 객체 저장
         setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
         setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
       }else{
@@ -59,9 +61,10 @@ let CafeUpload = () => {
       let files = Array.from(e.dataTransfer.files);
   
       if (files.length + imgURL.length <=3) {
-        const newImgURLs = files.map(file=> URL.createObjectURL(file))
+        const newImgURLs = files.map(file=> URL.createObjectURL(file))  //blob URL 만들어서 미리보기 
         const newImgNames = files.map(file => file.name)
 
+        setImagesFiles(prev => [...prev, ...files]); // ✅ 파일 객체 저장
         setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
         setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
       }else{
@@ -107,12 +110,16 @@ let CafeUpload = () => {
         return;
       }
       
-      // 이미지를 addcafe에 전달
-      addCafe(imgURL, imgName, cafeHours, title, place, content, phone, sns)
-        
-      navigate("/cafelist")
 
-      
+      // FormData 방식
+      // 이미지 파일을 프론트에서 서버로 업로드 → 서버에 저장 → URL을 클라이언트에 전달 → DB에 저장
+      const formData = new FormData();
+
+      // 이미지 파일 첨부
+      images.forEach(file => {
+        formData.append("files", file);
+      });
+
       const cafeData = {
         name,
         title,
@@ -121,23 +128,31 @@ let CafeUpload = () => {
         sns,
         phone,
         cafeHours,
-        imgURLs: imgURL, // 이미지 URL 배열
-        imgNames: imgName // 이미지 파일명 배열
+        // imgURLs: imgURL,     // createObjectURL()로 만든 URL들
+        // imgNames: imgName,
       };
 
+      // JSON 문자열로 변환해 FormData에 추가
+      formData.append("cafeData", JSON.stringify(cafeData));
+
       try {
-        const response = await axios.post('http://localhost:8080/api/addCafe', cafeData, {
+        const response = await axios.post("http://localhost:8080/api/addCafe", formData, {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "multipart/form-data"
           }
         });
-        
-        alert(response.data); // 서버로부터의 응답 메시지 출력
+
+        const { imageUrls } = response.data; // ✅ 이제 정상적으로 응답에서 꺼낼 수 있어
+        setImgURL(imageUrls); // blob → 정적 이미지 URL로 교체
+        addCafe(imageUrls, imgName, cafeHours, title, place, content, phone, sns)   // 이미지를 addcafe에 전달
+
+        alert("카페가 등록되었습니다!");
         navigate("/cafelist");
-      }catch (error) {
-      console.error("Error details:", error.response || error.message || error);
-    alert("카페 등록에 실패했습니다.");
-  }
+      } catch (error) {
+        console.error("등록 실패", error);
+        alert("카페 등록에 실패했습니다.");
+      }
+
 
 
 
@@ -176,8 +191,8 @@ let CafeUpload = () => {
                   {['월','화','수','목','금','토','일'].map((day,idx) =>(
                     <div key={idx} className="upload-cafehour-item">
                       <p>{day}</p>
-                      <input type="text" placeholder='영업시간을 입력해주세요' onChange={handleCafeHoursChange}
-                      value={cafeHours[day]} name={day}/>
+                      <textarea type="text" placeholder='영업시간을 입력해주세요' onChange={handleCafeHoursChange}
+                      value={cafeHours[day]} name={day} className="upload-cafehour-textarea"/>
                     </div>
                   ))}
                 </div>

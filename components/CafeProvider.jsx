@@ -22,7 +22,7 @@ let CafeProvider = ({children}) => {
     localStorage.setItem("cafes", JSON.stringify(cafes))
   }, [cafes])
 
-  // 카페 상태 가져오는
+  // 카페 상태 가져오는 (페이지가 처음 로드될 때 localStorage에 저장된 데이터를 불러오기 위한 용도)
   useEffect(()=> {
     let savedCafe = JSON.parse(localStorage.getItem("cafes"))
     if(savedCafe){
@@ -113,7 +113,7 @@ const [nextId, setNextId] = useState(1);
 
 
   return(
-    <CafeContext.Provider value={{cafes, addCafe, deleteCafe, setCafes, searchTerm, filteredData, setSearchTerm, setFilteredData, handleResetFilter, posts, addBoard, deletePost, addComment}}>
+    <CafeContext.Provider value={{cafes, setCafes, addCafe, deleteCafe, setCafes, searchTerm, filteredData, setSearchTerm, setFilteredData, handleResetFilter, posts, addBoard, deletePost, addComment}}>
       {children}
     </CafeContext.Provider>
   )
