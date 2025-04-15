@@ -15,7 +15,7 @@ let Nav = () => {
   let heroImage;
   let heroText = {title:'', subtitle:''}
 
-  if (location.pathname == '/cafelist' || location.pathname == '/cafeupload' || location.pathname.startsWith('/cafedetail/')){
+  if (location.pathname == '/cafelist' || location.pathname == '/cafeupload' || location.pathname.startsWith('/cafedetail/') || location.pathname.startsWith('/cafeedit/')){
     heroImage = 'url(/c6.jpg)';
     heroText = {
       title : 'STORE',

@@ -63,6 +63,7 @@ const Main = () => {
         <Route path='/' element={<Cafemain />} />
         <Route path='/cafelist' element={<CafeList />} />
         <Route path='/cafeupload' element={<CafeUpload />} />
+        <Route path="/cafeedit/:id" element={<CafeUpload />} />
         <Route path='/cafedetail/:id' element={<CafeDetail />} />
         <Route path="/community/notice" element={<NoticePage />} />
         <Route path="/community/chat" element={<ChatPage />} />
@@ -74,7 +75,7 @@ const Main = () => {
         <Route path='/mypage' element={<MyPage />} />
 
       </Routes>
-      {showfooter && showfooter2 && showNav3 && <Footer/>}
+      {showfooter && showfooter2 && showfooter3 && <Footer/>}
     </div>
   );
 };

@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+    const navigate = useNavigate();
 
     const returnToCafe = () => {
         window.location.href = '#'; // 원하는 링크로 변경
@@ -21,7 +25,7 @@ const LoginPage = () => {
         } else {
             setErrorMessage("");
             alert("로그인 성공하셨습니다.");
-            // 로그인 후 처리
+            navigate("/");  // 로그인 후 처리
         }
     };
 

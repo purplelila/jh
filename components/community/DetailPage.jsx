@@ -3,6 +3,9 @@ import { useContext, useState, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
 import Tabs from "./Tabs";
 
+import React from 'react';
+import axios from 'axios';
+
 function DetailPage() {
     const { posts, addComment } = useContext(CafeContext);  
     const { category, postId } = useParams();
@@ -91,7 +94,7 @@ function DetailPage() {
             </div>
 
             <div className="content">
-                <p>{post.content}</p>
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </div>
 
             <div className="list-btn">

@@ -1,74 +1,140 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Tabs from "./Tabs";
+import axios from "axios";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const WritePage = () => {
+const WritePage2 = () => {
   const { addBoard } = useContext(CafeContext);
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [files, setFiles] = useState([]);
+  const [content, setContent] = useState(""); // CKEditor에서 작성한 내용을 저장
+  const [files, setFiles] = useState([]); // 파일 상태 추가
   const navigate = useNavigate();
   const location = useLocation();
   const { category } = useParams();
+
+  // ✅ 커스텀 업로드 어댑터
+  function CustomUploadAdapterPlugin(editor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return new CustomUploadAdapter(loader);
+    };
+  }
+
+  class CustomUploadAdapter {
+    constructor(loader) {
+      this.loader = loader;
+    }
+
+    upload() {
+      return this.loader.file.then(file => {
+        const formData = new FormData();
+        formData.append('upload', file);
+
+        return fetch('http://localhost:8080/api/board/image-upload', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(result => {
+            // 서버에서 { url: '/uploads/파일명.jpg' } 이런 식으로 반환됨
+            return {
+              default: `http://localhost:8080${result.url}`
+            };
+          })
+          .catch(err => {
+            console.error("이미지 업로드 실패:", err);
+            return Promise.reject(err);
+          });
+      });
+    }
+
+    abort() {
+      // 업로드 취소 시 처리할 내용 (생략 가능)
+    }
+  }
+
+  // 폼 제출
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("category", category);
+
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    try {
+      await axios.post(`/api/board/${category}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert('게시글 등록 성공!');
+      navigate(`/community/${category}`);
+    } catch (error) {
+      console.error("게시물 등록 실패:", error);
+    }
+  };
 
   const handleFileChange = (e) => {
     setFiles([...e.target.files]);
   };
 
-  // 폼 제출 시 호출되는 함수 (비동기 처리)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // 게시물 추가 함수 호출
-    try {
-      await addBoard(title, content, files, category); // 비동기 호출
-
-      // 게시물 추가 후 공지사항 목록 페이지로 이동
-      navigate(`/community/${category}`); 
-    } catch (error) {
-      console.error("게시물 등록 중 오류 발생:", error);
-      // 에러가 발생한 경우 추가 처리 필요 (예: 오류 메시지 표시)
-    }
-  };
-
-  // 취소 버튼 핸들러
   const handleCancel = () => {
-    navigate(`/community/${category}`); // 현재 카테고리로 돌아가기
+    navigate(`/${category}`);
   };
 
   return (
     <>
-      <Tabs activeTab={location.pathname} /> {/* URL 기반으로 activeTab 설정 */}
+      <Tabs activeTab={location.pathname} />
       <div className="add-board-wrapper">
         <h1 className="form-title">게시물 등록</h1>
-        <form className="form-container" onSubmit={handleSubmit}> {/* onSubmit 사용 */}
+        <form className="form-container" onSubmit={handleSubmit}>
           <div className="file-title">
             <label htmlFor="title">제목</label>
-            <input type="text"id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력하세요" required/>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="제목을 입력하세요"
+              required
+            />
           </div>
+
           <div className="file-content">
             <label htmlFor="content">내용</label>
-            <textarea id="content" value={content} onChange={(e) => setContent(e.target.value)} placeholder="내용을 입력하세요" required/>
+            <CKEditor
+              editor={ClassicEditor}
+              data={content}
+              config={{
+                extraPlugins: [CustomUploadAdapterPlugin],
+              }}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                setContent(data);
+              }}
+            />
           </div>
+
           <div className="file-upload">
-            <label className="upload-title">파일첨부</label>
-            <div className="file-row">
-              <textarea className="file-name-input" value={files.map((file) => file.name).sort().join()} readOnly placeholder="선택된 파일 목록" rows={files.length || 2}/>
-              <label className="upload-button">
-                업로드
-                <input type="file" onChange={handleFileChange} multiple hidden />
-              </label>
-            </div>
+            <label htmlFor="file">첨부 파일</label>
+            <input
+              type="file"
+              id="file"
+              multiple
+              onChange={handleFileChange}
+            />
           </div>
 
           <div className="button-group">
-            <button type="submit" className="submit-btn">
-              등록
-            </button>
-            <button type="button" className="cancel-btn" onClick={handleCancel}>
-              취소
-            </button>
+            <button type="submit" className="submit-btn">등록</button>
+            <button type="button" className="cancel-btn" onClick={handleCancel}>취소</button>
           </div>
         </form>
       </div>
@@ -76,4 +142,4 @@ const WritePage = () => {
   );
 };
 
-export default WritePage;
+export default WritePage2;

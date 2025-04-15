@@ -113,7 +113,7 @@ const [nextId, setNextId] = useState(1);
 
 
   return(
-    <CafeContext.Provider value={{cafes, setCafes, addCafe, deleteCafe, setCafes, searchTerm, filteredData, setSearchTerm, setFilteredData, handleResetFilter, posts, addBoard, deletePost, addComment}}>
+    <CafeContext.Provider value={{cafes, setCafes, addCafe, deleteCafe, setCafes, searchTerm, filteredData, setSearchTerm, setFilteredData, handleResetFilter, posts, setPosts, addBoard, deletePost, addComment}}>
       {children}
     </CafeContext.Provider>
   )

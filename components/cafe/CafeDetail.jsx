@@ -45,6 +45,7 @@ let CafeDetail = () => {
         setMainImage(imgURL)
     }
 
+    // 삭제
     const handleDelete = async (id) => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
       
@@ -116,8 +117,7 @@ let CafeDetail = () => {
                     <hr className="cafe-detail-hr"/>
                     <div className="cafe-detail-item">
                         <p>지도</p>
-                        {/* <CafeKakaoMap address={selectedCafe.place}/> */}
-                        <CafeKakaoMap address="부산 연제구 중앙천로37번길 32" />
+                        <CafeKakaoMap address={selectedCafe.place}/>
                     </div>
                     <hr className="cafe-detail-hr"/>
                     <div className="cafe-detail-item">
@@ -144,6 +144,11 @@ let CafeDetail = () => {
             <button onClick={() => handleDelete(selectedCafe.id)}>
                 삭제
             </button>
+            </div>
+            <div className="cafedetail-btn">
+                <Link to={`/cafeedit/${selectedCafe.id}`}>
+                    <button>수정</button>
+                </Link>
             </div>
       </div>
       </>

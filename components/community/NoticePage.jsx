@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 import { useState, useEffect, useContext } from "react";
 import { CafeContext } from "../CafeProvider";
@@ -6,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import Tabs from "./Tabs";
 
 const NoticePage = () => {
-  const { posts } = useContext(CafeContext);
+  // const { posts } = useContext(CafeContext);
+  const { posts, setPosts } = useContext(CafeContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchCategory, setSearchCategory] = useState('title');
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,6 +24,20 @@ const NoticePage = () => {
       ? post[searchCategory].toLowerCase().includes(searchTerm.toLowerCase())
       : false // author가 없을 경우 검색 제외
   );
+
+  // ✅ 게시글 목록 불러오기
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get('/api/board');
+      setPosts(res.data); // 예: [{ id: 1, title: '', content: '', category: 'notice' }, ...]
+    } catch (err) {
+      console.error('게시글 목록 불러오기 실패', err);
+    }
+  };
 
 
   //게시물 정렬

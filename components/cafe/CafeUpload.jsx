@@ -1,16 +1,17 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import React from "react";
+import { useParams } from "react-router-dom";
 
 let CafeUpload = () => {
     let {addCafe} = useContext(CafeContext)
   
     const [imgURL, setImgURL] = useState([]);   // 이미지 URL을 저장
     const [imgName, setImgName] = useState([]); // 이미지 파일명을 저장
-    const [images, setImagesFiles] = useState([]); // ✅ 이미지 파일 객체들 저장
+    const [images, setImagesFiles] = useState([]); // 이미지 파일 객체들 저장
     const [name, setName] = useState("")
     const [title, setTitle] = useState("")
     const [place, setPlace] = useState("")
@@ -43,16 +44,17 @@ let CafeUpload = () => {
     let handleImageChange = (e) => {
       let files = Array.from(e.target.files);
   
-      if (files.length + imgURL.length <=3) {
+      if (files.length > 3) {
+        alert("3개의 이미지까지 선택가능합니다.");
+        return;
+      }
         const newImgURLs = files.map(file=> URL.createObjectURL(file))
         const newImgNames = files.map(file => file.name)
 
-        setImagesFiles(prev => [...prev, ...files]); // ✅ 파일 객체 저장
-        setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
-        setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
-      }else{
-        alert("3개의 이미지까지 선택가능합니다.")
-      }
+        // 기존 이미지 제거하고 새로 선택한 이미지 
+        setImagesFiles(files); // 파일 객체 저장
+        setImgURL(newImgURLs); // 배열로 이미지 URL 저장
+        setImgName(newImgNames); // 배열로 파일명 저장
     }
 
     // img 업로드 (파일 드래그 앤 드롭)
@@ -60,17 +62,44 @@ let CafeUpload = () => {
       e.preventDefault();
       let files = Array.from(e.dataTransfer.files);
   
-      if (files.length + imgURL.length <=3) {
+      if (files.length > 3) {
+        alert("3개의 이미지까지 선택가능합니다.");
+        return;
+      }
         const newImgURLs = files.map(file=> URL.createObjectURL(file))  //blob URL 만들어서 미리보기 
         const newImgNames = files.map(file => file.name)
 
-        setImagesFiles(prev => [...prev, ...files]); // ✅ 파일 객체 저장
-        setImgURL(prevURLs => [...prevURLs, ...newImgURLs]); // 배열로 이미지 URL 저장
-        setImgName(prevNames => [...prevNames, ...newImgNames]); // 배열로 파일명 저장
-      }else{
-        alert("3개의 이미지까지 선택가능합니다.")
-      }
+        // 기존 이미지 제거하고 새로 선택한 이미지 
+        setImagesFiles(files); // 파일 객체 저장
+        setImgURL(newImgURLs); // 배열로 이미지 URL 저장
+        setImgName(newImgNames); // 배열로 파일명 저장
     }
+
+    // 카페 수정전 데이터 불러오는거
+    const { id } = useParams(); // /edit/:id 이런 URL에서 가져오기
+    const isEdit = Boolean(id); // id가 있으면 수정모드
+    useEffect(() => {
+      if (isEdit) {
+        axios.get(`http://localhost:8080/api/cafe/${id}`)
+          .then((res) => {
+            const data = res.data;
+            setName(data.name);
+            setTitle(data.title);
+            setPlace(data.place);
+            setContent(data.content);
+            setPhone(data.phone);
+            setSns(data.sns);
+            setCafeHours(data.cafeHours);
+    
+            // 이미지 URL은 서버 이미지 URL로
+            setImgURL(data.imgURLs || []);
+            setImgName(data.imgNames || []);
+          })
+          .catch((err) => {
+            console.error("카페 정보 불러오기 실패", err);
+          });
+      }
+    }, [id]);
   
     const handleSubmit = async (e) => {
       e.preventDefault()
@@ -109,6 +138,8 @@ let CafeUpload = () => {
         alert("이미지를 선택해주세요.");
         return;
       }
+
+
       
 
       // FormData 방식
@@ -127,32 +158,42 @@ let CafeUpload = () => {
         content,
         sns,
         phone,
-        cafeHours,
-        // imgURLs: imgURL,     // createObjectURL()로 만든 URL들
-        // imgNames: imgName,
+        cafeHours
       };
 
       // JSON 문자열로 변환해 FormData에 추가
       formData.append("cafeData", JSON.stringify(cafeData));
 
       try {
-        const response = await axios.post("http://localhost:8080/api/addCafe", formData, {
+        const url = isEdit
+          ? `http://localhost:8080/api/editCafe/${id}`
+          : "http://localhost:8080/api/addCafe";
+      
+        const method = isEdit ? "put" : "post";
+      
+        const response = await axios({
+          method,
+          url,
+          data: formData,
           headers: {
             "Content-Type": "multipart/form-data"
           }
         });
-
-        const { imageUrls } = response.data; // ✅ 이제 정상적으로 응답에서 꺼낼 수 있어
-        setImgURL(imageUrls); // blob → 정적 이미지 URL로 교체
-        addCafe(imageUrls, imgName, cafeHours, title, place, content, phone, sns)   // 이미지를 addcafe에 전달
-
-        alert("카페가 등록되었습니다!");
+      
+        const { imageUrls } = response.data;
+        setImgURL(imageUrls); // 서버에서 응답 온 정적 URL로 교체
+      
+        if (!isEdit) {
+          addCafe(imageUrls, imgName, cafeHours, title, place, content, phone, sns);
+        }
+      
+        alert(isEdit ? "카페가 수정되었습니다." : "카페가 등록되었습니다.");
         navigate("/cafelist");
       } catch (error) {
-        console.error("등록 실패", error);
-        alert("카페 등록에 실패했습니다.");
+        console.error("카페 등록/수정 실패", error);
+        alert("카페 등록/수정에 실패했습니다.");
       }
-
+      
 
 
 
@@ -236,7 +277,7 @@ let CafeUpload = () => {
 
 
             <div className="upload-form-btn">
-              <button type='submit'>게시글 등록</button>
+              <button type='submit'>{isEdit ? "게시글 수정" : "게시글 등록"}</button>
             </div>
           </form>
         </div>
