@@ -190,7 +190,7 @@ let CafeUpload = () => {
         alert(isEdit ? "카페가 수정되었습니다." : "카페가 등록되었습니다.");
         navigate("/cafelist");
       } catch (error) {
-        console.error("카페 등록/수정 실패", error);
+        console.error("카페 등록/수정 실패", error.response || error.message);
         alert("카페 등록/수정에 실패했습니다.");
       }
       

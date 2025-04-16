@@ -32,13 +32,6 @@
     margin-top: 20px;
 
 }
-.login-logo2{
-    width: 350px; /* 원하는 너비로 설정 */
-    height: auto; /* 비율에 맞게 높이를 자동으로 설정 */
-    margin-bottom: 25px; /*이미지와 텍스트 간 간격 조정*/
-    margin-top: 20px;
-
-}
 .login-h1 {
     color: #333;
     font-size: 30pxpx;
@@ -58,15 +51,7 @@
     font-weight: 600;
     font-style: bold;
 }
-
-.login-h3 {
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 25px;
-    font-weight: 600;
-}
-
-#username,
+#userid,
 #password {
     width: 100%;
     padding: 12px;
@@ -85,8 +70,8 @@
 }
 
 #submit {
-    background-color: rgb(255, 161, 40, 0.8) ;
-    color: rgb(0, 0, 0);
+    background-color: rgb(255, 161, 40) ;
+    color: rgb(255, 255, 255);
     border: none;
     padding: 12px;
     border-radius: 6px;
@@ -94,11 +79,6 @@
     cursor: pointer;
     width: 100%;
     transition: background-color 0.3s ease;
-}
-
-#submit:hover {
-    background-color: #FFA128;
-    color: rgb(255, 255, 255);
 }
 
 .lognin-error {
