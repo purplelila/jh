@@ -1,15 +1,14 @@
-import React from 'react';
-
 import { useNavigate, useLocation } from "react-router-dom";
+import React from 'react'; // ✅ 꼭 필요
 
 const Tabs = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const tabList = [
-    { name: '공지사항', path: '/community/notice' },
-    { name: '소통창', path: '/community/chat' },
-    { name: '자주하는 질문', path: '/community/faq' },
+    { name: '공지사항', path: '/notice' },
+    { name: '소통창', path: '/chat' },
+    { name: '자주하는 질문', path: '/faq' },
   ];
 
   return (

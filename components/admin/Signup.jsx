@@ -11,7 +11,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState('');
+  const [userType, setUserType] = useState('0');
   const [postalCode, setPostalCode] = useState('');
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
@@ -20,6 +20,7 @@ const Signup = () => {
   const handleUserTypeChange = (e) => {
     setUserType(e.target.value);
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,20 +87,27 @@ const Signup = () => {
 
   return (
     <div className="signup-total-box">
+      <div className="showdow-box">
+        <div className="signup-img-box">
+          <div className="sinup-img-left">
+            <img src="/registerchar.png" alt="환영사진" />
+          </div>
+        </div>
         <div className="signup-container">
         <h2 className='signup-h2'>회원가입</h2>
         <form onSubmit={handleSubmit}>
           <input className='signup-userid' type="text" value={userid} onChange={(e) => setUserid(e.target.value)} placeholder="아이디" required/>
-          <input className='signup-username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="이름" required/>
-          <input className='signup-email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일" required />
           <input className='signup-pwd' type="password" value={password} onChange={(e) => setPassword(e.target.value)}  placeholder="비밀번호" required autoComplete="new-password"/>
           <input className='signup-pwd-ck' type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="비밀번호 확인" required autoComplete="new-password"/>
+          <input className='signup-email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일" required />
+          <input className='signup-username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="이름" required/>
           <input className='signup-niname' type="text" value={nickname} onChange={(e) => setNickname(e.target.value)}  placeholder="닉네임" />
           <div className="signup-user-type">
-            <label>
-              <input className='signup-radio-n' type="radio" name="userType" value="0" checked={userType === '0'} onChange={handleUserTypeChange} required />
-              일반회원 </label>
-            <label>
+            <label className='signup-radio-n'>
+              <input className='signup-radio-n' type="radio" name="userType" value="0" checked={userType === "0"} onChange={handleUserTypeChange} required />
+              일반회원
+              </label>
+            <label className='signup-radio-c'>
               <input className='signup-radio-c' type="radio" name="userType" value="1" checked={userType === '1'} onChange={handleUserTypeChange} required />
               카페사장
             </label> 
@@ -126,10 +134,10 @@ const Signup = () => {
           <a href="/" id="terms-link">메인으로</a>
         </div>
       </div>
+      </div>
     </div>
     
   );
 };
 
 export default Signup;
-

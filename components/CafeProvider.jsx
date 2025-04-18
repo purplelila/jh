@@ -58,57 +58,74 @@ let CafeProvider = ({children}) => {
 const [posts, setPosts] = useState([]);
 const [nextId, setNextId] = useState(1);
 
-   // 게시물 추가
-   function addBoard(title, content, files, category) {
-    const newPost = {title, content, files, category, id: nextId, createDate: new Date().toLocaleDateString(), comments: []};
-    const categoryPosts = posts.filter(post => post.category === category);
-    setNextId(nextId + 1);
-    setPosts([...posts, newPost]);
-  }
-
-  //게시물 번호
-  useEffect(() => {
-    localStorage.setItem("posts", JSON.stringify(posts));
-  }, [posts]);
-
-  // 게시물 상태 저장
-  useEffect(() => {
-    localStorage.setItem("posts", JSON.stringify(posts));
-  }, [posts]);
-
-  // 게시물 상태 가져오기
-  useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem("posts"));
-    if (savedPosts) {
-      setPosts(savedPosts);
-    }
-  }, []);
-
-  // 게시물 삭제
-  function deletePost(id) {
-    const filteredPosts = posts.filter((p) => p.id !== id);
-    setPosts(filteredPosts);
-  }
-
-  //상세보기 댓글 가져오기
-  const addComment = (postId, text) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === parseInt(postId)
-          ? {
-              ...post,
-              comments: [
-                ...post.comments,
-                {
-                  author: "사용자", // 또는 로그인 사용자 이름
-                  text,
-                },
-              ],
-            }
-          : post
-      )
-    );
+  // 게시물 추가
+function addBoard(title, content, files, category) {
+  const newPost = {
+    title,
+    content,
+    files: files.map(file => ({ url: URL.createObjectURL(file) })), // 저장할 때는 URL만 저장
+    category,
+    id: nextId,
+    createDate: new Date().toISOString(),
+    comments: [],
   };
+  const categoryPosts = posts.filter(post => post.category === category);
+  setNextId(nextId + 1);
+  setPosts([...posts, newPost]);
+}
+
+// 게시물 상태 가져오기
+useEffect(() => {
+  const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+
+  setPosts(savedPosts);
+  const lastPost = savedPosts[savedPosts.length - 1];
+  setNextId(lastPost ? lastPost.id + 1 : 1); // 빈 배열일 경우 대비
+}, []);
+
+//게시물 번호
+useEffect(() => {
+  localStorage.setItem("posts", JSON.stringify(posts));
+}, [posts]);
+
+// 게시물 상태 저장
+useEffect(() => {
+  localStorage.setItem("posts", JSON.stringify(posts));
+}, [posts]);
+
+// 게시물 상태 가져오기
+useEffect(() => {
+  const savedPosts = JSON.parse(localStorage.getItem("posts"));
+  if (savedPosts) {
+    setPosts(savedPosts);
+  }
+}, []);
+
+// 게시물 삭제
+function deletePost(id) {
+  const filteredPosts = posts.filter((p) => p.id !== id);
+  setPosts(filteredPosts);
+}
+
+//상세보기 댓글 가져오기
+const addComment = (postId, text) => {
+  setPosts(prevPosts =>
+    prevPosts.map(post =>
+      post.id === parseInt(postId)
+        ? {
+            ...post,
+            comments: [
+              ...post.comments,
+              {
+                author: "사용자", // 또는 로그인 사용자 이름
+                text,
+              },
+            ],
+          }
+        : post
+    )
+  );
+};
 
 
 

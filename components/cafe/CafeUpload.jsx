@@ -19,6 +19,9 @@ let CafeUpload = () => {
     const [sns, setSns] = useState("")
     const [phone, setPhone] = useState("")
 
+    const [existingImages, setExistingImages] = useState([]); // 기존 이미지 (수정 시)
+    const [imagesToDelete, setImagesToDelete] = useState([]); // 삭제할 이미지 파일명 리스트
+
     const [cafeHours, setCafeHours] = useState({
       월 : "",
       화 : "",
@@ -43,37 +46,62 @@ let CafeUpload = () => {
     // img 업로드 (파일 선택)
     let handleImageChange = (e) => {
       let files = Array.from(e.target.files);
+
+      e.target.value = null;
   
-      if (files.length > 3) {
+      if (existingImages.length + images.length + files.length > 3) {
         alert("3개의 이미지까지 선택가능합니다.");
         return;
       }
         const newImgURLs = files.map(file=> URL.createObjectURL(file))
         const newImgNames = files.map(file => file.name)
 
-        // 기존 이미지 제거하고 새로 선택한 이미지 
-        setImagesFiles(files); // 파일 객체 저장
-        setImgURL(newImgURLs); // 배열로 이미지 URL 저장
-        setImgName(newImgNames); // 배열로 파일명 저장
+        setImagesFiles((prev) => {
+          const updatedFiles = [...prev, ...files];
+          setImgURL((prev) => [...prev, ...newImgURLs]);
+          setImgName((prev) => [...prev, ...newImgNames]);
+          return updatedFiles; // 이미지를 업데이트한 후 상태 반환
+        });
     }
 
     // img 업로드 (파일 드래그 앤 드롭)
     let handleDrop = (e) => {
       e.preventDefault();
       let files = Array.from(e.dataTransfer.files);
+
+      e.target.value = null;
   
-      if (files.length > 3) {
+      if (existingImages.length + images.length + files.length > 3) {
         alert("3개의 이미지까지 선택가능합니다.");
         return;
       }
         const newImgURLs = files.map(file=> URL.createObjectURL(file))  //blob URL 만들어서 미리보기 
         const newImgNames = files.map(file => file.name)
 
-        // 기존 이미지 제거하고 새로 선택한 이미지 
-        setImagesFiles(files); // 파일 객체 저장
-        setImgURL(newImgURLs); // 배열로 이미지 URL 저장
-        setImgName(newImgNames); // 배열로 파일명 저장
+        setImagesFiles((prev) => {
+          const updatedFiles = [...prev, ...files];
+          setImgURL((prev) => [...prev, ...newImgURLs]);
+          setImgName((prev) => [...prev, ...newImgNames]);
+          return updatedFiles; // 이미지를 업데이트한 후 상태 반환
+        });
     }
+
+    // 이미지 파일 선택 취소 (x)
+    const removeImage = (indexToRemove) => {
+      if (indexToRemove < existingImages.length) {
+        const removedImage = existingImages[indexToRemove];
+        setImagesToDelete((prev) => [...prev, removedImage.imgName]); // 삭제할 이미지명 추가
+        setExistingImages((prev) => prev.filter((_, i) => i !== indexToRemove)); // 기존 이미지도 제거!
+      } else {
+        const relativeIndex = indexToRemove - existingImages.length;
+        setImagesFiles((prev) => prev.filter((_, i) => i !== relativeIndex));
+      }
+
+      // imgName, ImagesFiles, imgURL 상태 업데이트
+      setImgName((prev) => prev.filter((_, i) => i !== indexToRemove)); // imgName에서 삭제
+      setImagesFiles((prev) => prev.filter((_, i) => i !== indexToRemove)); // ImagesFiles에서 삭제
+      setImgURL((prev) => prev.filter((_, i) => i !== indexToRemove)); // imgURL에서 삭제
+    };
 
     // 카페 수정전 데이터 불러오는거
     const { id } = useParams(); // /edit/:id 이런 URL에서 가져오기
@@ -94,12 +122,19 @@ let CafeUpload = () => {
             // 이미지 URL은 서버 이미지 URL로
             setImgURL(data.imgURLs || []);
             setImgName(data.imgNames || []);
+
+            setExistingImages(
+              (data.imgNames || []).map((name, idx) => ({
+                imgName: name,
+                imgURL: data.imgURLs[idx]
+              }))
+            );
           })
           .catch((err) => {
             console.error("카페 정보 불러오기 실패", err);
           });
       }
-    }, [id]);
+    }, [id, isEdit]);
   
     const handleSubmit = async (e) => {
       e.preventDefault()
@@ -151,6 +186,19 @@ let CafeUpload = () => {
         formData.append("files", file);
       });
 
+      // //삭제된 이미지 파일명 전달
+      // if (imagesToDelete.length > 0) {
+      //   imagesToDelete.forEach((name) => {
+      //     formData.append("deleteImgNames", name);
+      //   });
+      // }
+      // 삭제할 이미지 이름 리스트 전송
+      imagesToDelete.forEach((name) => {
+        formData.append("deleteImgNames", name); // 리스트로 처리
+      });
+      
+      console.log("삭제될 이미지:", imagesToDelete);
+
       const cafeData = {
         name,
         title,
@@ -164,20 +212,20 @@ let CafeUpload = () => {
       // JSON 문자열로 변환해 FormData에 추가
       formData.append("cafeData", JSON.stringify(cafeData));
 
+
       try {
         const url = isEdit
           ? `http://localhost:8080/api/editCafe/${id}`
           : "http://localhost:8080/api/addCafe";
       
-        const method = isEdit ? "put" : "post";
-      
+        const method = isEdit ? "post" : "post";
         const response = await axios({
           method,
           url,
-          data: formData,
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+          data: formData
+          // headers: {
+          //   "Content-Type": "multipart/form-data"
+          // }
         });
       
         const { imageUrls } = response.data;
@@ -194,10 +242,6 @@ let CafeUpload = () => {
         alert("카페 등록/수정에 실패했습니다.");
       }
       
-
-
-
-
       
     }
   
@@ -265,14 +309,30 @@ let CafeUpload = () => {
               <label>첨부파일<span className="upload-required">*</span></label>
               <div className="upload-form-input">
                 <input type="file" accept="image/*" onChange={handleImageChange} style={{display:'none'}} id="file-upload" multiple/>
+
                 {/* 이미지 제목표시 */}
                 <div className="upload-form-filename" onDrop={handleDrop} onDragOver={(e)=> e.preventDefault()}>
-                  <input type="text" value={imgName.length > 0 ? imgName.join(","): " 선택된 파일이 없습니다."} disabled placeholder="선택된 파일이 없습니다."/>
+                {imgName.length > 0 ? (
+                  <div className="upload-file-tag-wrapper">
+                    {imgName.map((name, index) => (
+                      <div key={index} className="upload-file-tag">
+                        <span>{name}</span>
+                        <button type="button" onClick={() => removeImage(index)} className="upload-file-remove-btn">
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="upload-file-name">선택된 파일이 없습니다.</p>
+                )}
                 </div>
                 <p className="upload-form-imgtext">*파일(jpg, jpeg, fif, gif, tif, tiff, png, zip)은 최대 3개까지 선택 가능합니다.</p>
+
               </div>
+
               {/* 이미지 선택 버튼 */}
-              <button type="button" onClick={()=> document.getElementById('file-upload').click()}>파일선택</button>
+              <button className="upload-form-img-choose" type="button" onClick={()=> document.getElementById('file-upload').click()}>파일선택</button>
             </div>
 
 

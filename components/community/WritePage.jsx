@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import Tabs from "./Tabs";
+import Tabs from "../community/Tabs";
 import axios from "axios";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const WritePage2 = () => {
+const WritePage = () => {
   const { addBoard } = useContext(CafeContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(""); // CKEditor에서 작성한 내용을 저장
@@ -75,7 +75,7 @@ const WritePage2 = () => {
         },
       });
       alert('게시글 등록 성공!');
-      navigate(`/community/${category}`);
+      navigate(`/${category}`);
     } catch (error) {
       console.error("게시물 등록 실패:", error);
     }
@@ -142,4 +142,4 @@ const WritePage2 = () => {
   );
 };
 
-export default WritePage2;
+export default WritePage;

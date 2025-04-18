@@ -9,14 +9,48 @@
   font-family: "Noto Sans KR", sans-serif;
   height: 100vh;
 }
+.showdow-box{
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1000px;
+  height: 80%;
+}
+.signup-img-box {
+  background-color: #ffffff;
+  padding: 30px;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  margin: 0;
+}
+.sinup-img-left {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sinup-img-left img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .signup-container {
     background-color: #ffffff;
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    width: 380px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
     border: 1px solid #e0e0e0;
-    margin: 50px;
+    margin: 0;
+    height: 100%;
   }
   
   .signup-h2 {
@@ -135,4 +169,8 @@
   .sigh-footer a:hover {
     text-decoration: underline;
   }
-  
+
+  .signup-radio-n input[type="radio"],
+  .signup-radio-c input[type="radio"]{
+    margin-right: 3px;
+  }

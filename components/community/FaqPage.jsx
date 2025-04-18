@@ -1,113 +1,129 @@
 import { useState, useEffect, useContext } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate } from "react-router-dom";
-import Tabs from "./Tabs";
+import { useParams } from "react-router-dom";
+import Tabs from "../community/Tabs";
+import React from 'react';
+import axios from 'axios';
 
 const FaqPage = () => {
-  const { posts } = useContext(CafeContext);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { posts, setPosts } = useContext(CafeContext); // useContext 사용
+  const [inputTerm, setInputTerm] = useState(""); // 사용자 입력값
+  const [searchTerm, setSearchTerm] = useState(""); // 실제 검색 트리거 값
   const [searchCategory, setSearchCategory] = useState('title');
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(10);
+  const [openPost, setOpenPost] = useState(null);  // 드롭다운 상태 관리
   const navigate = useNavigate();
+  const { category } = useParams();
 
-  const filteredPosts = posts
-    .filter((post) => post.category === "faq") // 💡 카테고리 고정 필터링
-    .filter((post) =>
-      post[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-  //게시물 정렬
-  const sortedPosts = filteredPosts.sort((a, b) => b.id - a.id);
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
-
-  const handleClick = () => {
-    navigate(`/community/faq/add`);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setCurrentPage(1); // 검색 시 첫 페이지로 리셋
-  };
-
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 해줍니다.
-    const day = String(d.getDate()).padStart(2, '0'); // 일도 두 자릿수로 맞춥니다.
-    return `${year}. ${month}. ${day}`;
-  };
-
+   // 게시물 필터링 (검색 기능)
+   const filteredPosts = Array.isArray(posts)
+   ? posts
+       .filter((post) => post.category === "faq")
+       .filter((post) =>
+         post[searchCategory]
+           ? post[searchCategory].toLowerCase().includes(searchTerm.toLowerCase())
+           : false
+       )
+   : [];
+ 
+   // 검색 제출 시 페이지 리셋
+   const handleSearchSubmit = (e) => {
+     e.preventDefault();
+     setSearchTerm(inputTerm);  // 이때만 검색 실행
+     setCurrentPage(1);
+   };
+ 
+   // ✅ 게시글 목록 불러오기
+   useEffect(() => {
+     fetchPosts();
+   }, []);
+ 
+   const fetchPosts = async () => {
+     try {
+       const res = await axios.get('/api/board');
+       setPosts(res.data); // 예: [{ id: 1, title: '', content: '', category: 'notice' }, ...]
+     } catch (err) {
+       console.error('게시글 목록 불러오기 실패', err);
+     }
+   };
+ 
+   // 게시물 정렬
+   const sortedPosts = filteredPosts.sort((a, b) => b.id - a.id);
+ 
+    // "글쓰기" 버튼 클릭 시
+    const handleClick = () => {
+     navigate(`/${category}/add`);
+   };
+ 
+   // 페이지네이션 계산
+   const indexOfLastPost = currentPage * postsPerPage;
+   const indexOfFirstPost = indexOfLastPost - postsPerPage;
+   const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
+ 
    // 페이지 번호 클릭 시
    const handlePageClick = (page) => {
-    setCurrentPage(page);
+     setCurrentPage(page);
+   };
+
+  // 드롭다운 열기/닫기
+  const togglePost = (id) => {
+    setOpenPost(openPost === id ? null : id); // 동일한 게시물을 클릭하면 닫고, 다른 게시물을 클릭하면 열기
+  };
+
+  //텍스트 출력
+  const stripHtmlTags = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
   };
 
   return (
-    <div className="community-container">
+    <div className="faq-container">
       <Tabs />
-      <div className="tab-content">
-        <div className="community-board">
-          <div className="community-top">
-            <div className="community-title">
+        <div className="faq-board">
+          <div className="faq-top">
+            <div className="faq-title">
               <h2>자주하는 질문</h2>
             </div>
-            <div className="search-box">
+            <div className="faq-search-box">
               <form onSubmit={handleSearchSubmit}>
                 <select value={searchCategory} onChange={(e) => setSearchCategory(e.target.value)}>
                   <option value="title">제목</option>
                   <option value="author">작성자</option>
                 </select>
                 <input
-                  type="search"
+                  type="text"
                   placeholder="내용을 입력해주세요."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={inputTerm}
+                  onChange={(e) => setInputTerm(e.target.value)}
                 />
                 <button type="submit">검색</button>
               </form>
             </div>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성일</th>
-                <th>조회수</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentPosts.length === 0 ? (
-                <tr>
-                  <td colSpan="5">게시글이 없습니다.</td>
-                </tr>
-              ) : (
-                currentPosts.map((p, index) => (
-                  <tr key={p.id}>
-                     {/* 번호 매기기 (오름차순) */}
-                     <td>{(filteredPosts.length - (currentPage - 1) * postsPerPage - index)}</td>
-                    <td
-                      onClick={() => navigate(`/community/faq/${p.id}`)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <strong>{p.title}</strong>
-                    </td>
-                    <td>{p.author || "관리자"}</td>
-                    <td>{formatDate(p.createDate)}</td>
-                    <td>{p.views || 0}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          {/* 게시물 목록 */}
+          <div className="faq-list">
+            {currentPosts.length === 0 ? (
+              <div>게시글이 없습니다.</div>
+            ) : (
+              currentPosts.map((p, index) => (
+                <div key={p.id} className={`faq-item ${openPost === p.id ? 'open' : ''}`}>
+                  <div className="faq-item-header" onClick={() => togglePost(p.id)}>
+                    <p>{p.title}</p>
+                  </div>
+                  {openPost === p.id && (
+                    <div className="faq-item-details">
+                      <p dangerouslySetInnerHTML={{ __html: p.content }} />
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
 
       <div className="button-section">
         <div className="add-btn">
@@ -116,7 +132,6 @@ const FaqPage = () => {
       </div>
 
       <div className="pagination">
-        {/* 이전 버튼 */}
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
@@ -124,18 +139,16 @@ const FaqPage = () => {
           이전
         </button>
 
-        {/* 페이지 번호 표시 */}
         {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }, (_, index) => (
           <button
             key={index + 1}
-            onClick={() => handlePageClick(index + 1)} // 페이지 숫자 클릭 시 현재 페이지로 설정
+            onClick={() => handlePageClick(index + 1)}
             className={currentPage === index + 1 ? "active" : ""}
           >
             {index + 1}
           </button>
         ))}
 
-        {/* 다음 버튼 */}
         <button
           onClick={() =>
             setCurrentPage((p) =>
@@ -147,7 +160,6 @@ const FaqPage = () => {
           이후
         </button>
       </div>
-
     </div>
   );
 };

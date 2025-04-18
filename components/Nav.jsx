@@ -2,7 +2,7 @@ import React from 'react';
 
 
 import { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,matchPath } from "react-router-dom";
 import { CafeContext } from "./CafeProvider";
 
 let Nav = () => {
@@ -21,12 +21,21 @@ let Nav = () => {
       title : 'STORE',
       subtitle : '좋은 커피와 서비스를 제공하는 카페 정보를 제공합니다'
     }
-  }else if (location.pathname == '/community/notice' || location.pathname == '/community/chat' || location.pathname == '/community/faq'|| location.pathname == '/community' || location.pathname == '/write' || location.pathname.startsWith ('/community/')){
-    heroImage = 'url(/main1.jpg)';
+  } else if (location.pathname === '/notice' || location.pathname === '/chat' || location.pathname === '/faq') {
+    heroImage = `url(/c6.jpg)`;
     heroText = {
-      title : 'COMMUNITY',
-      subtitle : '더벤티는 2014년 3월, 부산에서 첫 선을 보이며 고객님께 합리적인가격에 좋은 커피를 제공하기위해 시작되었습니다.'
-    }
+      title: 'COMMUNITY',
+      subtitle: '정보를 공유하고 서로 의견을 주고받아보세요',
+    };
+  } else if (
+    matchPath('/:category/add', location.pathname) || 
+    matchPath('/:category/:postId', location.pathname)
+  ) {
+    heroImage = `url(/c6.jpg)`;
+    heroText = {
+      title: 'COMMUNITY',
+      subtitle: '정보를 공유하고 서로 의견을 주고받아보세요'
+    };
   }else{
     heroImage='';
     heroText = {title : '', subtitle : ''}
@@ -47,7 +56,7 @@ let Nav = () => {
                     </div>
                     <div className="menu-store">
                       <Link to={'/cafelist'} onClick={handleResetFilter}>STORE</Link>
-                      <Link to={'/community/notice'}>COMMUNITY</Link>
+                      <Link to={'/notice'}>COMMUNITY</Link>
                     </div>
                 </div>
                 <div className="menu-right">

@@ -1,36 +1,69 @@
+import React from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate } from "react-router-dom";
-import Tabs from "./Tabs";
+import Tabs from "../community/Tabs";
 
 const ChatPage = () => {
-  const { posts } = useContext(CafeContext);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { posts, setPosts } = useContext(CafeContext);
+  const [inputTerm, setInputTerm] = useState(""); // 사용자 입력값
+  const [searchTerm, setSearchTerm] = useState(""); // 실제 검색 트리거 값
   const [searchCategory, setSearchCategory] = useState('title');
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(10);
   const navigate = useNavigate();
+  const { category } = useParams();
 
-  const filteredPosts = posts
-    .filter((post) => post.category === "chat") // 💡 카테고리 고정 필터링
-    .filter((post) =>
-      post[searchCategory]?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  // 게시물 필터링 (검색 기능)
+  const filteredPosts = Array.isArray(posts)
+  ? posts
+      .filter((post) => post.category === "chat")
+      .filter((post) =>
+        post[searchCategory]
+          ? post[searchCategory].toLowerCase().includes(searchTerm.toLowerCase())
+          : false
+      )
+  : [];
 
-  //게시물 정렬
+  // 검색 제출 시 페이지 리셋
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSearchTerm(inputTerm);  // 이때만 검색 실행
+    setCurrentPage(1);
+  };
+
+  // ✅ 게시글 목록 불러오기
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get('/api/board');
+      setPosts(res.data); // 예: [{ id: 1, title: '', content: '', category: 'notice' }, ...]
+    } catch (err) {
+      console.error('게시글 목록 불러오기 실패', err);
+    }
+  };
+
+  // 게시물 정렬
   const sortedPosts = filteredPosts.sort((a, b) => b.id - a.id);
 
+   // "글쓰기" 버튼 클릭 시
+   const handleClick = () => {
+    navigate(`/${category}/add`);
+  };
+
+  // 페이지네이션 계산
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
-  const handleClick = () => {
-    navigate(`/community/chat/add`);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    setCurrentPage(1); // 검색 시 첫 페이지로 리셋
+  // 페이지 번호 클릭 시
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
   };
 
   const formatDate = (date) => {
@@ -39,11 +72,6 @@ const ChatPage = () => {
     const month = String(d.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 해줍니다.
     const day = String(d.getDate()).padStart(2, '0'); // 일도 두 자릿수로 맞춥니다.
     return `${year}. ${month}. ${day}`;
-  };
-
-   // 페이지 번호 클릭 시
-   const handlePageClick = (page) => {
-    setCurrentPage(page);
   };
 
   return (
@@ -62,10 +90,10 @@ const ChatPage = () => {
                   <option value="author">작성자</option>
                 </select>
                 <input
-                  type="search"
+                  type="text"
                   placeholder="내용을 입력해주세요."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={inputTerm}
+                  onChange={(e) => setInputTerm(e.target.value)}
                 />
                 <button type="submit">검색</button>
               </form>
@@ -90,18 +118,33 @@ const ChatPage = () => {
               ) : (
                 currentPosts.map((p, index) => (
                   <tr key={p.id}>
-                     {/* 번호 매기기 (오름차순) */}
-                     <td>{(filteredPosts.length - (currentPage - 1) * postsPerPage - index)}</td>
-                    <td
-                      onClick={() => navigate(`/community/chat/${p.id}`)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <strong>{p.title}</strong>
-                    </td>
-                    <td>{p.author || "관리자"}</td>
-                    <td>{formatDate(p.createDate)}</td>
-                    <td>{p.views || 0}</td>
-                  </tr>
+                  <td
+                    className={p.content ? 'with-border' : ''}  // content가 있을 때만 border 추가
+                  >
+                    {(filteredPosts.length - (currentPage - 1) * postsPerPage - index)}
+                  </td>
+                  <td
+                    onClick={() => navigate(`/${category}/${p.id}`)}
+                    className={p.content ? 'with-border' : ''}  // content가 있을 때만 border 추가
+                  >
+                    <strong>{p.title}</strong>
+                  </td>
+                  <td
+                    className={p.content ? 'with-border' : ''}  // content가 있을 때만 border 추가
+                  >
+                    {p.author || "관리자"}
+                  </td>
+                  <td
+                    className={p.content ? 'with-border' : ''}  // content가 있을 때만 border 추가
+                  >
+                    {formatDate(p.createDate)}
+                  </td>
+                  <td
+                    className={p.content ? 'with-border' : ''}  // content가 있을 때만 border 추가
+                  >
+                    {p.views || 0}
+                  </td>
+                </tr>
                 ))
               )}
             </tbody>

@@ -12,7 +12,7 @@ const Cafemain = () => {
   };
 
   const navigateToComm = () => {
-    navigate('/community/notice'); // CommunityPage로 이동 (예시: /community)
+    navigate('/notice'); // CommunityPage로 이동 (예시: /community)
   };
 
   return (

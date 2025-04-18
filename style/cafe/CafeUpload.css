@@ -135,18 +135,65 @@
     font-size: 15px;
   }
   
-  .upload-form-filename{
-    width: 100%;
-    padding: 20px 17px;
-    margin: 15px 0;
+  /* --------------------------------------- 이미지 제목표시 ----------------------------------- */
+  .upload-form-filename {
     border: 1px solid #e0e0e0;
-    box-sizing: border-box;
+    padding: 20px;
     border-radius: 5px;
-    height: 60px;
     background-color: #f1f3f5;
+    text-align: left;
+    transition: background-color 0.3s;
+    max-height: 60px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
   }
   
-  .upload-form-img button{
+  .upload-file-name {
+    color: #888;
+    font-size: 14px;
+  }
+  
+  .upload-file-tag-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .upload-file-tag {
+    background-color: #c2c2c2;
+    border: 1px solid #c2c2c2;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: white;
+    transition: background-color 0.2s ease;
+  }
+  
+  .upload-file-tag:hover {
+    background-color: #888;
+  }
+  
+  .upload-file-remove-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin-left: 6px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .upload-file-remove-btn:hover {
+    color: #333;
+  }
+  
+
+  
+  
+/* ----------------------------------------------------------------------------------------- */
+
+  .upload-form-img-choose{
     width: 100px;
     height: 60px;
     border: none;
@@ -155,12 +202,13 @@
     transition: background-color 0.3s ease;
     margin-bottom: 17px;
     margin-right: 7px;
+    margin-top: 11px;
     background-color: #FFA128;
     color: #eee;
     font-size: 17px;
   }
   
-  .upload-form-img button:hover {
+  .upload-form-img-choose:hover {
     background-color: #FFA128;
     color: #eee;
   }

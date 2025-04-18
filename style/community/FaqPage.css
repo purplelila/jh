@@ -1,18 +1,39 @@
+/*------------------------------------------------ faq-top -----------------------------------------------------------*/
 
-/*------------------------------------------------ notice-top -----------------------------------------------------------*/
-
-.community-title h2 {
-  font-size: 40px;
+.faq-board {
+    width: 1200px;
+    margin: 0 auto;
 }
 
-.search-box select {
+.faq-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    width: 100%;
+}
+
+.faq-title h2 {
+    font-size: 40px;
+    text-align: center; /* 제목을 가운데 정렬 */
+}
+
+/*------------------------------------------------ faq-search-box -----------------------------------------------------------*/
+
+.faq-search-box {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center; /* 검색 박스를 가운데 정렬 */
+}
+
+.faq-search-box select {
     width: 100px;
     height: 40px;
     margin-right: 5px;
     font-size: 16px;
 }
   
-.search-box input {
+.faq-search-box input {
     width: 350px;
     height: 40px;
     padding: 0 5px;
@@ -20,7 +41,7 @@
     font-size: 16px;
 }
   
-.search-box button {
+.faq-search-box button {
     width: 60px;
     height: 40px;
     background-color: #FFA128;
@@ -31,58 +52,51 @@
     color: #eee;
 }
 
-/*------------------------------------------------ notice-board table -----------------------------------------------------------*/
+/*---------------------------------------------------------- FAQ 목록 스타일 ---------------------------------------------------*/
 
-.community-board{
-    width: 1200px;
-    margin: 0 auto;
+.faq-list {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* FAQ 목록을 가운데 정렬 */
+  border-top: 1px solid #000;
 }
 
-.community-top {
+.faq-item {
+  border-bottom: 1px solid #ddd;
+  /* margin-bottom: 10px; */
+  transition: all 0.3s ease;
+  width: 100%; /* 리스트가 화면 너비를 채우도록 설정 */
+}
+
+.faq-item-header {
   display: flex;
   justify-content: space-between;
-  margin: 40px 0;
-  align-items: center;
+  cursor: pointer;
+  padding: 14px 0;
 }
 
-  
-.community-board table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-.community-board table tr th {
-    height: 60px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+.faq-item-header:hover {
+  background-color: #f0f0f0;
 }
 
-.community-board table tr th {
-    /* border: 1px solid #ccc; */
-    width: 10%;
-    background-color: #f7f7f7;
+.faq-item-header p {
+    font-size: 25px;
+}
+
+.faq-item-details p {
     font-size: 18px;
 }
 
-.community-board  table tr th:nth-child(2) {
-    width: 40%;
-} 
-
-.community-board  table tr td {
-  width: 10%;
-  font-size: 18px;
-  text-align: center;
-  height: 60px;
+.faq-item-details {
+  padding: 14px 0;
+  border-top: 1px solid #ddd;
+  display: none;
 }
 
-.community-board  table tr td:nth-child(2) {
-    text-align: left;
-    width: 40%;
-    cursor: pointer;
-}
-
-.with-border {
-  border-bottom: 1px solid #ccc;
+.faq-item.open .faq-item-details {
+  display: block;
 }
 
 /*------------------------------------------------ add-button -----------------------------------------------------------*/

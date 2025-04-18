@@ -18,7 +18,10 @@ import './style/cafe/CafeUpload.css'
 import './style/community/communityPage.css'
 import './style/community/WritePage.css'
 import './style/community/DetailPage.css'
+import './style/community/FaqPage.css'
+import './style/community/LightboxImageViewer.css'
 import './style/community/Tabs.css'
+
 
 import './style/master/admin.css'
 import './style/master/admin-bord-1.css'
@@ -43,9 +46,7 @@ import CafeList from "./components/cafe/CafeList";
 import CafeUpload from "./components/cafe/CafeUpload";
 import CafeDetail from "./components/cafe/CafeDetail";
 
-import NoticePage from './components/community/NoticePage';
-import ChatPage from './components/community/ChatPage';
-import FaqPage from './components/community/FaqPage';
+import BoardPage from './components/community/BoardPage';
 import WritePage from './components/community/WritePage';
 import DetailPage from './components/community/DetailPage';
 
@@ -91,18 +92,20 @@ const Main = () => {
   
       <Routes>
         <Route path='/' element={<Cafemain />} />
+
         <Route path='/cafelist' element={<CafeList />} />
         <Route path='/cafeupload' element={<CafeUpload />} />
         <Route path="/cafeedit/:id" element={<CafeUpload />} />
         <Route path='/cafedetail/:id' element={<CafeDetail />} />
-        <Route path="/community/notice" element={<NoticePage />} />
-        <Route path="/community/chat" element={<ChatPage />} />
-        <Route path="/community/faq" element={<FaqPage />} />
-        <Route path="/community/:category/add" element={<WritePage />} />
-        <Route path="/community/:category/:postId" element={<DetailPage />} />
+
+        <Route path="/:category" element={<BoardPage />} /> */
+        <Route path="/:category/add" element={<WritePage />} />
+        <Route path="/:category/:postId" element={<DetailPage />} />
+
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/mypage' element={<MyPage />} />        
+        <Route path='/mypage' element={<MyPage />} />   
+             
         <Route path="/admin/1" element={<Admin />} />
         <Route path="/admin/list-0" element={<AdminList_0 />} />
         <Route path="/admin/list-1" element={<AdminList_1 />} />

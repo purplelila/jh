@@ -1,143 +1,156 @@
+// DetailPage.jsx
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
-import Tabs from "./Tabs";
-
 import React from 'react';
 import axios from 'axios';
 
+import Tabs from "../community/Tabs";
+import LightboxImageViewer from "./LightboxImageViewer"; // 확대 이미지 모달 컴포넌트 import
+
 function DetailPage() {
-    const { posts, addComment } = useContext(CafeContext);  
-    const { category, postId } = useParams();
-    const navigate = useNavigate();
-    const [comment, setComment] = useState("");
-    const [fileURLs, setFileURLs] = useState([]);
+  const { addComment } = useContext(CafeContext);
+  const { category, postId } = useParams();
+  const [post, setPost] = useState(null);
+  const [comment, setComment] = useState("");
+  const [lightboxImage, setLightboxImage] = useState(null);
+  const navigate = useNavigate();
 
-    const post = posts.find((p) => p.id === parseInt(postId));
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  };
 
-    useEffect(() => {
-        if (post?.files?.length) {
-            const urls = post.files.map((file) => ({
-                name: file.name,
-                type: file.type,
-                url: URL.createObjectURL(file),
-            }));
-            setFileURLs(urls);
+  useEffect(() => {
+    axios.get(`/api/board/${category}/${postId}`)
+      .then(res => setPost(res.data))
+      .catch(err => console.error(err));
+  }, [category, postId]);
 
-            return () => {
-                urls.forEach((file) => URL.revokeObjectURL(file.url));
-            };
-        }
-    }, [post]);
+  // 이미지 썸네일 처리 + 클릭 이벤트 (모달로 원본 보기)
+  useEffect(() => {
+    if (!post) return;
+    const contentEl = document.querySelector('.content');
+    if (!contentEl) return;
 
-    // 📌 게시물이 없을 때 예외 처리
-    if (!post) {
-        return (
-            <div className="not-found">
-                <h2>게시물을 찾을 수 없습니다.</h2>
-                <button onClick={() => navigate(`/community/${category}`)}>목록으로 돌아가기</button>
-            </div>
-        );
-    }
+    contentEl.querySelectorAll('img').forEach(img => {
+      const originalSrc = img.src;
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.src = originalSrc;
+      image.onload = () => {
+        const size = 600;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
 
-    const handleCommentChange = (e) => setComment(e.target.value);
+        const scale = Math.min(size / image.width, size / image.height); // 비율 유지
+        const scaledWidth = image.width * scale;
+        const scaledHeight = image.height * scale;
+        const x = (size - scaledWidth) / 2;
+        const y = (size - scaledHeight) / 2;
 
-    const handleCommentSubmit = (e) => {
-        e.preventDefault();
-        if (comment.trim()) {
-            addComment(postId, comment);
-            setComment("");
-        } else {
-            alert("댓글을 입력해주세요.");
-        }
+        ctx.fillStyle = "#fff"; // 배경 흰색
+        ctx.fillRect(0, 0, size, size);
+        ctx.drawImage(image, x, y, scaledWidth, scaledHeight);
+
+        const thumbnail = canvas.toDataURL("image/jpeg");
+
+        img.src = thumbnail;
+        img.classList.add('thumbnail-image');
+        img.style.cursor = 'zoom-in';
+
+        img.onclick = () => setLightboxImage(originalSrc);
+      };
+    });
+
+    return () => {
+      contentEl.querySelectorAll('img').forEach(img => img.onclick = null);
     };
+  }, [post]);
 
-    // 📌 현재 카테고리로 이동하도록 수정
-    const handleClick = () => navigate(`/community/${category}`);
+  const handleCommentSubmit = e => {
+    e.preventDefault();
+    if (!comment.trim()) return alert("댓글을 입력해주세요.");
+    addComment(postId, comment);
+    setComment("");
+  };
 
-    return (
-        <>
-        {/* 📌 현재 탭을 category로 설정 */}
-        <Tabs activeTab={category} setActiveTab={(tab) => navigate(`/community/${tab}`)} />
-        <div className="main-container">
-            <div className="title-section">
-                <div className="title"><h2>{post.title}</h2></div>
-                <div className="info">
-                    <span>작성자: 관리자</span>
-                    <span>작성일: {post.createDate}</span>
-                </div>
-            </div>
-            
-            {/* 모든 첨부파일 다운로드 목록 */}
-            {fileURLs.length > 0 && (
-                <div className="attached-files">
-                    <p>첨부파일:</p>
-                    <ul>
-                        {fileURLs.map((file, index) => (
-                            <li key={index}>
-                                <a href={file.url} download={file.name} className="download-link">
-                                    {file.name}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+  if (!post) return <p>Loading…</p>;
 
-            {/* 이미지 파일 먼저 보여주기 */}
-            <div className="attached-img">
-                {fileURLs.filter(f => f.type.startsWith("image/")).map((file, index) => (
-                    <div className="img-preview" key={index}>
-                        <img src={file.url} alt={`첨부 이미지 ${index}`} />
-                    </div>
-                ))}
-            </div>
+  return (
+    <>
+      <Tabs activeTab={category} setActiveTab={tab => navigate(`/${tab}`)} />
 
-            <div className="content">
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-            </div>
-
-            <div className="list-btn">
-                <button onClick={handleClick}>목록</button>
-            </div>
+      <div className="main-container">
+        <div className="title-section">
+          <h2>{post.title}</h2>
+          <div className="info">
+            <span>작성자: 관리자</span>
+            <span>작성일: {formatDate(post.createDate)}</span>
+          </div>
         </div>
 
-        <div className="comment-section">
-            <div className="commentlist">
-                <h4>댓글</h4>
-                <div className="commentlist-section">
-                    {(post.comments || []).map((comment, index) => (
-                        <div className="comments" key={index}>
-                            <span>{comment.author}</span>
-                            <p>{comment.text}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
+        {post.files?.length > 0 && (
+          <div className="attached-files">
+            <p>첨부파일:</p>
+            <ul>
+              {post.files.map((f,i) => (
+                <li key={i}>
+                  <a href={`http://localhost:8080/api/board/download/${f.savedName}`} download>
+                    {f.originalName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-            <div className="add-comment">
-                <h4>댓글쓰기</h4>
-                <div className="write-section">
-                    <form onSubmit={handleCommentSubmit}>
-                        <div className="write-comment">
-                            <textarea
-                                id="comment"
-                                name="comment"
-                                placeholder="댓글을 입력해주세요."
-                                value={comment}
-                                onChange={handleCommentChange}
-                                required
-                            />
-                        </div>
-                        <div className="write-btn">
-                            <button type="submit">등록</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div className="content" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+        {/* 확대 모달 */}
+        {lightboxImage &&
+          <LightboxImageViewer
+            imageUrl={lightboxImage}
+            onClose={() => {
+              setLightboxImage(null);
+              document.querySelectorAll('.content img').forEach(img => {
+                img.classList.add('thumbnail-image');
+              });
+            }}
+          />
+        }
+
+        <div className="list-btn">
+          <button onClick={() => navigate(`/${category}`)}>목록</button>
         </div>
-        </>
-    );
+      </div>
+
+      <div className="comment-section">
+        <h4>댓글</h4>
+        <div className="commentlist-section">
+          {post.comments?.map((c,i) => (
+            <div className="comments" key={i}>
+              <span>{c.author}</span>
+              <p>{c.text}</p>
+            </div>
+          ))}
+        </div>
+        <form className="add-comment write-section" onSubmit={handleCommentSubmit}>
+          <textarea
+            placeholder="댓글을 입력해주세요."
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            required
+          />
+          <div className="write-btn">
+            <button type="submit">등록</button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
 }
 
 export default DetailPage;
