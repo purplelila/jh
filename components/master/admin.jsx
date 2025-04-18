@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const Admin = () => {
+  const navigate = useNavigate();
   const [openMenu, setOpenMenu] = useState({
     member: false,
     board: false
@@ -15,19 +19,33 @@ const Admin = () => {
     }));
   };
 
+  const logoutCheck = () => {
+    const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
+    if (confirmLogout) {
+      alert("로그아웃 되었습니다.");
+      // 필요하다면 로그아웃 처리 추가 (예: localStorage.clear())
+      navigate("/"); // 메인 페이지로 이동
+    }
+  };
+
   return (
     <div className="admin-board">
       {/* 사이드바 */}
       <div className="sidebar">
-          <h2>관리자 메뉴</h2>
-          <ul>
-            <li><a href="/admin/1">대시보드</a></li>
+          <h2 className="sidebar-h2">관리자 메뉴
+            <Link to="/">
+             <FontAwesomeIcon icon={faHouse} className="sidebar-icon"/>
+            </Link>
+          </h2>
+          <ul className="sidebar-ul">
+            <li className="sidebar-li-a"><a href="/admin/1">대시보드</a></li>
 
             {/* 회원 관리 드롭다운 */}
             <li>
               <div className="dropdown-header" onClick={() => toggleMenu("member")}>
                 회원 관리
               </div>
+
               {openMenu.member && (
                 <ul className="dropdown-list">
                   <li><a href="/admin/list-0"> - 일반회원 목록</a></li>
@@ -52,6 +70,9 @@ const Admin = () => {
             </li>
 
             <li><a href="/admin/1">설정</a></li>
+            <li className="sidebar-logout">
+            <button className="sidebar-logout-btn" onClick={logoutCheck}>로그아웃</button>
+            </li>
           </ul>
         </div>
 
