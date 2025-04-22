@@ -23,6 +23,17 @@ let CafeList = () => {
       });
   }, []);
 
+  // 토큰 확인
+  // useEffect(() => {
+  //   // 로컬 스토리지에서 토큰 가져오기
+  //   const token = localStorage.getItem("token");
+
+  //   if (token) {
+  //     console.log("저장된 JWT 토큰:", token);
+  //   } else {
+  //     console.log("JWT 토큰이 존재하지 않습니다.");
+  //   }
+  // }, []);
 
     // 더보기 보여주는 갯수
     let loadMore = () => {

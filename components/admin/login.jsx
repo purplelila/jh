@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Signup from "./Signup";
 import axios from "axios";
 
 const LoginPage = () => {
@@ -10,46 +9,62 @@ const LoginPage = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate(); // 페이지 이동 함수
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-    
-        if (userid === "" || password === "") {
-          setErrorMessage("아이디 또는 비밀번호를 입력해주세요.");
-          return;
-        }
-    
-        try {
-            const response = await fetch("http://localhost:8080/api/login", {
-              method: "POST",
+        const handleSubmit = async (event) => {
+          event.preventDefault();
+      
+          if (userid === "" || password === "") {
+            setErrorMessage("아이디 또는 비밀번호를 입력해주세요.");
+            return;
+          }
+      
+          try {
+            const response = await axios.post("http://localhost:8080/api/login", {
+              userid,
+              password,
+            }, {
               headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", // ✅ 이거 꼭 필요해!
               },
-              body: JSON.stringify({ userid, password }),
+              
             });
-         if (response.ok) {
-              const data = await response.json();
-              alert(data.message);
-        
-              // userType에 따라 라우팅
-              switch (data.userType) {
-                case 0:
-                  navigate("/community");
-                  break;
-                case 1:
-                  navigate("/cafelist");
-                  break;
-                case 3:
-                  navigate("/admin/1");
-                  break;
-                default:
-                  navigate("/"); // fallback
-              }
-            } else {
-              const error = await response.text();
-              setErrorMessage(error);
+      
+            const data = response.data;
+      
+            // ✅ 토큰 저장
+            localStorage.setItem("token", data.token);
+
+            // ✅ 로그인한 사용자 정보 저장 (예: userType, userid 등)
+                localStorage.setItem("userType", data.userType); // 예: userType 저장
+                localStorage.setItem("userid", data.userid); // 예: userid 저장
+
+            // ✅ JWT가 잘 저장되었는지 콘솔로 확인
+                console.log("JWT 토큰: ", localStorage.getItem("token"));
+            
+            alert(data.message);
+      
+            // 🔀 userType에 따라 이동
+            switch (data.userType) {
+              case 0:
+                navigate("/notice");
+                break;
+              case 1:
+                navigate("/cafelist");
+                break;
+              case 3:
+                navigate("/admin/1");
+                break;
+              default:
+                navigate("/");
             }
+      
           } catch (error) {
-            setErrorMessage("서버와 연결할 수 없습니다.");
+            // ❌ 서버에서 에러 메시지 응답 시 처리
+            if (error.response && error.response.data) {
+              setErrorMessage(error.response.data.message );
+            } else {
+              setErrorMessage("서버와 연결할 수 없습니다.");
+            }
+            console.error("로그인 에러:", error);
           }
         };
 
@@ -77,5 +92,4 @@ const LoginPage = () => {
         
     );
 };
-
 export default LoginPage;

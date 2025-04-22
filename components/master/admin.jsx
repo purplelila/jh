@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect }from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
@@ -12,6 +12,40 @@ const Admin = () => {
     board: false
   });
 
+  const [isAuthorized, setIsAuthorized] = useState(null);
+
+    // ✅ 관리자 인증 체크
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      const userType = parseInt(localStorage.getItem("userType"));
+    
+      if (!token || userType !== 3) {
+        alert("관리자 페이지입니다. 로그인 해주세요.");
+        setIsAuthorized(false); // ❗ 비인가일 때 false로 설정
+        navigate("/login");
+      } else {
+        console.log("✅ 관리자 권한 확인 완료");
+        setIsAuthorized(true); // ✅ 인가되었을 때 true로 설정
+      }
+    }, [navigate]);
+
+    if (isAuthorized === false) {
+      return null; // 비인가일 때는 아무것도 안 보여줌
+    }
+    
+    if (isAuthorized === null) {
+      return (
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: "1.5rem"
+        }}>
+          🔒 관리자 권한 확인 중...
+        </div>
+      );
+    }
   const toggleMenu = (menu) => {
     setOpenMenu((prev) => ({
       ...prev,

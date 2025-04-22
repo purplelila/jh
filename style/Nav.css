@@ -48,9 +48,11 @@ header {
     font-size: 16px;
   }
   
-  .menu-left a:hover{
+  /* .menu-left a:hover{
     color: #AB865C;
-  }
+  } */
+
+  /*-----------------------------------------------------------------------------*/
   
   .menu-store{
     width: 550px;
@@ -62,6 +64,24 @@ header {
     /* font-weight: bold; */
     font-weight: 500;
   }
+
+  .menu-link {
+    margin: 40px 40px;
+    font-weight: 500;
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+  }
+  
+  /* 현재 페이지일 때만 적용 */
+  .menu-link.active {
+    color: #FFA128;
+    /* color: #a0522d; */
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  /*-----------------------------------------------------------------------------*/
   
   .menu-right{
     display: flex;
@@ -78,7 +98,7 @@ header {
   }
   
   .menu-login a{
-    padding: 0 5px;
+    padding: 0 7px;
     font-size: 13px;
   }
   
@@ -86,9 +106,9 @@ header {
     border-right: 1px solid #bbb;
   }
   
-  .menu-login a:nth-child(2) {
+  /* .menu-login a:nth-child(2) {
     border-right: 1px solid #bbb;
-  }
+  } */
 
   /*------------------------------------------------ icon -----------------------------------------------------------*/
   

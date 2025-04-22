@@ -16,6 +16,18 @@ function DetailPage() {
   const [lightboxImage, setLightboxImage] = useState(null);
   const navigate = useNavigate();
 
+  // 토큰 확인
+  // useEffect(() => {
+  //   // 로컬 스토리지에서 토큰 가져오기
+  //   const token = localStorage.getItem("token");
+
+  //   if (token) {
+  //     console.log("저장된 JWT 토큰:", token);
+  //   } else {
+  //     console.log("JWT 토큰이 존재하지 않습니다.");
+  //   }
+  // }, []);
+
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getFullYear()}. ${String(d.getMonth()+1).padStart(2,'0')}. ${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;

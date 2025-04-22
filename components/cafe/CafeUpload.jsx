@@ -34,6 +34,18 @@ let CafeUpload = () => {
 
     const navigate = useNavigate()
 
+    // 토큰 확인
+    useEffect(() => {
+    // 로컬 스토리지에서 토큰 가져오기
+    const token = localStorage.getItem("token");
+    
+    if (token) {
+      console.log("저장된 JWT 토큰:", token);
+    } else {
+      console.log("JWT 토큰이 존재하지 않습니다.");
+    }
+    }, []);
+
     // 영업일 시간 입력
     const handleCafeHoursChange = (e) => {
       const{name, value} = e.target;
@@ -186,13 +198,6 @@ let CafeUpload = () => {
         formData.append("files", file);
       });
 
-      // //삭제된 이미지 파일명 전달
-      // if (imagesToDelete.length > 0) {
-      //   imagesToDelete.forEach((name) => {
-      //     formData.append("deleteImgNames", name);
-      //   });
-      // }
-      // 삭제할 이미지 이름 리스트 전송
       imagesToDelete.forEach((name) => {
         formData.append("deleteImgNames", name); // 리스트로 처리
       });
@@ -212,17 +217,23 @@ let CafeUpload = () => {
       // JSON 문자열로 변환해 FormData에 추가
       formData.append("cafeData", JSON.stringify(cafeData));
 
+      // 토큰 가져오기
+      const token = localStorage.getItem('token');
 
       try {
         const url = isEdit
           ? `http://localhost:8080/api/editCafe/${id}`
           : "http://localhost:8080/api/addCafe";
+
       
         const method = isEdit ? "post" : "post";
         const response = await axios({
           method,
           url,
-          data: formData
+          data: formData,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
           // headers: {
           //   "Content-Type": "multipart/form-data"
           // }
@@ -233,16 +244,20 @@ let CafeUpload = () => {
       
         if (!isEdit) {
           addCafe(imageUrls, imgName, cafeHours, title, place, content, phone, sns);
+          alert("카페가 등록되었습니다.");
+
+          navigate("/cafelist");  // 등록 후 카페 리스트 페이지로 이동
+
+        } else {
+          alert("카페가 수정되었습니다.");
+          navigate(`/cafedetail/${id}`);  // 수정 후 디테일 페이지로 이동
         }
-      
-        alert(isEdit ? "카페가 수정되었습니다." : "카페가 등록되었습니다.");
-        navigate("/cafelist");
+
       } catch (error) {
-        console.error("카페 등록/수정 실패", error.response || error.message);
-        alert("카페 등록/수정에 실패했습니다.");
+        console.error("카페 등록/수정 실패", error.response);
+        alert("카페 사장만 등록할 수 있습니다.");
       }
-      
-      
+     
     }
   
     return(

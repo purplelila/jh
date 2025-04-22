@@ -1,144 +1,171 @@
-/* 기본 설정 */
-.mypage-total-box {
-    display: flex;
-    width: 1200px;
-    margin: 0 auto;
-    margin-top: 100px;
-  }
-  
-  /* 사이드바 스타일 */
-  .mypage-sidebar {
-    width: 300px;
-    background-color: #2c3e50;
-    color: white;
-    border-right: 1px solid #ddd;
-    box-sizing: border-box;
-    height: 1100px;
-  }
-  
-  .mypage-sidebar-title {
-    font-size: 24px;
-    margin: 30px;
-    font-weight: bold;
-    text-align: center;
-  }
+.mypage-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  width: 1200px;
+  margin: 0 auto;
+  padding-top: 100px;
+  box-sizing: border-box;
+}
 
-  .mypage-img-box{
-    border-bottom: 1px solid #ddd;
-    /* background-color: #ccc; */
-  }
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  padding: 24px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
 
-  .mypage-sidebar-img-profile{
-    border-radius: 50%;
-    object-fit: cover;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .mypage-img-2{
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    /* border: 2px solid #2c3e50; */
-    margin-bottom: 20px;
-  }
+.sidebar-title {
+  font-size: 20px;
+  color: #1d4ed8;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
 
-  .mypage-wecl-p, .mypage-wecl-h2{
-    text-align: center;
-  }
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  .mypage-wecl-h2{
-    margin-bottom: 20px;
-  }
+.menu-list li {
+  margin-bottom: 16px;
+  color: #374151;
+  cursor: pointer;
+}
 
-  .mypage-sidebar-menu {
-    list-style-type: none;
-    padding: 0;
-    padding: 20px 30px;
-  }
+.menu-list li:hover {
+  color: #2563eb;
+}
 
-  .mypage-sidebar-item {
-    display: block;
-    padding: 15px 0;
-    color: white;
-    text-decoration: none;
-    font-size: 23px;
-  }
+.sidebar-button {
+  margin-top: 40px;
+  width: 100%;
+  padding: 10px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-  .mypage-sidebar-item-content{
-    font-size: 15px;
-    color: #ccc;
-    padding-left: 20px;
-    display: block;
-    margin-bottom: 10px;
-  }
-  
+.sidebar-button:hover {
+  background-color: #1d4ed8;
+}
 
-  
-  .mypage-sidebar-item:hover {
-    background-color: #34495e;
-    color: white;
-  }
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 40px;
+}
 
-  .mypage-bye-box{
-    padding: 20px 30px;
-  }
-  
-  /* 본문 스타일 */
-  .mypage-content {
-    padding: 40px;
-    box-sizing: border-box;
-    background-color: white;
-    border-radius: 10px;
-    width: 900px;
-  }
-  
-  /* 프로필 섹션 스타일 */
-  .mypage-section {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    margin: 20px auto;
-  }
-  
-  .mypage-box-profile {
-    width: 40%;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mypage-img-box-box{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
+.user-info-box {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
 
-  .mypage-img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #2c3e50;
-  }
+.user-info-text {
+  max-width: 60%;
+}
 
+.username {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
 
-  /* 정보 섹션 스타일 */
-  .mypage-box-profile-2 {
-    width: 60%;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+.button-group {
+  margin-top: 16px;
+}
 
-  .mypage-p-total-box{
-    height: 50vh;
-    display: flex;
-    padding: 10px;
-    flex-direction: column;
-  }
+.outline-button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.outline-button:hover {
+  background-color: #eff6ff;
+}
+
+.filled-button {
+  padding: 6px 12px;
+  border: none;
+  color: white;
+  background-color: #2563eb;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filled-button:hover {
+  background-color: #1d4ed8;
+}
+
+.payment-status {
+  display: flex;
+  gap: 24px;
+}
+
+.status-box {
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  width: 120px;
+}
+
+.label {
+  color: #6b7280;
+}
+
+.value {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.value.red {
+  color: #dc2626;
+}
+
+.small-text {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* Application Status */
+.application-status {
+  background-color: #2563eb;
+  color: white;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 24px;
+  margin-top: 40px;
+}
+
+.status-item {
+  text-align: center;
+}
+
+.status-item .label {
+  font-size: 14px;
+}
+
+.status-item .value {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 4px;
+}

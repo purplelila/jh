@@ -1,15 +1,31 @@
 import React from 'react';
 
 
-import { useContext } from "react";
-import { Link, useLocation,matchPath } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { NavLink ,Link, useLocation,matchPath } from "react-router-dom";
 import { CafeContext } from "./CafeProvider";
+import { useNavigate } from "react-router-dom";
 
 let Nav = () => {
  
   // store랑 community 경로마다 배경 이미지 및 텍스트 설정
   const location = useLocation()
   const {handleResetFilter} = useContext(CafeContext)
+
+  const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, [location.pathname]); // 경로 바뀔 때마다 상태 다시 확인
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
 
   // 기본값 설정
   let heroImage;
@@ -43,6 +59,30 @@ let Nav = () => {
 
   const hideHero = location.pathname ==='/mypage';
 
+  // STORE에 해당하는 모든 경로
+  const isStoreActive = location.pathname.startsWith('/cafelist') ||
+  location.pathname.startsWith('/cafeupload') ||
+  location.pathname.startsWith('/cafeedit') ||
+  location.pathname.startsWith('/cafedetail');
+
+  // COMMUNITY 관련 경로들
+  const isCommunityActive = (() => {
+    const path = location.pathname;
+    // `/login`, `/signup`, `/mypage` 같은 건 제외하고
+    const excluded = ['/login', '/signup', '/mypage'];
+    if (excluded.includes(path)) return false;
+  
+    // `/admin/...` 도 제외
+    if (path.startsWith('/admin')) return false;
+  
+    // `/cafe...` 도 제외
+    if (path.startsWith('/cafe')) return false;
+  
+    // 그 외의 1차 경로는 커뮤니티일 확률 높음
+    const firstPath = path.split('/')[1];
+    return ['notice', 'faq', 'free', 'event', 'chat'].includes(firstPath);
+  })();
+
   return(
     <>
       <header>
@@ -55,15 +95,28 @@ let Nav = () => {
                       </Link>
                     </div>
                     <div className="menu-store">
-                      <Link to={'/cafelist'} onClick={handleResetFilter}>STORE</Link>
-                      <Link to={'/notice'}>COMMUNITY</Link>
+                      <NavLink to={'/cafelist'} onClick={handleResetFilter} className={`menu-link ${isStoreActive ? 'active' : ''}`}>
+                        STORE
+                      </NavLink>
+                      <NavLink to={'/notice'} className={`menu-link ${isCommunityActive ? 'active' : ''}`}>
+                        COMMUNITY
+                      </NavLink>
                     </div>
                 </div>
                 <div className="menu-right">
                   <div className="menu-login">
-                    <Link to={'/login'}>LOGIN</Link>
-                    <Link to={'/signup'}>JOIN</Link>
-                    <Link to={'/mypage'}>MY PAGE</Link>
+                  {isLoggedIn ? (
+                  <>
+                    <Link to="#" onClick={(e) => {e.preventDefault(); handleLogout();}}>LOGOUT</Link>
+                    <Link to={"/mypage"}>MY PAGE</Link>
+                  </>
+                ) : (
+                  <>
+                    <Link to={"/login"}>LOGIN</Link>
+                    {/* <Link to={"/mypage"}>MY PAGE</Link> */}
+                    <Link to={"/signup"}>JOIN</Link>
+                  </>
+                )}
                   </div>
                   <div className="social-icons">
                     <a href='https://www.instagram.com/' target="_blank"><i class="fa-brands fa-instagram"></i></a>
