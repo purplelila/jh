@@ -93,11 +93,9 @@ let CafeList = () => {
             <Link to={'/cafelist'} onClick={handleResetFilter}>CAFE LISTINGS</Link>
           </h2>
           <div className="cafe-btn">
-            <div className="cafe-upload">
-
-                  <Link to={'/cafeupload'} className="cafe-upload-button">등록</Link>
-
-            </div>
+            {/* <div className="cafe-upload">
+                <Link to={'/cafeupload'} className="cafe-upload-button">등록</Link>
+            </div> */}
             <div className="search-cotainer">
               <input type="text" placeholder='카페를 입력하세요.' className='cafesearch-input' onChange={(e)=> setSearchTerm(e.target.value)} value={searchTerm}/>
               <button className='search-btn' onClick={handleSearch}>검색</button>

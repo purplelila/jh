@@ -36,11 +36,6 @@
     display: flex;
     gap: 8px;
   }
-
-  .register-edit-form-birth{
-    display: flex;
-    gap: 8px;
-  }
   
   .register-edit-form-input,
   .register-edit-form-select {
@@ -74,12 +69,6 @@
   
   .register-edit-nickname-btn:hover {
     background-color: #d4d4d4;
-  }
-
-  .register-edit-gender-check{
-    font-size: 14px;
-    color: #444;
-    font-weight: 500;
   }
 
   .register-edit-email{

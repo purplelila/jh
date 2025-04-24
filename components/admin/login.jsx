@@ -29,16 +29,27 @@ const LoginPage = () => {
             });
       
             const data = response.data;
+            console.log(data); // 응답 데이터 확인
       
             // ✅ 토큰 저장
             localStorage.setItem("token", data.token);
+            localStorage.setItem("userType", data.userType); // 예: userType 저장
+            localStorage.setItem("name", data.name);    // username 저장
+            localStorage.setItem("email", data.email);  // email 저장
 
             // ✅ 로그인한 사용자 정보 저장 (예: userType, userid 등)
-                localStorage.setItem("userType", data.userType); // 예: userType 저장
+            if (data.userid) {
                 localStorage.setItem("userid", data.userid); // 예: userid 저장
+            }
+
+            if (data.nickname) {
+              localStorage.setItem("nickname", data.nickname);
+              console.log("nickname 저장 완료: ", data.nickname);
+            }
 
             // ✅ JWT가 잘 저장되었는지 콘솔로 확인
                 console.log("JWT 토큰: ", localStorage.getItem("token"));
+                console.log("사용자 ID: ", localStorage.getItem("userid"));
             
             alert(data.message);
       

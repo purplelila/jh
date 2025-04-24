@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../style/admin/PasswordChange.css'
 
-const PasswordChange = ({realPassword}) => {
+const PasswordChange = () => {
     const navigate = useNavigate();
 
 // 비밀번호 눈 아이콘 토글을 위한 상태
@@ -24,30 +24,61 @@ const PasswordChange = ({realPassword}) => {
     const confirmPasswordRef = useRef(null);
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault()
 
-    if (currentPassword !== realPassword) {
-        alert("현재 비밀번호가 일치하지 않습니다.");
-        setCurrentErrorMessage("현재 비밀번호가 일치하지 않습니다.")
-        currentPasswordRef.current.focus()
-        return;
-      }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    console.log("사용자 토큰:", token); // 토큰 값이 제대로 출력되는지 확인
 
     if (newPassword !== confirmPassword) {
-        alert("입력하신 새 비밀번호와 일치하지 않습니다.");
-        setConfirmErrorMessage("입력하신 새 비밀번호와 일치하지 않습니다.")
-        confirmPasswordRef.current.focus()
-        return;
-      }
+      alert("입력하신 새 비밀번호와 일치하지 않습니다.");
+      setConfirmErrorMessage("입력하신 새 비밀번호와 일치하지 않습니다.");
+      confirmPasswordRef.current.focus();
+      return;
+    }
   
-      const confirm = window.confirm("정말 비밀번호를 변경하시겠습니까?");
-      if (confirm) {
-        alert("비밀번호가 변경되었습니다.");
-        navigate("/profile");
+    const confirm = window.confirm("정말 비밀번호를 변경하시겠습니까?");
+    if (!confirm) return;
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/change-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+      console.log("Authorization header:", `Bearer ${token}`); // 콘솔로 확인
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert("비밀번호가 성공적으로 변경되었습니다.");
+        navigate("/mypage");
+        window.location.reload();   // 페이지 새로 고침
+      } else {
+        if (data.message === "현재 비밀번호가 틀렸습니다.") {
+          alert("현재 비밀번호가 일치하지 않습니다.");
+          setCurrentErrorMessage(data.message);
+          currentPasswordRef.current.focus();
+        } else {
+          alert(data.message || "비밀번호 변경 실패");
+        }
       }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      alert("서버와의 통신 중 문제가 발생했습니다.");
+    }
+  };
 
-  }
 
   return (
     <div className="mypage-password-change">

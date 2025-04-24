@@ -44,33 +44,6 @@
   padding-top: 20px;
 }
 
-.cafe-upload {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.cafe-upload-button {
-  /* padding: 12px 20px; */
-  width: 75px;
-  height: 49px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  background-color: #FFA128;
-  color: #eee;
-  font-size: 17px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.cafe-upload-button:hover {
-  background-color: #FFA128;
-  color: #eee;
-}
-
 .search-container {
   display: flex;
   align-items: center;

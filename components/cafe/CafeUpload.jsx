@@ -36,15 +36,24 @@ let CafeUpload = () => {
 
     // 토큰 확인
     useEffect(() => {
-    // 로컬 스토리지에서 토큰 가져오기
-    const token = localStorage.getItem("token");
+      // 로컬 스토리지에서 토큰 가져오기
+      const token = localStorage.getItem("token");
     
-    if (token) {
-      console.log("저장된 JWT 토큰:", token);
-    } else {
-      console.log("JWT 토큰이 존재하지 않습니다.");
-    }
-    }, []);
+      if (token) {
+        console.log("저장된 JWT 토큰:", token);
+      } else {
+        console.log("JWT 토큰이 존재하지 않습니다.");
+      }
+
+      // 로그인 시 저장된 작성자 정보 가져오기
+      const userid = localStorage.getItem("nickname");
+      if (userid) {
+        setName(userid); // '작성자' 필드에 로그인한 사용자의 ID를 설정
+      } else {
+        navigate("/login"); // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+      }
+    }, [navigate]);
+    
 
     // 영업일 시간 입력
     const handleCafeHoursChange = (e) => {
@@ -277,7 +286,7 @@ let CafeUpload = () => {
             <div className="upload-form-content">
               <div className="upload-form-cafe">
                 <label>작성자<span className="upload-required">*</span></label>
-                <input type="text" placeholder='작성자' onChange={(e)=> setName(e.target.value)} value={name}/>
+                <input type="text" placeholder='작성자' onChange={(e)=> setName(e.target.value)} value={name} disabled/>
               </div>
             
               <div className="upload-form-cafe">

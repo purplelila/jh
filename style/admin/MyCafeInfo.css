@@ -1,0 +1,86 @@
+.cafe-upload {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+
+.cafe-upload-button {
+    padding: 10px 20px;
+    background-color: #103481d3;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+
+.mycafe-table-section {
+    background-color: #fff;
+    padding: 24px;
+    margin-bottom: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mycafe-table-section-h2 {
+    margin-bottom: 16px;
+    font-size: 25px;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .mycafe-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .mycafe-table-th,
+  .mycafe-table-td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .mycafe-table-th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  .mycafe-table-tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  /* 버튼 css*/
+
+  .mycafe-table-td-editbtn{
+    background-color: #103481d3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    margin-right: 5px;
+  }
+
+  .mycafe-table-td-cancelbtn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+  
+  .mycafe-table-td-button {
+    background-color: #103481d3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+
+  
