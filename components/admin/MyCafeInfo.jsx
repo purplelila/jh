@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../../style/admin/MyCafeInfo.css"; 
+import axios from 'axios';
 
 
 const MyCafeInfo = () => {
-  const cafes = [
-    { id: 1, name: '커피앤조이', requestDate: '2025-04-21', status: '승인 대기' },
-    { id: 3, name: '카페마마스', approvedDate: '2025-04-19', status: '승인 완료' },
-  ];
+  const [cafes, setCafes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const waitingList = cafes.filter(c => c.status === '승인 대기');
-  const approvedList = cafes.filter(c => c.status === '승인 완료');
+  // 카페 목록 불러오기
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const currentUserName = localStorage.getItem("nickname"); // ✅ 로그인한 사용자 닉네임 가져오기
+    axios.get("http://localhost:8080/api/cafes", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+      .then((response) => {
+        console.log("🚀 가져온 카페 목록:", response.data);
+        // ✅ 작성자 기준으로 필터링
+        const myCafes = response.data.filter(cafe => cafe.name === currentUserName);
+
+        setCafes(myCafes); // ✅ 내 카페만 상태에 저장
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('카페 목록 가져오기 실패:', error);
+        setLoading(false);
+      });
+  }, []);
 
   const handleEdit = (id) => {
     console.log('수정하기 클릭 - 카페 ID:', id);
@@ -34,6 +53,7 @@ const MyCafeInfo = () => {
         <thead>
           <tr className='mycafe-table-tr'>
             <th className='mycafe-table-th'>카페명</th>
+            <th className='mycafe-table-th'>제목</th>
             {type === 'waiting' && <th className='mycafe-table-th'>신청일</th>}
             {type === 'approved' && <th className='mycafe-table-th'>승인일</th>}
             <th className='mycafe-table-th'>상태</th>
@@ -44,8 +64,13 @@ const MyCafeInfo = () => {
           {data.map((cafe) => (
             <tr key={cafe.id}>
               <td className='mycafe-table-td'>{cafe.name}</td>
-              <td className='mycafe-table-td'>{type === 'waiting' ? cafe.requestDate : cafe.approvedDate}</td>
-              <td className='mycafe-table-td'>{cafe.status}</td>
+              <td className='mycafe-table-td'>{cafe.title}</td>
+              <td className='mycafe-table-td'>{type === 'waiting' ? cafe.regDate : cafe.approvalAt}</td>
+              <td className='mycafe-table-td'>
+                  {cafe.approvalStatus === 'PENDING' ? '승인 대기' :
+                  cafe.approvalStatus === 'APPROVED' ? '승인 완료' :
+                  cafe.approvalStatus === 'REJECTED' ? '거절됨' : '알 수 없음'}
+              </td>
               <td className='mycafe-table-td'>
                 {type === 'waiting' ? (
                   <div>
@@ -62,6 +87,14 @@ const MyCafeInfo = () => {
       </table>
     </div>
   );
+
+  // 승인 대기 카페와 승인 완료 카페 필터링
+  const waitingList = cafes.filter(c => c.approvalStatus === 'PENDING');
+  const approvedList = cafes.filter(c => c.approvalStatus === 'APPROVED');  
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div>

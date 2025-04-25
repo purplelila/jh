@@ -15,8 +15,14 @@ let CafeList = () => {
       axios.get("http://localhost:8080/api/cafes")
       .then(res => {
         console.log("카페 리스트 확인:", res.data);
-        setCafes(res.data);
-        setFilteredData(res.data);
+        res.data.forEach(cafe => {
+        console.log(`카페 ${cafe.title}의 승인 상태: ${cafe.approvalStatus}, id: ${cafe.id}`);
+        });
+        const approvedCafes = res.data.filter(cafe => cafe.approvalStatus === "APPROVED");
+        
+        console.log("승인된 카페들:", approvedCafes); // 승인된 카페 확인
+        setCafes(approvedCafes);         // ✅ 승인된 카페만 저장
+        setFilteredData(approvedCafes);  // ✅ 승인된 카페만 보여줌
       })
       .catch(err => {
         console.error("카페 데이터 불러오기 실패:", err);
@@ -111,29 +117,31 @@ let CafeList = () => {
               // 검색어 없을 때                     // 검색어 있을때 검색결과 없을때
             <p>카페 정보가 없습니다.</p> ): <p>검색된 카페 정보가 없습니다.</p>)
             : (
-            filteredData.map((p, idx) => {
-              if (idx < numofRows){
-                return(
-                  <div key={idx} className='cafe-item'>
-                    <div className="cafe-item-img">
-                      {/* 이미지 표시 */}
-                      <Link to={`/cafedetail/${p.id}`}>
-                        <p><img src={p.imgURLs && p.imgURLs.length > 0 ? p.imgURLs[0] : "/default-image.jpg"} /></p>
-                      </Link>
-                    </div>
-                    <div className="cafe-item-text">
-                      <h3>{p.title}</h3>
-                      <p>{p.content}</p>
-                      {/* <p>{p.place}</p> */}
-                      <div className="cafe-item-detail">
+            filteredData
+              .filter(p => p.approvalStatus === "APPROVED")  // 승인된 카페만 필터링
+              .map((p, idx) => {
+                if (idx < numofRows){
+                  return(
+                    <div key={idx} className='cafe-item'>
+                      <div className="cafe-item-img">
+                        {/* 이미지 표시 */}
                         <Link to={`/cafedetail/${p.id}`}>
-                          <p>자세히 보기+</p>
+                          <p><img src={p.imgURLs && p.imgURLs.length > 0 ? p.imgURLs[0] : "/default-image.jpg"} /></p>
                         </Link>
                       </div>
+                      <div className="cafe-item-text">
+                        <h3>{p.title}</h3>
+                        <p>{p.content}</p>
+                        {/* <p>{p.place}</p> */}
+                        <div className="cafe-item-detail">
+                          <Link to={`/cafedetail/${p.id}`}>
+                            <p>자세히 보기+</p>
+                          </Link>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )
-              }
+                  )
+                }
               return null
             })
           )}

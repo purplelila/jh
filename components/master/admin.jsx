@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 const Admin = () => {
@@ -12,6 +13,7 @@ const Admin = () => {
     board: false
   });
 
+  const [pendingCafes, setPendingCafes] = useState([]);
   const [isAuthorized, setIsAuthorized] = useState(null);
 
     // ✅ 관리자 인증 체크
@@ -28,6 +30,71 @@ const Admin = () => {
         setIsAuthorized(true); // ✅ 인가되었을 때 true로 설정
       }
     }, [navigate]);
+
+
+
+    // 승인 대기 중인 카페 목록 불러오기
+    useEffect(() => {
+      if (isAuthorized) {
+        const token = localStorage.getItem("token");
+        axios.get("http://localhost:8080/cafes/pending", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+          .then((response) => {
+            console.log(response.data);
+            if (Array.isArray(response.data)) {
+              setPendingCafes(response.data); // 응답이 배열일 경우 상태 업데이트
+            } else {
+              console.error("카페 목록은 배열이어야 합니다.");
+              setPendingCafes([]); // 배열이 아니면 빈 배열로 설정
+            }
+          })
+          .catch((error) => {
+            console.error("카페 목록을 불러오는 데 실패했습니다.", error);
+            setPendingCafes([]); // 실패 시 빈 배열로 설정
+          });
+      }
+    }, [isAuthorized]);
+  
+    // 카페 승인 처리
+    const approveCafe = (cafeId) => {
+      const token = localStorage.getItem("token"); // ✅ 토큰 가져오기
+      axios.post(`http://localhost:8080/cafes/${cafeId}/approve`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(() => {
+          alert("카페가 승인되었습니다.");
+          setPendingCafes(pendingCafes.filter(cafe => cafe.id !== cafeId));
+        })
+        .catch((error) => {
+          console.error("카페 승인에 실패했습니다.", error);
+          alert("카페 승인에 실패했습니다.");
+        });
+    };
+  
+    // 카페 거절 처리
+    const rejectCafe = (cafeId) => {
+      const token = localStorage.getItem("token"); // ✅ 토큰 가져오기
+      axios.post(`http://localhost:8080/cafes/${cafeId}/reject`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(() => {
+          alert("카페가 거절되었습니다.");
+          setPendingCafes(pendingCafes.filter(cafe => cafe.id !== cafeId));
+        })
+        .catch((error) => {
+          console.error("카페 거절에 실패했습니다.", error);
+          alert("카페 거절에 실패했습니다.");
+        });
+    };
+
+
 
     if (isAuthorized === false) {
       return null; // 비인가일 때는 아무것도 안 보여줌
@@ -135,15 +202,17 @@ const Admin = () => {
             </tr>
           </thead>
           <tbody>
-            {[10, 9, 8].map((num) => (
-              <tr key={num} className="list-tr">
-                <td>{num}</td>
-                <td>게시판 제목 {num}</td>
-                <td>관리자</td>
-                <td>2024-03-{20 - (10 - num)}</td>
+            {pendingCafes.map((cafe) => (
+              <tr key={cafe.id} className="list-tr">
+                <td>{cafe.id}</td>
+                <td>{cafe.title}</td>
+                <td>{cafe.name}</td>
+                <td>{cafe.regDate}</td>
                 <td>
-                  <button>승인</button>
-                  <button className="delete-btn">거절</button>
+                  <button onClick={() => approveCafe(cafe.id)}>승인</button>
+                  <button className="delete-btn" onClick={() => rejectCafe(cafe.id)}>
+                    거절
+                  </button>
                 </td>
               </tr>
             ))}

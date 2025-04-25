@@ -22,6 +22,8 @@ let CafeUpload = () => {
     const [existingImages, setExistingImages] = useState([]); // 기존 이미지 (수정 시)
     const [imagesToDelete, setImagesToDelete] = useState([]); // 삭제할 이미지 파일명 리스트
 
+    const [approvalStatus, setApprovalStatus] = useState("PENDING"); // 승인 상태 관리 (기본: PENDING)
+
     const [cafeHours, setCafeHours] = useState({
       월 : "",
       화 : "",
@@ -132,6 +134,7 @@ let CafeUpload = () => {
         axios.get(`http://localhost:8080/api/cafe/${id}`)
           .then((res) => {
             const data = res.data;
+            console.log("응답 데이터:", data);  // 응답 데이터 확인
             setName(data.name);
             setTitle(data.title);
             setPlace(data.place);
@@ -139,6 +142,8 @@ let CafeUpload = () => {
             setPhone(data.phone);
             setSns(data.sns);
             setCafeHours(data.cafeHours);
+
+            setApprovalStatus(data.approvalStatus); // 승인 상태를 받아와서 설정
     
             // 이미지 URL은 서버 이미지 URL로
             setImgURL(data.imgURLs || []);
@@ -220,7 +225,8 @@ let CafeUpload = () => {
         content,
         sns,
         phone,
-        cafeHours
+        cafeHours,
+        approvalStatus : "PENDING",// 승인 상태
       };
 
       // JSON 문자열로 변환해 FormData에 추가
@@ -253,9 +259,9 @@ let CafeUpload = () => {
       
         if (!isEdit) {
           addCafe(imageUrls, imgName, cafeHours, title, place, content, phone, sns);
-          alert("카페가 등록되었습니다.");
+          alert("작성하신 카페정보가 승인요청되었습니다.");
 
-          navigate("/cafelist");  // 등록 후 카페 리스트 페이지로 이동
+          navigate("/mypage");
 
         } else {
           alert("카페가 수정되었습니다.");
@@ -264,7 +270,7 @@ let CafeUpload = () => {
 
       } catch (error) {
         console.error("카페 등록/수정 실패", error.response);
-        alert("카페 사장만 등록할 수 있습니다.");
+        alert("카페 등록 중 문제가 발생했습니다.");
       }
      
     }
@@ -361,7 +367,7 @@ let CafeUpload = () => {
 
 
             <div className="upload-form-btn">
-              <button type='submit'>{isEdit ? "게시글 수정" : "게시글 등록"}</button>
+              <button type='submit'>{isEdit ? "게시글 수정" : "등록 승인요청"}</button>
             </div>
           </form>
         </div>
