@@ -71,11 +71,23 @@ const LoginPage = () => {
           } catch (error) {
             // ❌ 서버에서 에러 메시지 응답 시 처리
             if (error.response && error.response.data) {
-              setErrorMessage(error.response.data.message );
+              const serverMsg = error.response.data.message;
+          
+              // ✅ 조건에 따라 알림 분기
+              if (
+                serverMsg.includes("비밀번호") ||
+                serverMsg.includes("아이디") ||
+                serverMsg.includes("로그인") // 혹시 다른 메시지 형태 대비
+              ) {
+                alert("아이디 / 비밀번호가 틀렸습니다."); // 가장 일반적인 안내
+              }
+          
+              setErrorMessage(serverMsg); // 화면에 메시지도 출력
+          
             } else {
-              setErrorMessage("서버와 연결할 수 없습니다.");
+              console.error("서버와 연결할 수 없습니다."); // ❗ 콘솔에만 출력
+              alert("연결 중입니다. 잠시만 기다려주세요."); // 사용자에게는 부드럽게 안내
             }
-            console.error("로그인 에러:", error);
           }
         };
 

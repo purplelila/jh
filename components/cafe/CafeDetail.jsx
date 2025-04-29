@@ -11,7 +11,7 @@ let CafeDetail = () => {
     const[mainImage, setMainImage] = useState(null);
     const navigate = useNavigate();
     
-    const { cafes, setCafes, setFilteredData, deleteCafe } = useContext(CafeContext)
+    const { cafes, setCafes, setFilteredData } = useContext(CafeContext)
     let { id } = useParams()
     const [selectedCafe, setSelectedCafe] = useState(null);
 
@@ -45,20 +45,6 @@ let CafeDetail = () => {
         setMainImage(imgURL)
     }
 
-    // 삭제
-    const handleDelete = async (id) => {
-        if (!window.confirm("정말 삭제하시겠습니까?")) return;
-      
-        try {
-          await axios.delete(`http://localhost:8080/api/deleteCafe/${id}`);
-          deleteCafe(id); // context에서 상태 제거
-          alert("삭제되었습니다.");
-          navigate("/cafelist");
-        } catch (error) {
-          console.error("삭제 실패", error);
-          alert("삭제에 실패했습니다.");
-        }
-      };
 
     return(
       <>
@@ -138,16 +124,6 @@ let CafeDetail = () => {
             <div className="cafedetail-btn">
                 <Link to={'/cafelist'}>
                     <button>목록</button>
-                </Link>
-            </div>
-            <div className="cafedetail-btn">
-            <button onClick={() => handleDelete(selectedCafe.id)}>
-                삭제
-            </button>
-            </div>
-            <div className="cafedetail-btn">
-                <Link to={`/cafeedit/${selectedCafe.id}`}>
-                    <button>수정</button>
                 </Link>
             </div>
       </div>

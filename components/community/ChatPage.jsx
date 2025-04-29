@@ -79,6 +79,11 @@ const ChatPage = () => {
       <Tabs />
       <div className="tab-content">
         <div className="community-board">
+        <div className="breadcrumb-list">
+            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">소통창</span>
+          </div>
           <div className="community-top">
             <div className="community-title">
               <h2>소통창</h2>

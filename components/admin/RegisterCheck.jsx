@@ -32,6 +32,7 @@ const RegisterCheck = ({ onSuccess }) => {
 
     if (response.ok) {
       console.log("비밀번호 일치", data);
+      alert("비밀번호가 확인되었습니다."); // 비밀번호 일치 시 알림 추가
       onSuccess(); // 비밀번호가 맞으면 onSuccess 호출
     } else {
       console.log("비밀번호 불일치", data.message);

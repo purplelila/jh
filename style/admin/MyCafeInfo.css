@@ -34,9 +34,9 @@
   }
   
   .mycafe-table-th,
-  .mycafe-table-td {
+  .mycafe-table-td,
+  .mycafe-table-td-date {
     padding: 12px 16px;
-    text-align: left;
     border-bottom: 1px solid #eee;
   }
   
@@ -50,9 +50,19 @@
     background-color: #f5f5f5;
   }
 
+  .mycafe-table-td-btns{
+    display: flex;
+    justify-content: center;
+  }
+
+  .mycafe-table-td-date{
+    text-align: center;
+  }
+
+
   /* 버튼 css*/
 
-  .mycafe-table-td-editbtn{
+  .mycafe-table-td-showbtn{
     background-color: #103481d3;
     color: white;
     border: none;
@@ -73,8 +83,19 @@
     font-size: 0.875rem;
   }
   
-  .mycafe-table-td-button {
+  .mycafe-table-td-editbtn{
     background-color: #103481d3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    margin-right: 5px;
+  }
+
+  .mycafe-table-td-deletebnt {
+    background-color: #ef4444;
     color: white;
     border: none;
     padding: 6px 12px;

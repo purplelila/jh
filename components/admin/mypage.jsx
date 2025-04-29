@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 import PasswordChange from "./PassWordChange";
 import RegisterChange from "./RegisterChange";
@@ -12,12 +13,58 @@ const MyPage = () => {
   const [activeSection, setActiveSection] = useState("profile"); // 기본적으로 프로필 섹션만 보이게 설정
   const [isOpenDrop, setIsOpenDrop] = useState(null); // 드롭다운 상태
 
+  const [cafes, setCafes] = useState([]); // 카페 정보 상태
+  const [waitingCount, setWaitingCount] = useState(0); // 승인 대기 카페 수
+  const [approvedCount, setApprovedCount] = useState(0); // 승인 완료 카페 수
+
   // 현재 비밀번호 상태 관리
   const [realPassword, setRealPassword] = useState("12344")
 
   // 회원정보 비밀번호 확인
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
 
+  // 사용자 ID와 토큰 가져오기
+  const userId = localStorage.getItem("userid");
+  const token = localStorage.getItem("token");
+
+  // 카페 목록 가져오기
+  useEffect(() => {
+    console.log("현재 사용자 ID:", userId); // 확인용 콘솔 로그
+    axios.get("http://localhost:8080/api/cafes", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log("전체 카페 목록:", response.data);  // 전체 카페 목록을 확인
+        const myCafes = response.data.map((cafe) => {
+          console.log("카페:", cafe);  // 각 카페의 내용 출력
+          return cafe;  // 필드명이 맞는지 확인
+        });
+      
+        // 예시: 'userid' 대신 다른 필드명일 수 있음
+        const myCafesFiltered = response.data.filter((cafe) => cafe.userid === userId);
+        console.log("내 카페 목록:", myCafesFiltered);  // 내 카페 목록
+        setCafes(myCafesFiltered);
+
+        // 승인 대기
+        const waiting = myCafes.filter((cafe) => cafe.approvalStatus === "PENDING").length;
+        // 승인 완료 카페 수 계산 (APPROVED + REJECTED)
+        const approved = myCafes.filter((cafe) => 
+          cafe.approvalStatus === "APPROVED" || cafe.approvalStatus === "REJECTED"
+        ).length;
+        
+        setCafes(myCafes);
+        setWaitingCount(waiting);
+        setApprovedCount(approved);
+        console.log("카페 목록 가져오기 성공:", response.data);
+        console.log("승인 대기 카페 수:", waiting);
+        console.log("승인 완료 카페 수:", approved);
+      })
+      .catch((error) => {
+        console.error("카페 목록 가져오기 실패:", error);
+      });
+  }, [userId]);
 
 
   // 로그인된 사용자 정보 상태로 관리
@@ -188,22 +235,22 @@ const MyPage = () => {
               <>
                 <div className="mypage-status-item">
                   <p className="mypage-label">승인대기</p>
-                  <p className="mypage-value">0건</p>
+                  <p className="mypage-value">{waitingCount}건</p>
                 </div>
                 <div className="mypage-status-item">
                   <p className="mypage-label">승인완료</p>
-                  <p className="mypage-value">1건</p>
+                  <p className="mypage-value">{approvedCount}건</p>
                 </div>
               </>
             )}
             
               <div className="mypage-status-item">
                 <p className="mypage-label">내가쓴글</p>
-                <p className="mypage-value">1건</p>
+                <p className="mypage-value">{}건</p>
               </div> 
               <div className="mypage-status-item">
                 <p className="mypage-label">내가쓴댓글</p>
-                <p className="mypage-value">1건</p>
+                <p className="mypage-value">{}건</p>
               </div> 
           </div>
         </>

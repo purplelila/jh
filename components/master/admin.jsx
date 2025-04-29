@@ -1,181 +1,156 @@
-import React, { useState, useEffect }from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "./sidebar";
 import axios from "axios";
-
 
 const Admin = () => {
   const navigate = useNavigate();
-  const [openMenu, setOpenMenu] = useState({
-    member: false,
-    board: false
-  });
-
-  const [pendingCafes, setPendingCafes] = useState([]);
+  const [totalMembers, setTotalMembers] = useState(0);
+  const [newMembersToday, setNewMembersToday] = useState(0);
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [pendingCafes, setPendingCafes] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCafes, setTotalCafes] = useState(0);
+  const cafelistPerPage = 5;
+  
+  const startIndex = (currentPage - 1) * cafelistPerPage;
+  const paginatedCafes = pendingCafes.slice(startIndex, startIndex + cafelistPerPage);
 
-    // ✅ 관리자 인증 체크
-    useEffect(() => {
+  // 관리자 인증 체크
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userType = parseInt(localStorage.getItem("userType"));
+
+    if (!token || userType !== 3) {
+      setIsAuthorized(false);
+    } else {
+      setIsAuthorized(true);
+    }
+  }, []);
+
+  // 권한 없으면 로그인 페이지로 이동
+  useEffect(() => {
+    if (isAuthorized === false) {
+      alert("정상적인 접근경로가 아닙니다.");
+      navigate("/login");
+    }
+  }, [isAuthorized, navigate]);
+
+  // 승인 대기 카페 목록 불러오기 (최신순 정렬)
+  useEffect(() => {
+    if (isAuthorized) {
       const token = localStorage.getItem("token");
-      const userType = parseInt(localStorage.getItem("userType"));
-    
-      if (!token || userType !== 3) {
-        alert("관리자 페이지입니다. 로그인 해주세요.");
-        setIsAuthorized(false); // ❗ 비인가일 때 false로 설정
-        navigate("/login");
-      } else {
-        console.log("✅ 관리자 권한 확인 완료");
-        setIsAuthorized(true); // ✅ 인가되었을 때 true로 설정
-      }
-    }, [navigate]);
-
-
-
-    // 승인 대기 중인 카페 목록 불러오기
-    useEffect(() => {
-      if (isAuthorized) {
-        const token = localStorage.getItem("token");
-        axios.get("http://localhost:8080/cafes/pending", {
-          headers: {
-            Authorization: `Bearer ${token}`
+      axios
+        .get("http://localhost:8080/cafes/pending", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          if (Array.isArray(response.data)) {
+            const sortedCafes = response.data.sort((a, b) => new Date(b.regDate) - new Date(a.regDate));
+            setPendingCafes(sortedCafes);
+            const totalCafes = sortedCafes.length;
+            setTotalPages(Math.ceil(totalCafes / cafelistPerPage));
+            setTotalCafes(totalCafes);
+          } else {
+            console.error("카페 목록은 배열이어야 합니다.");
+            setPendingCafes([]);
           }
         })
-          .then((response) => {
-            console.log(response.data);
-            if (Array.isArray(response.data)) {
-              setPendingCafes(response.data); // 응답이 배열일 경우 상태 업데이트
-            } else {
-              console.error("카페 목록은 배열이어야 합니다.");
-              setPendingCafes([]); // 배열이 아니면 빈 배열로 설정
-            }
-          })
-          .catch((error) => {
-            console.error("카페 목록을 불러오는 데 실패했습니다.", error);
-            setPendingCafes([]); // 실패 시 빈 배열로 설정
-          });
-      }
-    }, [isAuthorized]);
-  
-    // 카페 승인 처리
-    const approveCafe = (cafeId) => {
-      const token = localStorage.getItem("token"); // ✅ 토큰 가져오기
-      axios.post(`http://localhost:8080/cafes/${cafeId}/approve`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(() => {
-          alert("카페가 승인되었습니다.");
-          setPendingCafes(pendingCafes.filter(cafe => cafe.id !== cafeId));
+        .catch((error) => {
+          console.error("카페 목록을 불러오는 데 실패했습니다.", error);
+          setPendingCafes([]);
+        });
+    }
+  }, [isAuthorized]);
+
+  // pendingCafes가 바뀌면 페이지 수 재계산
+  useEffect(() => {
+    const totalCafes = pendingCafes.length;
+    const newTotalPages = Math.ceil(totalCafes / cafelistPerPage) || 1;
+    setTotalPages(newTotalPages);
+
+    if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages);
+    }
+  }, [pendingCafes, currentPage]);
+
+  // 전체 회원 수, 오늘 가입 회원 수 가져오기
+  useEffect(() => {
+    if (isAuthorized) {
+      const token = localStorage.getItem("token");
+
+      axios
+        .get("http://localhost:8080/api/users/count", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setTotalMembers(response.data);
         })
         .catch((error) => {
-          console.error("카페 승인에 실패했습니다.", error);
-          alert("카페 승인에 실패했습니다.");
+          console.error("전체 회원 수를 불러오는 데 실패했습니다.", error);
         });
-    };
-  
-    // 카페 거절 처리
-    const rejectCafe = (cafeId) => {
-      const token = localStorage.getItem("token"); // ✅ 토큰 가져오기
-      axios.post(`http://localhost:8080/cafes/${cafeId}/reject`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(() => {
-          alert("카페가 거절되었습니다.");
-          setPendingCafes(pendingCafes.filter(cafe => cafe.id !== cafeId));
+
+      axios
+        .get("http://localhost:8080/api/users/count-today", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setNewMembersToday(response.data);
         })
         .catch((error) => {
-          console.error("카페 거절에 실패했습니다.", error);
-          alert("카페 거절에 실패했습니다.");
+          console.error("오늘 가입한 회원 수를 불러오는 데 실패했습니다.", error);
         });
-    };
-
-
-
-    if (isAuthorized === false) {
-      return null; // 비인가일 때는 아무것도 안 보여줌
     }
-    
-    if (isAuthorized === null) {
-      return (
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          fontSize: "1.5rem"
-        }}>
-          🔒 관리자 권한 확인 중...
-        </div>
-      );
-    }
-  const toggleMenu = (menu) => {
-    setOpenMenu((prev) => ({
-      ...prev,
-      [menu]: !prev[menu],
-    }));
+  }, [isAuthorized]);
+
+  // 카페 승인 처리
+  const approveCafe = (cafeId) => {
+    const token = localStorage.getItem("token");
+    axios
+      .post(`http://localhost:8080/cafes/${cafeId}/approve`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        alert("카페가 승인되었습니다.");
+        setPendingCafes((prevCafes) => prevCafes.filter((cafe) => cafe.id !== cafeId));
+      })
+      .catch((error) => {
+        console.error("카페 승인에 실패했습니다.", error);
+        alert("카페 승인에 실패했습니다.");
+      });
   };
 
-  const logoutCheck = () => {
-    const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
-    if (confirmLogout) {
-      alert("로그아웃 되었습니다.");
-      // 필요하다면 로그아웃 처리 추가 (예: localStorage.clear())
-      navigate("/"); // 메인 페이지로 이동
+  // 카페 거절 처리
+  const rejectCafe = (cafeId) => {
+    const token = localStorage.getItem("token");
+    axios
+      .post(`http://localhost:8080/cafes/${cafeId}/reject`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        alert("카페가 거절되었습니다.");
+        setPendingCafes((prevCafes) => prevCafes.filter((cafe) => cafe.id !== cafeId));
+      })
+      .catch((error) => {
+        console.error("카페 거절에 실패했습니다.", error);
+        alert("카페 거절에 실패했습니다.");
+      });
+  };
+
+  // 페이지 이동 처리
+  const handlePageClick = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
   return (
     <div className="admin-board">
       {/* 사이드바 */}
-      <div className="sidebar">
-          <h2 className="sidebar-h2">관리자 메뉴
-            <Link to="/">
-             <FontAwesomeIcon icon={faHouse} className="sidebar-icon"/>
-            </Link>
-          </h2>
-          <ul className="sidebar-ul">
-            <li className="sidebar-li-a"><a href="/admin/1">대시보드</a></li>
-
-            {/* 회원 관리 드롭다운 */}
-            <li>
-              <div className="dropdown-header" onClick={() => toggleMenu("member")}>
-                회원 관리
-              </div>
-
-              {openMenu.member && (
-                <ul className="dropdown-list">
-                  <li><a href="/admin/list-0"> - 일반회원 목록</a></li>
-                  <li><a href="/admin/list-1"> - 카페사장 목록</a></li>
-                </ul>
-              )}
-            </li>
-
-            {/* 게시판 관리 드롭다운 */}
-            <li>
-              <div className="dropdown-header" onClick={() => toggleMenu("board")}>
-                게시판 관리
-              </div>
-              {openMenu.board && (
-                <ul className="dropdown-list">
-                  <li><a href="/admin/Bord-1"> - 공지사항 목록</a></li>
-                  <li><a href="/admin/Bord-2">- 자주 묻는 질문 목록</a></li>
-                  <li><a href="/admin/Bord-3">- 커뮤니티 목록</a></li>
-                  <li><a href="/admin/Bord-4">- 카페등록 목록</a></li>
-                </ul>
-              )}
-            </li>
-
-            <li><a href="/admin/1">설정</a></li>
-            <li className="sidebar-logout">
-            <button className="sidebar-logout-btn" onClick={logoutCheck}>로그아웃</button>
-            </li>
-          </ul>
-        </div>
+      <div className="sidebar-allbox">
+        <Sidebar />
+      </div>
 
       {/* 메인 컨텐츠 */}
       <div className="main-content">
@@ -183,14 +158,15 @@ const Admin = () => {
         <div className="dashboard-cards">
           <div className="card-card-1">
             <h3>전체 회원</h3>
-            <p>1,250명</p>
+            <p>{totalMembers !== null ? `${totalMembers}명` : "로딩중..."}</p>
           </div>
           <div className="card-card-2">
             <h3>신규 가입</h3>
-            <p>25명</p>
+            <p>{newMembersToday !== null ? `${newMembersToday}명` : "로딩중..."}</p>
           </div>
         </div>
-            <h1 className="admin-h1">승인대기목록</h1>
+
+        <h1 className="admin-h1">승인대기목록</h1>
         <table className="board-table">
           <thead>
             <tr className="tr-total-middle">
@@ -202,29 +178,51 @@ const Admin = () => {
             </tr>
           </thead>
           <tbody>
-            {pendingCafes.map((cafe) => (
-              <tr key={cafe.id} className="list-tr">
-                <td>{cafe.id}</td>
-                <td>{cafe.title}</td>
-                <td>{cafe.name}</td>
-                <td>{cafe.regDate}</td>
-                <td>
-                  <button onClick={() => approveCafe(cafe.id)}>승인</button>
-                  <button className="delete-btn" onClick={() => rejectCafe(cafe.id)}>
-                    거절
-                  </button>
-                </td>
+            {Array.isArray(pendingCafes) && pendingCafes.length > 0 ? (
+              paginatedCafes.map((cafe, index) => (
+                <tr key={cafe.id} className="list-tr">
+                  <td>{totalCafes - (startIndex + index)}</td>
+                  <td>{cafe.title}</td>
+                  <td>{cafe.name}</td>
+                  <td>{cafe.regDate}</td>
+                  <td>
+                    <button onClick={() => approveCafe(cafe.id)}>승인</button>
+                    <button className="delete-btn" onClick={() => rejectCafe(cafe.id)}>거절</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">대기 중인 카페가 없습니다.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 
         <div className="pagination">
-          <button className="prev-btn">이전</button>
-          <span className="active">1</span>
-          <span>2</span>
-          <span>3</span>
-          <button className="next-btn">이후</button>
+          <button
+            className="prev-btn"
+            disabled={currentPage === 1}
+            onClick={() => handlePageClick(currentPage - 1)}
+          >
+            이전
+          </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <span
+              key={index}
+              className={currentPage === index + 1 ? "active" : ""}
+              onClick={() => handlePageClick(index + 1)}
+            >
+              {index + 1}
+            </span>
+          ))}
+          <button
+            className="next-btn"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageClick(currentPage + 1)}
+          >
+            이후
+          </button>
         </div>
       </div>
     </div>

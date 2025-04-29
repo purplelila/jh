@@ -16,6 +16,15 @@ const Signup = () => {
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isUseridValid, setIsUseridValid] = useState(null); // null | true | false //아이디 영어와 숫자만 가능하게하는상태
+  const [isPasswordValid, setIsPasswordValid] = useState(null); //비밀번호 입력시 조건필요한 부분
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(null); //비밀번호 중복확인상태
+  const [isEmailValid, setIsEmailValid] = useState(null); // 이메일 유효성 상태 추가
+  const [isUsernameValid, setIsUsernameValid] = useState(null); // 이메일 유효성 상태 추가
+  const [isNicknameValid, setIsNicknameValid] = useState(null); // 닉네임 유효성 상태 추가
+  const [isLoading, setIsLoading] = useState(false); //비동기처리
+  const [isUseridDuplicate, setIsUseridDuplicate] = useState(null); // 아이디 중복 여부
+
 
   const handleUserTypeChange = (e) => {
     setUserType(e.target.value);
@@ -85,23 +94,140 @@ const Signup = () => {
     }).open();
   };
 
+    //아이디 관련 내용
+  const validateUserid = () => {
+    const regex = /^[a-zA-Z0-9]+$/; // 영어+숫자만
+    if (userid === '') {
+      setIsUseridValid(null);
+    } else {
+      setIsUseridValid(regex.test(userid));
+    }
+  };
+    //아이디 중복 관련 내용
+    const checkUseridDuplicate = async () => {
+      if (!userid) {
+        alert('아이디를 입력해주세요!');
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`http://localhost:8080/api/users/check-userid?userid=${userid}`);
+        if (response.data) {
+          alert(`"${userid}" ❌ 이미 사용 중인 아이디입니다!`);
+          setIsUseridDuplicate(true); // 중복 아이디일 경우
+        } else {
+          alert(`"${userid}" ✅ 사용 가능한 아이디입니다!`);
+          setIsUseridDuplicate(false); // 사용 가능한 아이디일 경우
+        }
+      } catch (error) {
+        console.error('아이디 중복 확인 오류:', error);
+        alert('아이디 중복 확인에 실패했어요!❌ 잠시 후 다시 이용해주세요.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    //비밀번호 관련 내용
+  const validatePassword = () => {
+    // 정규식: 최소 8자, 영어/숫자 포함
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*])[A-Za-z\d~!@#$%^&*]{8,}$/;
+    setIsPasswordValid(regex.test(password)); // 유효성 검사 결과를 상태로 업데이트
+  };
+
+    //비밀번호 확인 관련내용
+  const validateConfirmPassword = () => {
+    if (confirmPassword !== password) {
+      setIsConfirmPasswordValid(false);
+    } else {
+      setIsConfirmPasswordValid(true);
+    }
+  };
+
+    //이메일관련내용
+  const validateEmail = () => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    setIsEmailValid(regex.test(email));
+  };
+
+    //이름관련내용
+  const validateUsername = () => {
+    const regex = /^[a-zA-Z가-힣]+$/; // 영문자와 한글만 허용
+    if (username === '') {
+      setIsUsernameValid(null);
+    } else {
+      setIsUsernameValid(regex.test(username));
+    }
+  };
+
+        //닉네임관련내용
+        const checkNicknameDuplicate = async () => {
+          if (!nickname) {
+            alert('닉네임을 입력해주세요!');
+            return;
+          }
+          setIsLoading(true); // 로딩 시작
+          try {
+            const response = await axios.get(`http://localhost:8080/api/users/check-nickname?nickname=${nickname}`);
+            
+            if (response.data.isDuplicate) {
+              alert(`"${nickname}" 이미 사용 중이에요!`);
+              setIsNicknameValid(false); // ❌ 중복이면 false
+            } else {
+              alert(`"${nickname}"  사용 가능합니다!`);
+              setIsNicknameValid(true); // ✅ 중복 아니면 true
+            }
+          } catch (error) {
+            console.error('중복 확인 오류:', error);
+            alert('닉네임 중복 확인에 실패했어요!❌ 잠시 후 다시 이용해주세요.');
+          } finally {
+            setIsLoading(false); // 로딩 종료
+          }
+        };
+    
   return (
     <div className="signup-total-box">
       <div className="showdow-box">
         <div className="signup-img-box">
-          <div className="sinup-img-left">
+          <div className="signup-img-left">
             <img src="/registerchar.png" alt="환영사진" />
           </div>
         </div>
         <div className="signup-container">
         <h2 className='signup-h2'>회원가입</h2>
         <form onSubmit={handleSubmit}>
-          <input className='signup-userid' type="text" value={userid} onChange={(e) => setUserid(e.target.value)} placeholder="아이디" required/>
-          <input className='signup-pwd' type="password" value={password} onChange={(e) => setPassword(e.target.value)}  placeholder="비밀번호" required autoComplete="new-password"/>
-          <input className='signup-pwd-ck' type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="비밀번호 확인" required autoComplete="new-password"/>
-          <input className='signup-email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일" required />
-          <input className='signup-username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="이름" required/>
-          <input className='signup-niname' type="text" value={nickname} onChange={(e) => setNickname(e.target.value)}  placeholder="닉네임" />
+        <div className="dubleck-box">
+          <input className='signup-userid' type="text" value={userid} onChange={(e) => setUserid(e.target.value)} onBlur={validateUserid} placeholder="아이디" required  autoComplete="off"/>
+          <button className='dck-btn' type="button" onClick={checkUseridDuplicate} disabled={isLoading}>{isLoading ? '확인 중...' : '중복 확인'}</button>
+        </div>
+        {isUseridValid === false && (<p className="signup-error-text">❌ 아이디를 다시 입력해주세요.</p>)}
+        {isUseridValid === true && (<p className="signup-success-text">✅ 사용 가능한 아이디 형식입니다.</p>)}
+        {isUseridDuplicate === true && (<p className="signup-error-text">❌ 아이디가 이미 사용 중입니다.</p>)}
+        {isUseridDuplicate === false && isUseridValid === true && (<p className="signup-success-text">✅ 사용 가능한 아이디입니다.</p>)}
+          <input className='signup-pwd' type="password" value={password} onChange={
+            (e) =>  {const newPassword = e.target.value;
+              setPassword(newPassword);
+              setIsPasswordValid(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*])[A-Za-z\d~!@#$%^&*]{8,}$/.test(newPassword)); // 즉시 검증
+            }} onBlur={validatePassword} placeholder="비밀번호" required autoComplete="new-password"/>
+          {isPasswordValid === false && (<p className="signup-error-text">❌ 8자 이상, 영문자와 숫자, 특수기호(~,!,@,# 등)를 포함해주세요.</p>)}
+          {isPasswordValid === true && (<p className="signup-success-text">✅ 사용 가능한 비밀번호입니다.</p>)}
+
+          <input className='signup-pwd-ck' type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onBlur={validateConfirmPassword} placeholder="비밀번호 확인" required autoComplete="new-password"/>
+          {isConfirmPasswordValid === false && (<p className="signup-error-text">❌ 비밀번호가 일치하지 않습니다.</p>)}
+          {isConfirmPasswordValid === true && (<p className="signup-success-text">✅ 비밀번호가 일치합니다.</p>)}
+
+          <input className='signup-email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={validateEmail} placeholder="이메일" required />
+          {isEmailValid === false && (<p className="signup-error-text">❌ 올바른 이메일 형식을 입력해주세요.</p>)}
+          {isEmailValid === true && (<p className="signup-success-text">✅ 사용 가능한 이메일입니다.</p>)}
+          <input className='signup-username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} onBlur={validateUsername} placeholder="이름" required/>
+          {isUsernameValid === false && (<p className="signup-error-text">❌이름에 숫자나 특수기호를 사용할 수 없습니다.</p>)}
+          {isUsernameValid === true && (<p className="signup-success-text">✅ 유효한 이름입니다.</p>)}
+          <div className="dubleck-box">
+            <input className="signup-niname" type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="닉네임" /> {/* 값업데이트 */}
+            <button className='dck-btn' type="button" onClick={checkNicknameDuplicate} disabled={isLoading} >{isLoading ? '확인 중...' : '중복 확인'}</button>  {/* 중복 확인 버튼 */}
+          </div>
+          {isNicknameValid === true && (<p className="signup-success-text">✅ 사용 가능한 닉네임입니다.</p>)}
+          {isNicknameValid === false && (<p className="signup-error-text">❌ 닉네임이 이미 사용 중입니다.</p>)}
+          
           <div className="signup-user-type">
             <label className='signup-radio-n'>
               <input className='signup-radio-n' type="radio" name="userType" value="0" checked={userType === "0"} onChange={handleUserTypeChange} required />

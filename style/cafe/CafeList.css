@@ -37,7 +37,7 @@
 
 .cafe-btn{
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   margin-top: 40px;
   border-top: 1px solid #aaa;

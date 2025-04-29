@@ -1,128 +1,166 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import Sidebar from "./sidebar";
 
 const AdminList = () => {
-    const navigate = useNavigate();
-  const location = useLocation();
   const [users, setUsers] = useState([]); // ← 서버에서 받아올 회원 데이터
-  const [openMenu, setOpenMenu] = useState({
-    member: false,
-    board: false,
-  });
-
-  // 현재 경로에 따라 메뉴 자동으로 펼치기
-  useEffect(() => {
-    setOpenMenu({
-      member: location.pathname.includes("/admin/list"),
-      board: location.pathname.includes("/admin/Bord"),
-    });
-  }, [location]);
-
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/users?userType=0")
-      .then((response) => {
-        setUsers(response.data); // 회원 리스트 저장
-      })
-      .catch((error) => {
-        setError("회원 데이터를 불러오지 못했습니다.");
-        console.error(error);
-      });
-  }, []);
-
-  const toggleMenu = (menu) => {
-    setOpenMenu((prev) => ({
-      ...prev,
-      [menu]: !prev[menu],
-    }));
-  };
-
+  const [isAuthorized, setIsAuthorized] = useState(null); // ← 이거 추가!!
+  const navigate = useNavigate();
   const [activePage, setActivePage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
+  const usersPerPage = 5; // 한 페이지에 보여줄 회원 수
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [editedUserType, setEditedUserType] = useState(null);
+
   const handlePageClick = (page) => {
     setActivePage(page);
   };
 
-  const renderRows = () => {
-    return users.map((item, index) => (
-      <tr key={index}>
-        <td>{users.length - index}</td>
-        <td>{item.userid}</td>
-        <td>{item.username}</td>
-        <td>{item.email}</td>
-        <td>{item.nickname}</td>
-        <td>{item.userType === 0 ? '일반회원' : item.userType === 1 ? '카페사장' : '관리자'}</td>
-        <td> {new Date(item.createdAt).getFullYear()}-
-             {('0' + (new Date(item.createdAt).getMonth() + 1)).slice(-2)}-
-             {('0' + new Date(item.createdAt).getDate()).slice(-2)}
-        </td>
-        <td>
-          <button className="list-rem-btn">수정</button>{" "}
-          <button className="list-delete-btn">탈퇴</button>
-        </td>
-      </tr>
-    ));
-  };
+   // ✅ 관리자 인증 체크
+   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userType = parseInt(localStorage.getItem("userType"));
+  
+    if (!token || userType !== 3) {
+      setIsAuthorized(false); // 상태만 설정
+    } else {
+      console.log("✅ 관리자 권한 확인 완료");
+      setIsAuthorized(true);
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (isAuthorized === false) {
+      alert("정상적인 접근경로가 아닙니다.");
+      navigate("/login"); // navigate는 따로!
+    }
+  }, [isAuthorized, navigate]);
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/users?userType=0")
+      .then((response) => {
+        setUsers(response.data); // 회원 리스트 저장
+        // 전체 회원 수로 총 페이지 수 계산
+        const totalUsers = response.data.length;
+        const totalPagesCalculated = Math.ceil(totalUsers / usersPerPage); // 전체 페이지 수 계산
+        setTotalPages(totalPagesCalculated); // 총 페이지 수 상태 업데이트
+      })
+      .catch((error) => {
+        console.error("회원 데이터를 불러오지 못했습니다.", error);
+        alert("회원 데이터를 불러오지 못했습니다."); // 오류 메시지 표시
+      });
+  }, []);
 
-  const logoutCheck = () => {
-    const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
-    if (confirmLogout) {
-      alert("로그아웃 되었습니다.");
-      // 필요하다면 로그아웃 처리 추가 (예: localStorage.clear())
-      navigate("/"); // 메인 페이지로 이동
+
+  // 수정 또는 저장 핸들러
+  const handleEditClick = (item) => {
+    if (editingUserId === item.userid) {
+      // 저장 버튼 클릭 시
+      axios
+        .put(`http://localhost:8080/api/users/${item.userid}`, {
+          ...item,
+          userType: editedUserType,
+        })
+        .then((response) => {
+          alert("수정되었습니다.");
+  
+          // 👉 userType이 바뀌었으면 그에 맞는 목록으로 이동
+          setEditingUserId(null);
+          setEditedUserType(null);
+  
+          // 필터링된 userType으로 다시 호출 (예: 0은 일반회원, 1은 카페사장)
+          axios
+            .get(`http://localhost:8080/api/users?userType=${editedUserType}`)
+            .then((res) => {
+              setUsers(res.data);
+  
+              // 페이지 관련 값도 다시 계산
+              const totalUsers = res.data.length;
+              const totalPagesCalculated = Math.ceil(totalUsers / usersPerPage);
+              setTotalPages(totalPagesCalculated);
+              setActivePage(1); // 첫 페이지로 이동
+            });
+        })
+        .catch((error) => {
+          console.error("수정 실패", error);
+          alert("수정 중 오류가 발생했습니다.");
+        });
+    } else {
+      // 수정 버튼 클릭 시
+      setEditingUserId(item.userid);
+      setEditedUserType(item.userType);
     }
   };
 
+    // ✨ 삭제 핸들러 추가
+    const handleDelete = (userid) => {
+      const confirmDelete = window.confirm("정말 탈퇴시키시겠습니까?");
+      if (confirmDelete) {
+        axios.delete(`http://localhost:8080/api/users/${userid}`)
+          .then(() => {
+            alert("탈퇴 처리되었습니다.");
+            // 탈퇴 후 회원 목록에서 해당 회원을 제거
+            const updatedUsers = users.filter((user) => user.userid !== userid);
+            setUsers(updatedUsers);
+    
+            // 새로운 전체 페이지 수 계산
+            const totalUsers = updatedUsers.length;
+            const totalPagesCalculated = Math.ceil(totalUsers / usersPerPage);
+            setTotalPages(totalPagesCalculated);
+    
+            // 현재 페이지가 총 페이지 수보다 클 경우, 마지막 페이지로 이동
+            if (activePage > totalPagesCalculated) {
+              setActivePage(totalPagesCalculated); // 마지막 페이지로 설정
+            }
+          })
+          .catch((error) => {
+            console.error("삭제 실패", error);
+            alert("삭제 중 오류가 발생했습니다.");
+          });
+      }
+    };
+
+    const renderRows = () => {
+      // 현재 페이지에 맞는 회원 리스트 추출
+      const startIndex = (activePage - 1) * usersPerPage;
+      const endIndex = startIndex + usersPerPage;
+      const usersOnCurrentPage = users.slice().reverse().slice(startIndex, endIndex); // reverse()로 순서 반전
+    
+      return usersOnCurrentPage.map((item, index) => (
+        <tr key={index}>
+          <td>{users.length - (startIndex + index)}</td>
+          <td>{item.userid}</td>
+          <td>{item.username}</td>
+          <td>{item.email}</td>
+          <td>{item.nickname}</td>
+          <td>
+            {editingUserId === item.userid ? (
+            <select value={editedUserType} onChange={(e) => setEditedUserType(parseInt(e.target.value))}>
+              <option value={0}>일반회원</option>
+              <option value={1}>카페사장</option>
+            </select>
+            ) : item.userType === 0 ? ( "일반회원") : item.userType === 1 ? ("카페사장") : ("관리자")}
+          </td>
+          <td> {new Date(item.createdAt).getFullYear()}-
+               {('0' + (new Date(item.createdAt).getMonth() + 1)).slice(-2)}-
+               {('0' + new Date(item.createdAt).getDate()).slice(-2)}
+          </td>
+          <td>
+          <button className="list-rem-btn" onClick={() => handleEditClick(item)} >
+            {editingUserId === item.userid ? "저장" : "수정"}
+            </button>{" "}
+            <button className="list-delete-btn" onClick={() => handleDelete(item.userid)}>탈퇴</button>
+          </td>
+        </tr>
+      ));
+    };
+
   return (
     <div className="admin-board">
-    {/* 사이드바 */}
-    <div className="sidebar">
-        <h2 className="sidebar-h2">관리자 메뉴
-          <Link to="/">
-           <FontAwesomeIcon icon={faHouse} className="sidebar-icon"/>
-          </Link>
-        </h2>
-        <ul className="sidebar-ul">
-          <li className="sidebar-li-a"><a href="/admin/1">대시보드</a></li>
-
-          {/* 회원 관리 드롭다운 */}
-          <li>
-            <div className="dropdown-header" onClick={() => toggleMenu("member")}>
-              회원 관리
-            </div>
-
-            {openMenu.member && (
-              <ul className="dropdown-list">
-                <li><a href="/admin/list-0"> - 일반회원 목록</a></li>
-                <li><a href="/admin/list-1"> - 카페사장 목록</a></li>
-              </ul>
-            )}
-          </li>
-
-          {/* 게시판 관리 드롭다운 */}
-          <li>
-            <div className="dropdown-header" onClick={() => toggleMenu("board")}>
-              게시판 관리
-            </div>
-            {openMenu.board && (
-              <ul className="dropdown-list">
-                <li><a href="/admin/Bord-1"> - 공지사항 목록</a></li>
-                <li><a href="/admin/Bord-2">- 자주 묻는 질문 목록</a></li>
-                <li><a href="/admin/Bord-3">- 커뮤니티 목록</a></li>
-                <li><a href="/admin/Bord-4">- 카페등록 목록</a></li>
-              </ul>
-            )}
-          </li>
-
-          <li><a href="/admin/1">설정</a></li>
-          <li className="sidebar-logout">
-          <button className="sidebar-logout-btn" onClick={logoutCheck}>로그아웃</button>
-          </li>
-        </ul>
-      </div>
+         {/* 사이드바 */}
+         <div className="sidebar-allbox">
+      <Sidebar />
+     </div>
 
       {/* 메인 컨텐츠 */}
       <div className="mainlist-content">
@@ -145,17 +183,17 @@ const AdminList = () => {
         </table>
 
         <div className="pagination">
-          <button className="prev-btn">이전</button>
-          {[1, 2, 3].map((page) => (
-            <span
-              key={page}
-              className={activePage === page ? "active" : ""}
-              onClick={() => handlePageClick(page)}
-            >
-              {page}
-            </span>
+          <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} >이전</button>
+          {[...Array(totalPages)].map((_, index) => (
+              <span
+                key={index}
+                className={activePage === index + 1 ? "active" : ""}
+                onClick={() => handlePageClick(index + 1)}
+              >
+                {index + 1}
+              </span>
           ))}
-          <button className="next-btn">이후</button>
+          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}>이후</button>
         </div>
       </div>
     </div>
