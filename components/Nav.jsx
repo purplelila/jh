@@ -15,16 +15,36 @@ let Nav = () => {
   const navigate = useNavigate();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const storedNickname = localStorage.getItem("name");
+    const storedUserId = localStorage.getItem("userid");
     setIsLoggedIn(!!token);
+    setNickname(storedNickname || "");
+    setUserId(storedUserId || "");
+    console.log("name:", storedNickname); // 디버깅
+    console.log("userid:", storedUserId);
   }, [location.pathname]); // 경로 바뀔 때마다 상태 다시 확인
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("nickname");
+    localStorage.removeItem("userid");
+    const userType = localStorage.getItem("userType");  // 로그아웃 전에 userType 가져오기
     setIsLoggedIn(false);
-    navigate("/login");
+    setNickname("");
+  
+    // 현재 경로가 '/mypage'인 경우에만 메인으로 이동
+    if (location.pathname === "/mypage") {
+      if (userType === "1") {
+        navigate("/cafelist");  // 카페사장
+      } else {
+        navigate("/notice");    // 일반회원
+      }
+    }
   };
 
   // 기본값 설정
@@ -107,16 +127,21 @@ let Nav = () => {
                   <div className="menu-login">
                   {isLoggedIn ? (
                   <>
+                    <span className='nav-nickname'>{userId}</span>
+                    <span className="nav-nim">님</span>
+                    <span className="nav-divider">|</span>
                     <Link to="#" onClick={(e) => {e.preventDefault(); handleLogout();}}>LOGOUT</Link>
+                    <span className="nav-divider">|</span>
                     <Link to={"/mypage"}>MY PAGE</Link>
                   </>
-                ) : (
+                  ) : (
                   <>
                     <Link to={"/login"}>LOGIN</Link>
+                    <span className="nav-divider">|</span>
                     {/* <Link to={"/mypage"}>MY PAGE</Link> */}
                     <Link to={"/signup"}>JOIN</Link>
                   </>
-                )}
+                  )}
                   </div>
                   <div className="social-icons">
                     <a href='https://www.instagram.com/' target="_blank"><i class="fa-brands fa-instagram"></i></a>

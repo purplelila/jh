@@ -15,7 +15,8 @@ const FaqPage = () => {
   const [postsPerPage] = useState(10);
   const [openPost, setOpenPost] = useState(null);  // 드롭다운 상태 관리
   const navigate = useNavigate();
-  const { category } = useParams();
+  const { category, postId } = useParams();
+  const [post, setPost] = useState(null);
 
    // 게시물 필터링 (검색 기능)
    const filteredPosts = Array.isArray(posts)
@@ -112,11 +113,16 @@ const FaqPage = () => {
               currentPosts.map((p, index) => (
                 <div key={p.id} className={`faq-item ${openPost === p.id ? 'open' : ''}`}>
                   <div className="faq-item-header" onClick={() => togglePost(p.id)}>
-                    <p>{p.title}</p>
+                    <p>Q. <span>{p.title}</span></p>
+                    {openPost === p.id ? (
+                      <i className="faq-icon fa-solid fa-chevron-up"></i>
+                    ) : (
+                      <i className="faq-icon fa-solid fa-chevron-down"></i>
+                    )}
                   </div>
                   {openPost === p.id && (
                     <div className="faq-item-details">
-                      <p dangerouslySetInnerHTML={{ __html: p.content }} />
+                      <p dangerouslySetInnerHTML={{__html: p.textContent.replace('<p>', '<p><span class="faq-answer-prefix">A.</span> ')}}/>
                     </div>
                   )}
                 </div>

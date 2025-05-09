@@ -17,26 +17,28 @@ const Admin = () => {
   const startIndex = (currentPage - 1) * cafelistPerPage;
   const paginatedCafes = pendingCafes.slice(startIndex, startIndex + cafelistPerPage);
 
-  // 관리자 인증 체크
-  useEffect(() => {
+   // 관리자가 맞는지 확인하는 useEffect
+   useEffect(() => {
     const token = localStorage.getItem("token");
     const userType = parseInt(localStorage.getItem("userType"));
 
     if (!token || userType !== 3) {
-      setIsAuthorized(false);
+      setIsAuthorized(false);  // ❗관리자가 아님
     } else {
-      setIsAuthorized(true);
+      setIsAuthorized(true);  // ✅관리자 맞음
     }
-  }, []);
+  }, []); // 컴포넌트 처음 렌더링 시 한 번만 실행
 
-  // 권한 없으면 로그인 페이지로 이동
+  // 권한 없으면 로그인 페이지로 이동하는 useEffect
   useEffect(() => {
     if (isAuthorized === false) {
-      alert("정상적인 접근경로가 아닙니다.");
-      navigate("/login");
+      if (window.confirm("잘못된 경로입니다. 메인 페이지로 이동합니다.")) {
+        navigate("/");  // 메인 페이지로 리디렉션
+      }
     }
-  }, [isAuthorized, navigate]);
+  }, [isAuthorized, navigate]); // isAuthorized가 false일 때만 실행
 
+  
   // 승인 대기 카페 목록 불러오기 (최신순 정렬)
   useEffect(() => {
     if (isAuthorized) {
@@ -138,12 +140,21 @@ const Admin = () => {
       });
   };
 
-  // 페이지 이동 처리
-  const handlePageClick = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+    // 페이지 이동 처리
+    const handlePageClick = (page) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    };
+    
+    // 렌더링 부분
+    if (isAuthorized === null) {
+      return null;  // 화면을 아무것도 표시하지 않음
     }
-  };
+    
+    if (isAuthorized === false) {
+      return null;  // 잘못된 경로인 경우 화면을 비움
+    }
 
   return (
     <div className="admin-board">

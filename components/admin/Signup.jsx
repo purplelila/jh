@@ -113,7 +113,7 @@ const Signup = () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/users/check-userid?userid=${userid}`);
         if (response.data) {
-          alert(`"${userid}" ❌ 이미 사용 중인 아이디입니다!`);
+          alert(`"${userid}" 이미 사용 중인 아이디입니다!`);
           setIsUseridDuplicate(true); // 중복 아이디일 경우
         } else {
           alert(`"${userid}" ✅ 사용 가능한 아이디입니다!`);
@@ -121,7 +121,7 @@ const Signup = () => {
         }
       } catch (error) {
         console.error('아이디 중복 확인 오류:', error);
-        alert('아이디 중복 확인에 실패했어요!❌ 잠시 후 다시 이용해주세요.');
+        alert('아이디 중복 확인에 실패했어요! 잠시 후 다시 이용해주세요.');
       } finally {
         setIsLoading(false);
       }
@@ -159,31 +159,30 @@ const Signup = () => {
     }
   };
 
-        //닉네임관련내용
-        const checkNicknameDuplicate = async () => {
-          if (!nickname) {
-            alert('닉네임을 입력해주세요!');
-            return;
-          }
-          setIsLoading(true); // 로딩 시작
-          try {
-            const response = await axios.get(`http://localhost:8080/api/users/check-nickname?nickname=${nickname}`);
-            
-            if (response.data.isDuplicate) {
-              alert(`"${nickname}" 이미 사용 중이에요!`);
-              setIsNicknameValid(false); // ❌ 중복이면 false
-            } else {
-              alert(`"${nickname}"  사용 가능합니다!`);
-              setIsNicknameValid(true); // ✅ 중복 아니면 true
-            }
-          } catch (error) {
-            console.error('중복 확인 오류:', error);
-            alert('닉네임 중복 확인에 실패했어요!❌ 잠시 후 다시 이용해주세요.');
-          } finally {
-            setIsLoading(false); // 로딩 종료
-          }
-        };
-    
+    //닉네임관련내용
+    const checkNicknameDuplicate = async () => {
+      if (!nickname) {
+        alert('닉네임을 입력해주세요!');
+        return;
+      }
+      setIsLoading(true); // 로딩 시작
+      try {
+        const response = await axios.get(`http://localhost:8080/api/users/check-nickname?nickname=${nickname}`);
+        
+        if (response.data.isDuplicate) {
+          alert(`"${nickname}" 이미 사용 중이에요!`);
+          setIsNicknameValid(false); // ❌ 중복이면 false
+        } else {
+          alert(`"${nickname}"  사용 가능합니다!`);
+          setIsNicknameValid(true); // ✅ 중복 아니면 true
+        }
+      } catch (error) {
+        console.error('중복 확인 오류:', error);
+        alert('닉네임 중복 확인에 실패했어요! 잠시 후 다시 이용해주세요.');
+      } finally {
+        setIsLoading(false); // 로딩 종료
+      }
+    };
   return (
     <div className="signup-total-box">
       <div className="showdow-box">
@@ -200,9 +199,8 @@ const Signup = () => {
           <button className='dck-btn' type="button" onClick={checkUseridDuplicate} disabled={isLoading}>{isLoading ? '확인 중...' : '중복 확인'}</button>
         </div>
         {isUseridValid === false && (<p className="signup-error-text">❌ 아이디를 다시 입력해주세요.</p>)}
-        {isUseridValid === true && (<p className="signup-success-text">✅ 사용 가능한 아이디 형식입니다.</p>)}
-        {isUseridDuplicate === true && (<p className="signup-error-text">❌ 아이디가 이미 사용 중입니다.</p>)}
-        {isUseridDuplicate === false && isUseridValid === true && (<p className="signup-success-text">✅ 사용 가능한 아이디입니다.</p>)}
+         {isUseridValid === true && isUseridDuplicate === true && (<p className="signup-error-text">❌ 아이디가 이미 사용 중입니다.</p>)}
+        {isUseridValid === true && isUseridDuplicate === false && (<p className="signup-success-text">✅ 사용 가능한 아이디입니다.</p>)}
           <input className='signup-pwd' type="password" value={password} onChange={
             (e) =>  {const newPassword = e.target.value;
               setPassword(newPassword);
@@ -227,7 +225,7 @@ const Signup = () => {
           </div>
           {isNicknameValid === true && (<p className="signup-success-text">✅ 사용 가능한 닉네임입니다.</p>)}
           {isNicknameValid === false && (<p className="signup-error-text">❌ 닉네임이 이미 사용 중입니다.</p>)}
-          
+
           <div className="signup-user-type">
             <label className='signup-radio-n'>
               <input className='signup-radio-n' type="radio" name="userType" value="0" checked={userType === "0"} onChange={handleUserTypeChange} required />

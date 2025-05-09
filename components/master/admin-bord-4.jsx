@@ -13,6 +13,10 @@ const AdminList = () => {
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
   const usersPerPage = 10; // 한 페이지에 보여줄 회원 수
+  const [searchTerm, setSearchTerm] = useState("");   // 검색기능
+  const [searchType, setSearchType] = useState("title"); // 기본은 제목 검색
+  const [searchTriggered, setSearchTriggered] = useState(false); // 검색 버튼 눌러야 활성화
+
 
   // ✅ 관리자 인증 체크
    useEffect(() => {
@@ -35,6 +39,11 @@ const AdminList = () => {
       fetchPendingCafes(); // 카페 목록을 처음 불러옵니다.
     }
   }, [isAuthorized, activePage]);
+
+  // 검색
+  useEffect(() => {
+    setSearchTriggered(false); // 검색어 바꾸면 검색 버튼 다시 눌러야 작동함
+  }, [searchTerm, searchType]);
 
   // 서버에서 카페 목록 불러오기
   const fetchPendingCafes = () => {
@@ -106,6 +115,94 @@ const AdminList = () => {
         });
     };
 
+  // 카페 삭제
+  const deleteCafe = async (id) => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+  
+    const token = localStorage.getItem("token");
+    axios.delete(`http://localhost:8080/api/deleteCafe/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(() => {
+        alert("카페가 삭제되었습니다.");
+        setPendingCafes(prev => prev.filter(cafe => cafe.id !== id));
+      })
+      .catch((error) => {
+        console.error("카페 삭제에 실패했습니다.", error);
+        alert("카페 삭제에 실패했습니다.");
+      });
+  };
+
+  // 카페 반려
+  const toggleCafeApproval = (cafeId, currentStatus) => {
+    const token = localStorage.getItem("token");
+  
+    if (currentStatus === 'APPROVED') {
+      // 승인된 카페에서 반려 버튼을 눌렀을 때 확인을 띄운다
+      const confirmReject = window.confirm("카페 등록을 거절하시겠습니까?");
+      if (!confirmReject) return; // 사용자가 취소하면 아무 작업도 하지 않음
+  
+      // 반려 처리
+      const url = `http://localhost:8080/cafes/${cafeId}/reject`;
+  
+      axios.post(url, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(() => {
+        alert("카페 상태가 거절로 변경되었습니다.");
+        // 상태 업데이트
+        setPendingCafes(prevCafes =>
+          prevCafes.map(cafe =>
+            cafe.id === cafeId
+              ? { ...cafe, approvalStatus: 'REJECTED' }  // 거절로 상태 변경
+              : cafe
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("상태 변경 실패", error);
+        alert("카페 상태 변경에 실패했습니다.");
+      });
+    }
+  
+    if (currentStatus === 'REJECTED') {
+      // 거절된 카페에서 승인 버튼을 눌렀을 때 확인을 띄운다
+      const confirmApprove = window.confirm("카페 등록을 승인하시겠습니까?");
+      if (!confirmApprove) return; // 사용자가 취소하면 아무 작업도 하지 않음
+  
+      // 승인 처리
+      const url = `http://localhost:8080/cafes/${cafeId}/approve`;
+  
+      axios.post(url, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(() => {
+        alert("카페 상태가 승인으로 변경되었습니다.");
+        // 상태 업데이트
+        setPendingCafes(prevCafes =>
+          prevCafes.map(cafe =>
+            cafe.id === cafeId
+              ? { ...cafe, approvalStatus: 'APPROVED' }  // 승인으로 상태 변경
+              : cafe
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("상태 변경 실패", error);
+        alert("카페 상태 변경에 실패했습니다.");
+      });
+    }
+  };
+  
+  
+  
   // 미리보기
   const handleView = (id) => {
     navigate(`/cafedetail/${id}`);
@@ -116,8 +213,17 @@ const AdminList = () => {
   };
 
   const renderRows = () => {
+    let filteredCafes = pendingCafes;
+
+    if (searchTriggered && searchTerm.trim() !== "") {
+      filteredCafes = pendingCafes.filter((cafe) => {
+        const valueToSearch = searchType === "title" ? cafe.title : cafe.name;
+        return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
+
     // 카페를 최신순(내림차순)으로 정렬
-    const sortedCafes = [...pendingCafes].sort((a, b) => new Date(b.regDate) - new Date(a.regDate));
+    const sortedCafes = [...filteredCafes].sort((a, b) => new Date(b.regDate) - new Date(a.regDate));
 
     const indexOfLastCafe = activePage * usersPerPage;
     const indexOfFirstCafe = indexOfLastCafe - usersPerPage;
@@ -129,8 +235,9 @@ const AdminList = () => {
         <td>{cafe.title}</td>
         <td>{cafe.name}</td>
         <td>{cafe.regDate}</td>
+        <td>{cafe.approvalAt}</td>
         <td>
-        <button onClick={() => handleView(cafe.id)}>미리보기</button>
+        <button className="view-btn" onClick={() => handleView(cafe.id)}>미리보기</button>
         </td>
         <td>
           {cafe.approvalStatus === 'PENDING' ? '대기' : 
@@ -140,8 +247,20 @@ const AdminList = () => {
         <td>
           {cafe.approvalStatus === 'PENDING' && (
             <>
-              <button onClick={() => approveCafe(cafe.id)}>승인</button>{" "}
-              <button className="delete-btn" onClick={() => rejectCafe(cafe.id)}>거절</button>
+              <button className="approve-btn" onClick={() => approveCafe(cafe.id)}>승인</button>{" "}
+              <button className="reject-btn" onClick={() => rejectCafe(cafe.id)}>거절</button>
+            </>
+          )}
+            {cafe.approvalStatus === 'APPROVED' && (
+            <>
+              <button className="return-btn" onClick={() => toggleCafeApproval(cafe.id, cafe.approvalStatus)}>반려</button>{" "}
+              <button className="delete-btn" onClick={() => deleteCafe(cafe.id)}>삭제</button>
+            </>
+          )}
+          {cafe.approvalStatus === 'REJECTED' && (
+            <>
+              <button className="return-btn" onClick={() => toggleCafeApproval(cafe.id, cafe.approvalStatus)}>반려</button>{" "}
+              <button className="delete-btn" onClick={() => deleteCafe(cafe.id)}>삭제</button>
             </>
           )}
         </td>
@@ -160,13 +279,25 @@ const AdminList = () => {
     <div className="mainlist-content">
         <h1 className="adminlist-h1">카페연구소 카페등록 목록</h1>
 
+        <div className="admin-4-search-container">
+          <select className="admin-4-search-select" value={searchType}  onChange={(e) => setSearchType(e.target.value)}>
+            <option value="title">카페 이름</option>
+            <option value="name">작성자</option>
+          </select>
+          <input type="text" className="admin-4-search-input" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+          <button className="admin-4-search-btn" onClick={() => {setSearchTriggered(true); setActivePage(1);}}>
+            검색
+          </button>
+        </div>
+
         <table className="admin-listboard-table">
           <thead>
             <tr>
               <th>번호</th>
               <th>카페이름</th>
               <th>작성자</th>
-              <th>등록일자</th>
+              <th>신청일자</th>
+              <th>승인일자</th>
               <th>미리보기</th>
               <th>상태</th>
               <th>비고</th>

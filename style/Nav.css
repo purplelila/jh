@@ -55,7 +55,7 @@ header {
   /*-----------------------------------------------------------------------------*/
   
   .menu-store{
-    width: 550px;
+    width: 500px;
     text-align: center;
   }
   
@@ -95,6 +95,8 @@ header {
   
   .menu-login{
     height: 100%;
+    display: flex;
+    align-items: center;
   }
   
   .menu-login a{
@@ -102,13 +104,23 @@ header {
     font-size: 13px;
   }
   
-  .menu-login a:nth-child(1) {
-    border-right: 1px solid #bbb;
+.nav-divider {
+  margin: 0 4px;
+  color: #bbb;
+}
+
+  .nav-nickname {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 14px;
+    color: #333; 
+    margin-right: 2px;
   }
-  
-  /* .menu-login a:nth-child(2) {
-    border-right: 1px solid #bbb;
-  } */
+  .nav-nim {
+    font-size: 14px;
+    color: #333;
+    margin-right: 8px;
+  }
 
   /*------------------------------------------------ icon -----------------------------------------------------------*/
   

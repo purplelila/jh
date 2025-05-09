@@ -7,39 +7,34 @@ import { CafeContext } from "../CafeProvider";
 
 
 const MyCafeInfo = () => {
-  const [cafes, setCafes] = useState([]);
+  const [myCafes, setMyCafes] = useState([]);  // 로그인한 사용자 닉네임에 맞는 카페 목록
   const [loading, setLoading] = useState(true);
   const { deleteCafe } = useContext(CafeContext);
-  const [userId, setUserId] = useState(localStorage.getItem("userId")); // 상태로 사용자 ID 관리
+  const nickname = localStorage.getItem('nickname');  // 로컬 스토리지에서 닉네임 가져오기
 
   const navigate = useNavigate();
 
   // 카페 목록 불러오기
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const currentUserId = localStorage.getItem("userId"); // localStorage에서 사용자 ID 가져오기
-    setUserId(currentUserId); // 상태로 갱신
+    if (!nickname) return;  // 닉네임이 없으면 실행하지 않음
 
-    console.log("현재 사용자 ID:", currentUserId); // 확인용 콘솔 로그
+    axios.get('http://localhost:8080/api/cafes') // 카페 목록을 가져오는 API
+      .then(response => {
+        const cafeList = response.data;
+        console.log("🚀 가져온 카페 목록:", cafeList);
 
-    axios.get("http://localhost:8080/api/cafes", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
-      .then((response) => {
-        console.log("🚀 가져온 카페 목록:", response.data);
-        // 사용자 ID를 기준으로 카페 정보 필터링
-        const myCafes = response.data.filter(cafe => cafe.userId === currentUserId);  // `name` 대신 `userId`로 필터링
-        console.log("내 카페 목록:", myCafes); // 확인 로그 추가
-        setCafes(myCafes); // ✅ 내 카페만 상태에 저장
-        setLoading(false);
+        // 로그인한 사람의 닉네임에 맞는 카페만 필터링
+        const filteredCafes = cafeList.filter(cafe => cafe.name === nickname);
+        console.log("내 카페 목록:", filteredCafes);
+
+        setMyCafes(filteredCafes);  // 내 카페 목록 저장
+        setLoading(false);  // 로딩 완료
       })
-      .catch((error) => {
-        console.error('카페 목록 가져오기 실패:', error);
-        setLoading(false);
+      .catch(error => {
+        console.error("카페 목록 불러오기 실패", error);
+        setLoading(false);  // 로딩 완료 (실패 처리)
       });
-  }, [userId]);
+  }, [nickname]);  // 닉네임이 바뀔 때마다 다시 실행
 
   // 수정
   const handleEdit = (id) => {
@@ -64,7 +59,8 @@ const MyCafeInfo = () => {
 
   // 미리보기
   const handleView = (id) => {
-    navigate(`/cafedetail/${id}`);
+    const url = `/cafedetail/${id}`;  // 새 창에서 열 카페 상세 페이지 URL
+    window.open(url, '_blank');  // 새 창으로 URL 열기
   };
 
   // const handleCancel = (id) => {
@@ -131,8 +127,8 @@ const MyCafeInfo = () => {
   );
 
   // 승인 대기 카페와 승인 완료 카페 필터링
-  const waitingList = cafes.filter(c => c.approvalStatus === 'PENDING');
-  const approvedList = cafes.filter(c => c.approvalStatus === 'APPROVED' || c.approvalStatus === 'REJECTED');  
+  const waitingList = myCafes.filter(c => c.approvalStatus === 'PENDING');
+  const approvedList = myCafes.filter(c => c.approvalStatus === 'APPROVED' || c.approvalStatus === 'REJECTED');  
 
   if (loading) {
     return <div>로딩 중...</div>;

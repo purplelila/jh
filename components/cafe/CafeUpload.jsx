@@ -48,9 +48,9 @@ let CafeUpload = () => {
       }
 
       // 로그인 시 저장된 작성자 정보 가져오기
-      const userid = localStorage.getItem("nickname");
-      if (userid) {
-        setName(userid); // '작성자' 필드에 로그인한 사용자의 ID를 설정
+      const nickname = localStorage.getItem("nickname");
+      if (nickname) {
+        setName(nickname); // '작성자' 필드에 로그인한 사용자의 ID를 설정
       } else {
         navigate("/login"); // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
       }
@@ -162,6 +162,15 @@ let CafeUpload = () => {
       }
     }, [id, isEdit]);
   
+    const userId = localStorage.getItem("userid"); // 로그인된 사용자의 userId
+    if (!userId) {
+      alert("로그인 후 이용해주세요.");
+      navigate("/login"); // 로그인 페이지로 리디렉션
+      return;
+    }
+
+    console.log("User ID being sent:", userId);  // 추가 확인
+    
     const handleSubmit = async (e) => {
       e.preventDefault()
 
@@ -206,6 +215,7 @@ let CafeUpload = () => {
       // FormData 방식
       // 이미지 파일을 프론트에서 서버로 업로드 → 서버에 저장 → URL을 클라이언트에 전달 → DB에 저장
       const formData = new FormData();
+      formData.append("userid", userId);  // 로그인한 사용자의 ID 추가
 
       // 이미지 파일 첨부
       images.forEach(file => {

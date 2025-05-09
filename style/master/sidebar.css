@@ -1,119 +1,118 @@
 /* 사이드바 스타일 */
 .sidebar {
-    width: 240px;
-    height: 100vh; /* 화면의 전체 높이 */
-    background-color: #2d3e50; /* 어두운 회색/파란색 배경 */
-    color: #fff;
-    padding: 20px;
-    font-size: 14px;
-    border-right: 2px solid #34495e; /* 짙은 회색 테두리 */
-    display: flex;               /* 추가! */
-    flex-direction: column;     /* 세로 정렬 */
-    justify-content: space-between; /* 위-아래 공간 분배 */
-  }
-  .sidebar-icon {
-    margin-left: 10px;
-    color: #fff;
-  }
-  .sidebar-h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
-    color: #bdc3c7; /* 밝은 회색 */
-  }
-  
-  .sidebar-ul {
-    list-style: none;
-    font-size: 20px;
-    flex-grow: 1;               /* 나머지 영역 차지 */
-  }
-  
-  .sidebar ul li {
-    margin: 15px 0;
-  }
-  
-  .sidebar ul li a {
-    text-decoration: none;
-    color: #ecf0f1; /* 밝은 회색 텍스트 */
-    font-size: 14px;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-  }
-  
-  .sidebar ul li a:hover {
-    background-color: #3498db; /* 파란색 */
-    color: #fff;
-  }
-  
-  .dropdown-header {
-    font-size: 15px;
-    color: #ecf0f1;
-    padding: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  .dropdown-header:hover {
-    background-color: #3c5a72;
-    border-radius: 5px;
-  }
-  
-  .dropdown-list {
-    list-style: none;
-    padding-left: 15px;
-    margin-top: 5px;
-  }
-  
-  .dropdown-list li a {
-    font-size: 14px;
-    color: #ecf0f1;
-    text-decoration: none;
-    padding: 6px 0;
-    display: block;
-    transition: background-color 0.3s;
-  }
-  
-  .dropdown-list li a:hover {
-    background-color: #3498db;
-    border-radius: 4px;
-    padding-left: 10px;
-  }
-  
-  .sidebar-logout {
-    display: flex;
-    justify-content: center; /* 가로 가운데 정렬 */
-    align-items: center;     /* 세로 가운데 정렬 */
-    font-weight: 500;
-    height: 40px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    cursor: pointer;
-  }
-  
-  .sidebar-logout-btn {
-    background: none;
-    border: none;
-    color: #ecf0f1;
-    font-size: 14px !important;
-    cursor: pointer;
-  }
-  
-  .sidebar-logout:hover {
-    background-color: #3498db; /* 파란색 */
-    color: #fff;
-  }
-  
-  .downlogo{
-    margin-top: 0;              /* 기존 280% 제거 */
-    padding-top: 20px;
-    text-align: center;
-    width: 200px;
-    height: 60px;
-  }
-  .downlogo-img {
-    width: 100%;
-    height: 100%;
-  }
-  
+  width: 240px;
+  height: 100vh; /* 화면의 전체 높이 */
+  background-color: #2d3e50; /* 어두운 회색/파란색 배경 */
+  color: #fff;
+  padding: 20px;
+  font-size: 14px;
+  border-right: 2px solid #34495e; /* 짙은 회색 테두리 */
+  display: flex;               /* 추가! */
+  flex-direction: column;     /* 세로 정렬 */
+  justify-content: space-between; /* 위-아래 공간 분배 */
+}
+.sidebar-icon {
+  margin-left: 10px;
+  color: #fff;
+}
+.sidebar-h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #bdc3c7; /* 밝은 회색 */
+}
+
+.sidebar-ul {
+  list-style: none;
+  font-size: 20px;
+  flex-grow: 1;               /* 나머지 영역 차지 */
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ecf0f1; /* 밝은 회색 텍스트 */
+  font-size: 14px;
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background-color: #3498db; /* 파란색 */
+  color: #fff;
+}
+
+.dropdown-header {
+  font-size: 15px;
+  color: #ecf0f1;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.dropdown-header:hover {
+  background-color: #3c5a72;
+  border-radius: 5px;
+}
+
+.dropdown-list {
+  list-style: none;
+  padding-left: 15px;
+  margin-top: 5px;
+}
+
+.dropdown-list li a {
+  font-size: 14px;
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 6px 0;
+  display: block;
+  transition: background-color 0.3s;
+}
+
+.dropdown-list li a:hover {
+  background-color: #3498db;
+  border-radius: 4px;
+  padding-left: 10px;
+}
+
+.sidebar-logout {
+  display: flex;
+  justify-content: center; /* 가로 가운데 정렬 */
+  align-items: center;     /* 세로 가운데 정렬 */
+  font-weight: 500;
+  height: 40px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.sidebar-logout-btn {
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  font-size: 14px !important;
+  cursor: pointer;
+}
+
+.sidebar-logout:hover {
+  background-color: #3498db; /* 파란색 */
+  color: #fff;
+}
+
+.downlogo{
+  margin-top: 0;              /* 기존 280% 제거 */
+  padding-top: 20px;
+  text-align: center;
+  width: 200px;
+  height: 60px;
+}
+.downlogo img {
+  width: 100%;
+  height: 100%;
+}

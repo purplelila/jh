@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+
 const LoginPage = () => {
     const [userid, setUserid] = useState("");
     const [password, setPassword] = useState("");
@@ -29,47 +30,41 @@ const LoginPage = () => {
             });
       
             const data = response.data;
-            console.log(data); // 응답 데이터 확인
       
             // ✅ 토큰 저장
             localStorage.setItem("token", data.token);
-            localStorage.setItem("userType", data.userType); // 예: userType 저장
-            localStorage.setItem("name", data.name);    // username 저장
-            localStorage.setItem("email", data.email);  // email 저장
 
             // ✅ 로그인한 사용자 정보 저장 (예: userType, userid 등)
-            if (data.userid) {
+                localStorage.setItem("userType", data.userType); // 예: userType 저장
                 localStorage.setItem("userid", data.userid); // 예: userid 저장
-            }
-
-            if (data.nickname) {
-              localStorage.setItem("nickname", data.nickname);
-              console.log("nickname 저장 완료: ", data.nickname);
-            }
+                localStorage.setItem("nickname", response.data.nickname);
+                localStorage.setItem("name", response.data.name);
+                localStorage.setItem("email", response.data.email);
 
             // ✅ JWT가 잘 저장되었는지 콘솔로 확인
                 console.log("JWT 토큰: ", localStorage.getItem("token"));
-                console.log("사용자 ID: ", localStorage.getItem("userid"));
             
-            alert(data.message);
+            // alert(data.message);
       
             // 🔀 userType에 따라 이동
             switch (data.userType) {
               case 0:
                 navigate("/notice");
+                alert("일반회원으로 로그인되었습니다.");
                 break;
               case 1:
                 navigate("/cafelist");
+                alert("카페사장으로 로그인되었습니다.");
                 break;
               case 3:
                 navigate("/admin/1");
+                alert("관리자님 로그인되었습니다.");
                 break;
               default:
                 navigate("/");
             }
       
-          } catch (error) {
-            // ❌ 서버에서 에러 메시지 응답 시 처리
+          }  catch (error) {
             if (error.response && error.response.data) {
               const serverMsg = error.response.data.message;
           
@@ -101,8 +96,8 @@ const LoginPage = () => {
             </h2>
             {/* <h3 className="login-h3">카페연구소 로그인</h3> */}
             <form onSubmit={handleSubmit}>
-                <input type="text" id="userid" value={userid} onChange={(e) => setUserid(e.target.value)} placeholder="아이디" required/>
-                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" required/>
+                <input type="text" id="userid" value={userid} onChange={(e) => setUserid(e.target.value)} placeholder="아이디" required autoComplete="userid"/>
+                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" required autoComplete="new-password"/>
                 <input type="submit" id="submit" value="로그인" />
                 {errorMessage && <div className="lognin-error">{errorMessage}</div>}
             </form>

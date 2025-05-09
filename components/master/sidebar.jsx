@@ -33,6 +33,7 @@ const Sidebar = () => {
             // ✅ localStorage에서 로그인 정보 삭제
             localStorage.removeItem("token");
             localStorage.removeItem("userType");
+            localStorage.removeItem("userType");
         
             alert("로그아웃 되었습니다.");
             navigate("/"); // 메인 페이지로 이동

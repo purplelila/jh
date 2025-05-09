@@ -17,6 +17,8 @@ const MyPage = () => {
   const [waitingCount, setWaitingCount] = useState(0); // 승인 대기 카페 수
   const [approvedCount, setApprovedCount] = useState(0); // 승인 완료 카페 수
 
+  const [users, setUsers] = useState([]);
+
   // 현재 비밀번호 상태 관리
   const [realPassword, setRealPassword] = useState("12344")
 
@@ -26,10 +28,11 @@ const MyPage = () => {
   // 사용자 ID와 토큰 가져오기
   const userId = localStorage.getItem("userid");
   const token = localStorage.getItem("token");
+  const nickname = localStorage.getItem('nickname');  // 로컬 스토리지에서 닉네임 가져오기
 
   // 카페 목록 가져오기
   useEffect(() => {
-    console.log("현재 사용자 ID:", userId); // 확인용 콘솔 로그
+    console.log("현재 사용자 닉네임:", nickname); // 확인용 콘솔 로그
     axios.get("http://localhost:8080/api/cafes", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -37,24 +40,24 @@ const MyPage = () => {
     })
       .then((response) => {
         console.log("전체 카페 목록:", response.data);  // 전체 카페 목록을 확인
-        const myCafes = response.data.map((cafe) => {
-          console.log("카페:", cafe);  // 각 카페의 내용 출력
-          return cafe;  // 필드명이 맞는지 확인
+
+        // 각 카페에서 닉네임을 확인
+        response.data.forEach((cafe) => {
+          console.log("카페의 닉네임 필드:", cafe.nickname); // 또는 cafe.ownerNickname 등을 확인
         });
-      
-        // 예시: 'userid' 대신 다른 필드명일 수 있음
-        const myCafesFiltered = response.data.filter((cafe) => cafe.userid === userId);
+          
+        // 'userid' 대신 'nickname'을 사용하여 필터링
+        const myCafesFiltered = response.data.filter((cafe) => cafe.name === nickname);
         console.log("내 카페 목록:", myCafesFiltered);  // 내 카페 목록
         setCafes(myCafesFiltered);
 
         // 승인 대기
-        const waiting = myCafes.filter((cafe) => cafe.approvalStatus === "PENDING").length;
+        const waiting = myCafesFiltered.filter((cafe) => cafe.approvalStatus === "PENDING").length;
         // 승인 완료 카페 수 계산 (APPROVED + REJECTED)
-        const approved = myCafes.filter((cafe) => 
+        const approved = myCafesFiltered.filter((cafe) => 
           cafe.approvalStatus === "APPROVED" || cafe.approvalStatus === "REJECTED"
         ).length;
         
-        setCafes(myCafes);
         setWaitingCount(waiting);
         setApprovedCount(approved);
         console.log("카페 목록 가져오기 성공:", response.data);
@@ -64,7 +67,7 @@ const MyPage = () => {
       .catch((error) => {
         console.error("카페 목록 가져오기 실패:", error);
       });
-  }, [userId]);
+  }, [nickname]);  // 의존성 배열에 'nickname' 추가
 
 
   // 로그인된 사용자 정보 상태로 관리
@@ -125,15 +128,31 @@ const MyPage = () => {
     document.getElementById("file-input").click();
   };
 
-  const deleteAccount = () => {
-    const confirmDelete = window.confirm("정말 탈퇴하시겠습니까?");
-    if (confirmDelete) {
-      console.log("회원 탈퇴");
-      alert("탈퇴되셨습니다.");
-    } else {
-      console.log("회원 탈퇴 취소");
-    }
-  };
+// ✨ 마이페이지 - 개인 회원 탈퇴 핸들러
+const handleAccountDelete = () => {
+  const confirmDelete = window.confirm("정말 탈퇴하시겠습니까?");
+  if (!confirmDelete) {
+    console.log("회원 탈퇴 취소");
+    return;
+  }
+
+  axios.delete("http://localhost:8080/api/my-page/delete", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then(() => {
+      alert("탈퇴가 완료되었습니다!");
+      // 로그아웃 처리
+      localStorage.clear();
+      window.location.href = "/"; // 홈으로 리디렉션
+    })
+    .catch((error) => {
+      console.error("회원 탈퇴 실패:", error);
+      alert("탈퇴 중 오류가 발생했습니다.");
+    });
+};
+
 
   const toggleDropdown = (menuName) => {
     setIsOpenDrop((prev) => (prev === menuName? null:menuName)); // 드롭다운 열기/닫기
@@ -174,18 +193,17 @@ const MyPage = () => {
               </ul>
             )}
           </li>
-          <li><a href="#my-cafe-info" className="mypage-sidebar-item" 
-              onClick={(e) => {
-                e.preventDefault();
-                if (userInfo.userType != "1") {
-                  alert("일반회원은 카페 정보를 조회할 수 없습니다.");
-                  return;
-                }
-                toggleSection("my-cafe-info");
-              }}>
-              카페 등록
-            </a>
-          </li>
+          {userInfo.userType === "1" && (
+            <li>
+              <a href="#my-cafe-info" className="mypage-sidebar-item" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleSection("my-cafe-info");
+                }}>
+                카페 등록
+              </a>
+            </li>
+          )}
           <li>
             <a href="#" className="mypage-sidebar-item" onClick={() => toggleSection("question")}>
               고객센터
@@ -193,7 +211,7 @@ const MyPage = () => {
           </li>
         </ul>
         <div className="mypage-sidebar-bye-box">
-          <button className="mypage-sidebar-button" onClick={deleteAccount}>회원 탈퇴</button>
+          <button className="mypage-sidebar-button" onClick={() => handleAccountDelete(userId)}>회원 탈퇴</button>
         </div>
       </aside>
 
@@ -221,7 +239,7 @@ const MyPage = () => {
                 <p className="mypage-username">{userInfo.nickname} 님</p>
                 <p>{localStorage.getItem("userid")}</p>
                 <p>{userInfo.name}</p>
-                <p>{userInfo.userType === "1" ? "카페회원" : "일반회원"}</p>
+                <p>{userInfo.userType === "1" ? "카페회원" : userInfo.userType === "3" ? "관리자" : "일반회원"}</p>
                 <p>{userInfo.email}</p>
               </div>
                 <button className="mypage-outline-button"  onClick={() => {setActiveSection("change-member"); alert("회원정보 수정 페이지로 이동합니다.");}}>회원수정</button>
