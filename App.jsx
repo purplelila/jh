@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 import './App.css'
 import './style/Nav.css'
@@ -31,8 +33,8 @@ import './style/master/admin-bord-4.css'
 import './style/master/admin-list-0.css'
 import './style/master/admin-list-1.css'
 
-
 import { BrowserRouter as Router, Routes, Route, useLocation  } from "react-router-dom";
+import AutoLogout from './components/AutoLogout';
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import Cafemain from './components/Cafemain'
@@ -61,7 +63,8 @@ import AdminList_1 from './components/master/admin-list-1';
 
 const Main = () => {
   const location = useLocation();  // useLocation 훅은 Router 내에서 사용해야 함
-  
+  const navigate = useNavigate();
+
   // Cafemain 페이지에서만 Nav를 숨김
   const showNav = location.pathname !== '/';
   const showNav2 = location.pathname !== '/login';
@@ -84,7 +87,8 @@ const Main = () => {
   const showfooter8 = location.pathname !== '/admin/Bord-2';
   const showfooter9 = location.pathname !== '/admin/Bord-3';
   const showfooter10 = location.pathname !== '/admin/Bord-4';
-  
+
+
   return (
     <div className="container">
       {/* Nav가 'Cafemain' 페이지에서만 숨겨지도록 조건부 렌더링 */}
@@ -126,7 +130,8 @@ function App() {
 
       <Router>
         <CafeProvider>
-
+          
+              <AutoLogout/>
               <Main />
 
         </CafeProvider>

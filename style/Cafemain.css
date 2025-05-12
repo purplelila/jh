@@ -57,7 +57,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/ma3.jpg'); /* 배경 이미지 */
+    background-image: url('/coffeemain5.jpg'); /* 배경 이미지 */
     background-size: cover;
     background-position: center;
     opacity: 0.5; /* 기본적으로 이미지가 보이지 않음 */
@@ -109,7 +109,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/1.jpg'); /* 배경 이미지 */
+    background-image: url('/coffeemain4.jpg'); /* 배경 이미지 */
     background-size: cover;
     background-position: center;
     opacity: 0.5; /* 기본적으로 이미지가 보이지 않음 */

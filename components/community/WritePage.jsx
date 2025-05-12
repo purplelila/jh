@@ -1,18 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Tabs from "../community/Tabs";
 import axios from "axios";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { parse } from 'node-html-parser'; // ✅ 추가
+import { parse } from 'node-html-parser';
 
 const WritePage = () => {
   const { addBoard } = useContext(CafeContext);
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState(""); // CKEditor에서 작성한 전체 HTML 저장
+  const [content, setContent] = useState("");
   const [files, setFiles] = useState([]);
-  const [imageFiles, setImageFiles] = useState([]); // 이미지 파일 추가
+  const [imageFiles, setImageFiles] = useState([]);
+  const [nickname, setNickname] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { category } = useParams();
@@ -39,10 +40,9 @@ const WritePage = () => {
         })
           .then(response => response.json())
           .then(result => {
-            // 이미지 URL만 리턴받고, 해당 파일을 imageFiles 배열에 추가
-            setImageFiles(prev => [...prev, file]); // 이미지 파일을 배열에 저장
+            setImageFiles(prev => [...prev, file]);
             return {
-              default: `http://localhost:8080${result.url}` // 이미지 URL 리턴
+              default: `http://localhost:8080${result.url}`
             };
           })
           .catch(err => {
@@ -51,65 +51,70 @@ const WritePage = () => {
           });
       });
     }
-
     abort() {}
   }
 
   const parseContent = (htmlContent) => {
-    // node-html-parser 로 DOM 파싱
     const root = parse(htmlContent);
-  
     let placeholderHtml = htmlContent;
     const images = [];
-  
+
     root.querySelectorAll('img').forEach((img, idx) => {
       const src = img.getAttribute('src');
-      const outer = img.toString();           // e.g. <img src="...">
+      const outer = img.toString();
       const placeholder = `[[IMG${idx}]]`;
-  
-      // html 내에서 <img> 태그 문자열을 플레이스홀더로 교체
       placeholderHtml = placeholderHtml.replace(outer, placeholder);
-  
       images.push(src);
     });
-  
+
     return {
-      textContent: placeholderHtml,  // 토큰이 남아 있는 “텍스트” 블럭
-      images                         // 실제 URL 리스트
+      textContent: placeholderHtml,
+      images
     };
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      console.log("저장된 JWT 토큰:", token);
+    } else {
+      console.log("JWT 토큰이 존재하지 않습니다.");
+    }
+
+    const storedNickname = localStorage.getItem("nickname");
+    if (storedNickname) {
+      setNickname(storedNickname); // ✅ 수정된 부분
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { textContent, images } = parseContent(content); // ✅ content 분리
+    const token = localStorage.getItem("token"); // ✅ 추가된 부분
+
+    const { textContent, images } = parseContent(content);
 
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("textContent", textContent); // 텍스트 본문
-    formData.append("category", category);
-    formData.append("imageUrls", JSON.stringify(images)); // 이미지는 JSON 문자열로 보내기
-    
-    // FormData 내용 확인하기
-    console.log("FormData 내용:");
-    formData.forEach((value, key) => {
-      console.log(key + ": " + value);
-    });
+    formData.append("textContent", textContent);
+    formData.append("imageUrls", JSON.stringify(images));
+    formData.append("nickname", nickname);
 
-    // 파일들 추가 (일반 파일)
     files.forEach((file) => {
       formData.append("files", file);
     });
 
-    // 이미지 파일들 추가 (이미지 파일)
     imageFiles.forEach((file) => {
-      formData.append("imageFiles", file); // imageFiles에 저장된 파일들을 추가
+      formData.append("imageFiles", file);
     });
 
     try {
       await axios.post(`/api/board/${category}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         },
       });
       alert('게시글 등록 성공!');

@@ -216,7 +216,7 @@ const Admin = () => {
             disabled={currentPage === 1}
             onClick={() => handlePageClick(currentPage - 1)}
           >
-            이전
+            <i class="fas fa-angle-left"></i>  
           </button>
           {[...Array(totalPages)].map((_, index) => (
             <span
@@ -232,7 +232,7 @@ const Admin = () => {
             disabled={currentPage === totalPages}
             onClick={() => handlePageClick(currentPage + 1)}
           >
-            이후
+            <i class="fas fa-angle-right"></i>
           </button>
         </div>
       </div>

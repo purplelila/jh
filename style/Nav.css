@@ -112,12 +112,12 @@ header {
   .nav-nickname {
     text-decoration: underline;
     text-underline-offset: 3px;
-    font-size: 14px;
+    font-size: 13px;
     color: #333; 
     margin-right: 2px;
   }
   .nav-nim {
-    font-size: 14px;
+    font-size: 13px;
     color: #333;
     margin-right: 8px;
   }

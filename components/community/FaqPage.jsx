@@ -53,11 +53,6 @@ const FaqPage = () => {
    // 게시물 정렬
    const sortedPosts = filteredPosts.sort((a, b) => b.id - a.id);
  
-    // "글쓰기" 버튼 클릭 시
-    const handleClick = () => {
-     navigate(`/${category}/add`);
-   };
- 
    // 페이지네이션 계산
    const indexOfLastPost = currentPage * postsPerPage;
    const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -131,18 +126,13 @@ const FaqPage = () => {
           </div>
         </div>
 
-      <div className="button-section">
-        <div className="add-btn">
-          <button onClick={handleClick}>글쓰기</button>
-        </div>
-      </div>
 
       <div className="pagination">
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
         >
-          이전
+          <i class="fas fa-angle-left"></i>  
         </button>
 
         {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }, (_, index) => (
@@ -163,7 +153,7 @@ const FaqPage = () => {
           }
           disabled={currentPage === Math.ceil(filteredPosts.length / postsPerPage)}
         >
-          이후
+          <i class="fas fa-angle-right"></i>
         </button>
       </div>
     </div>

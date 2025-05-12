@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';  // useContext 추가
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
-import { CafeContext } from "../CafeProvider"; // CafeContext 가져오기
+import { useParams, useNavigate } from 'react-router-dom';
+import { CafeContext } from "../CafeProvider";
 import Tabs from "../community/Tabs";
 
-const NoticePage = () => {
-  const { posts, setPosts } = useContext(CafeContext); // useContext 사용
-  const [inputTerm, setInputTerm] = useState(""); // 사용자 입력값
-  const [searchTerm, setSearchTerm] = useState(""); // 실제 검색 트리거 값
+const ChatPage = () => {
+  const { posts, setPosts } = useContext(CafeContext);
+  const [inputTerm, setInputTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchCategory, setSearchCategory] = useState('title');
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(10);
@@ -17,50 +16,51 @@ const NoticePage = () => {
 
   // 게시물 필터링 (검색 기능)
   const filteredPosts = Array.isArray(posts)
-  ? posts
-      .filter((post) => post.category === "chat")
-      .filter((post) =>
-        post[searchCategory]
-          ? post[searchCategory].toLowerCase().includes(searchTerm.toLowerCase())
-          : false
-      )
-  : [];
+    ? posts
+        .filter((post) => post.category === "chat")
+        .filter((post) =>
+          post[searchCategory]
+            ? post[searchCategory].toLowerCase().includes(searchTerm.toLowerCase())
+            : false
+        )
+    : [];
 
   // 검색 제출 시 페이지 리셋
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    setSearchTerm(inputTerm);  // 이때만 검색 실행
+    setSearchTerm(inputTerm);
     setCurrentPage(1);
   };
 
-  // ✅ 게시글 목록 불러오기
+  // 게시글 목록 불러오기
   useEffect(() => {
     fetchPosts();
   }, []);
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('/api/board');
-      setPosts(res.data); // 예: [{ id: 1, title: '', content: '', category: 'notice' }, ...]
+      const token = localStorage.getItem('token');
+      const res = await axios.get('/api/board', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPosts(res.data);
     } catch (err) {
       console.error('게시글 목록 불러오기 실패', err);
     }
   };
 
-  // 게시물 정렬
   const sortedPosts = filteredPosts.sort((a, b) => b.id - a.id);
 
-   // "글쓰기" 버튼 클릭 시
-   const handleClick = () => {
+  const handleClick = () => {
     navigate(`/${category}/add`);
   };
 
-  // 페이지네이션 계산
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
 
-  // 페이지 번호 클릭 시
   const handlePageClick = (page) => {
     setCurrentPage(page);
   };
@@ -68,8 +68,8 @@ const NoticePage = () => {
   const formatDate = (date) => {
     const d = new Date(date);
     const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 해줍니다.
-    const day = String(d.getDate()).padStart(2, '0'); // 일도 두 자릿수로 맞춥니다.
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
     return `${year}. ${month}. ${day}`;
   };
 
@@ -124,13 +124,13 @@ const NoticePage = () => {
                       <strong>{p.title}</strong>
                     </td>
                     <td>
-                      {p.author || '관리자'}
+                      {p.nickname || "알 수 없음"}
                     </td>
                     <td>
                       {formatDate(p.createDate)}
                     </td>
                     <td>
-                        {p.views || 0}
+                      {p.views || 0}
                     </td>
                   </tr>
                 ))
@@ -151,7 +151,7 @@ const NoticePage = () => {
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
         >
-          이전
+          <i class="fas fa-angle-left"></i> 
         </button>
         {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }, (_, index) => (
           <button
@@ -170,11 +170,11 @@ const NoticePage = () => {
           }
           disabled={currentPage === Math.ceil(filteredPosts.length / postsPerPage)}
         >
-          이후
+          <i class="fas fa-angle-right"></i>
         </button>
       </div>
     </div>
   );
 };
 
-export default NoticePage;
+export default ChatPage;

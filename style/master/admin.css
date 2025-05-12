@@ -1,119 +1,18 @@
 .admin-board {
     display: flex;
-    background-color: #eef1f4; /* 밝은 회색 배경 */
+    /* background-color: #eef1f4;  */
 }
 
-/* 사이드바 스타일 */
-.sidebar {
-    width: 240px;
-    height: 100vh;
-    background-color: #2d3e50; /* 어두운 회색/파란색 배경 */
-    color: #fff;
-    padding: 20px;
-    position: fixed;
-    font-size: 14px;
-    border-right: 2px solid #34495e; /* 짙은 회색 테두리 */
-}
-.sidebar-icon{
-    margin-left: 10px;
-    color: #fff;
-}
-.sidebar-h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
-    color: #bdc3c7; /* 밝은 회색 */
-}
-
-.sidebar-ul {
-    list-style: none;
-    font-size: 20px;
-}
-
-.sidebar ul li {
-    margin: 15px 0;
-}
-
-.sidebar ul li a {
-    text-decoration: none;
-    color: #ecf0f1; /* 밝은 회색 텍스트 */
-    font-size: 18px;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.sidebar ul li a:hover {
-    background-color: #3498db; /* 파란색 */
-    color: #fff;
-}
-
-.dropdown-header {
-    font-size: 15px;
-    color: #ecf0f1;
-    padding: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  .dropdown-header:hover {
-    background-color: #3c5a72;
-    border-radius: 5px;
-  }
-  
-  .dropdown-list {
-    list-style: none;
-    padding-left: 15px;
-    margin-top: 5px;
-  }
-  
-  .dropdown-list li a {
-    font-size: 14px;
-    color: #ecf0f1;
-    text-decoration: none;
-    padding: 6px 0;
-    display: block;
-    transition: background-color 0.3s;
-  }
-  
-  .dropdown-list li a:hover {
-    background-color: #3498db;
-    border-radius: 4px;
-    padding-left: 10px;
-  }
-  .sidebar-logout{
-    text-align: left;
-    font-weight: 400;
-    display: block;
-    text-align: center;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    cursor: pointer;
-  }
-  .sidebar-logout-btn{
-    background: none;
-    border: none;
-    color: #ecf0f1;
-    font-size: 10px;
-  }
-  .sidebar-logout:hover{
-    background-color: #3498db; /* 파란색 */
-    color: #fff;
-  }
 
 /* 메인 컨텐츠 */
 .main-content {
-    margin-left: 240px;
     padding: 30px;
     width: calc(100% - 240px);
     background-color: #fff;
 }
 
 .main-h1 {
-    font-size: 28px;
     margin-bottom: 30px;
-    color: #333;
     font-weight: 600;
 }
 
@@ -133,14 +32,14 @@
     border: 1px solid #dcdcdc; /* 연한 회색 테두리 */
     text-align: center;
     border-radius: 6px;
-    height: 140px; /* 카드 높이 */
+    height: 200px; /* 카드 높이 */
     display: flex;
     flex-direction: column;
     justify-content: center; /* 콘텐츠 세로 중앙 정렬 */
 }
 
 .card-card-1 h3, .card-card-2 h3 {
-    font-size: 18px; /* 제목 크기 */
+    font-size: 35px; /* 제목 크기 */
     color: #2f3542; /* 어두운 회색 텍스트 */
     margin-bottom: 10px;
     font-weight: 600; /* 제목 강조 */
@@ -179,7 +78,7 @@
     padding: 15px;
     text-align: center;
     border: 1px solid #ddd;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .board-table td {

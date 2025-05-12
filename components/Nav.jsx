@@ -5,9 +5,11 @@ import { useContext, useEffect, useState } from "react";
 import { NavLink ,Link, useLocation,matchPath } from "react-router-dom";
 import { CafeContext } from "./CafeProvider";
 import { useNavigate } from "react-router-dom";
+import AutoLogout from './AutoLogout';  // ✅ AutoLogout 임포트
 
 let Nav = () => {
- 
+
+
   // store랑 community 경로마다 배경 이미지 및 텍스트 설정
   const location = useLocation()
   const {handleResetFilter} = useContext(CafeContext)
@@ -17,17 +19,36 @@ let Nav = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickname, setNickname] = useState("");
   const [userId, setUserId] = useState("");
+    const [userType, setUserType] = useState(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedNickname = localStorage.getItem("name");
-    const storedUserId = localStorage.getItem("userid");
-    setIsLoggedIn(!!token);
-    setNickname(storedNickname || "");
-    setUserId(storedUserId || "");
-    console.log("name:", storedNickname); // 디버깅
-    console.log("userid:", storedUserId);
-  }, [location.pathname]); // 경로 바뀔 때마다 상태 다시 확인
+// 자동 로그아웃 시 실행되는 콜백 함수
+const onLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("nickname");
+  localStorage.removeItem("userid");
+  localStorage.removeItem("userType");
+  setIsLoggedIn(false); // ✅ 상태 반영
+  setNickname("");
+  setUserId("");
+  setUserType(null);
+  navigate("/login");
+};
+
+
+ 
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  const storedNickname = localStorage.getItem("name");
+  const storedUserId = localStorage.getItem("userid");
+  const storedUserType = localStorage.getItem("userType");
+
+  setIsLoggedIn(!!token);
+  setNickname(storedNickname || "");
+  setUserId(storedUserId || "");
+  setUserType(storedUserType);
+}, [location.pathname]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -52,7 +73,7 @@ let Nav = () => {
   let heroText = {title:'', subtitle:''}
 
   if (location.pathname == '/cafelist' || location.pathname == '/cafeupload' || location.pathname.startsWith('/cafedetail/') || location.pathname.startsWith('/cafeedit/')){
-    heroImage = 'url(/c6.jpg)';
+    heroImage = 'url(/hero5.jpg)';
     heroText = {
       title : 'STORE',
       subtitle : '좋은 커피와 서비스를 제공하는 카페 정보를 제공합니다'
@@ -103,6 +124,18 @@ let Nav = () => {
     return ['notice', 'faq', 'free', 'event', 'chat'].includes(firstPath);
   })();
 
+  // 마이페이지 클릭 시 관리자 페이지로 리디렉션하는 함수
+  const handleMyPageClick = () => {
+    if (userType === "3") { // 관리자(3)일 경우
+      navigate("/admin/1"); // 관리자 페이지로 이동
+    } else if (userType === "1") { // 카페 사장(1)일 경우
+      navigate("/mypage"); // 카페 사장의 마이페이지로 이동
+    } else if (userType === "0") { // 일반 회원(0)일 경우
+      navigate("/mypage"); // 일반 회원의 마이페이지로 이동
+    }
+  };
+
+
   return(
     <>
       <header>
@@ -132,7 +165,7 @@ let Nav = () => {
                     <span className="nav-divider">|</span>
                     <Link to="#" onClick={(e) => {e.preventDefault(); handleLogout();}}>LOGOUT</Link>
                     <span className="nav-divider">|</span>
-                    <Link to={"/mypage"}>MY PAGE</Link>
+                    <Link to="#" onClick={(e) => { e.preventDefault(); handleMyPageClick(); }}>MY PAGE</Link>
                   </>
                   ) : (
                   <>
@@ -163,6 +196,8 @@ let Nav = () => {
         </div>
       </div>
       )}
+    {/* 자동 로그아웃 컴포넌트 추가 */}
+   <AutoLogout onLogout={onLogout} setIsLoggedIn={setIsLoggedIn} />
     </>      
     )
   }

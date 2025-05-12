@@ -270,10 +270,10 @@ const AdminList = () => {
 
   return (
     <div className="admin-board">
-         {/* 사이드바 */}
-         <div className="sidebar-allbox">
-      <Sidebar />
-    </div>
+        {/* 사이드바 */}
+        <div className="sidebar-allbox-main">
+          <Sidebar />
+        </div>
 
     {/* 메인 컨텐츠 */}
     <div className="mainlist-content">
@@ -307,7 +307,7 @@ const AdminList = () => {
         </table>
 
         <div className="pagination">
-        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} >이전</button>
+        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
           {[...Array(totalPages)].map((_, index) => (
               <span
                 key={index}
@@ -317,7 +317,7 @@ const AdminList = () => {
                 {index + 1}
               </span>
           ))}
-          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}>이후</button>
+          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
         </div>
       </div>
     </div>

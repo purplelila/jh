@@ -9,7 +9,7 @@ const AdminList = () => {
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
-  const usersPerPage = 5; // 한 페이지에 보여줄 회원 수
+  const usersPerPage = 10; // 한 페이지에 보여줄 회원 수
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUserType, setEditedUserType] = useState(null);
 
@@ -161,7 +161,7 @@ const AdminList = () => {
         </td>
         <td>
           <button className="list-rem-btn" onClick={() => handleEditClick(item)} >
-            {editingUserId === item.userid ? "저장" : "수정"}
+            {editingUserId === item.userid ? "저장" : "변경"}
             </button>{" "}
           <button className="list-delete-btn" onClick={() => handleDelete(item.userid)} >탈퇴</button>
         </td>
@@ -172,7 +172,7 @@ const AdminList = () => {
   return (
     <div className="admin-board">
            {/* 사이드바 */}
-     <div className="sidebar-allbox">
+     <div className="sidebar-allbox-main">
       <Sidebar />
      </div>
       {/* 메인 컨텐츠 */}
@@ -196,7 +196,7 @@ const AdminList = () => {
         </table>
 
         <div className="pagination">
-        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} >이전</button>
+        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
           {[...Array(totalPages)].map((_, index) => (
               <span
                 key={index}
@@ -206,7 +206,7 @@ const AdminList = () => {
                 {index + 1}
               </span>
           ))}
-          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}>이후</button>
+          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
         </div>
       </div>
     </div>

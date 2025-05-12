@@ -6,12 +6,14 @@ import axios from "axios";
 import Tabs from "../community/Tabs";
 
 function DetailPage() {
-  const { addComment } = useContext(CafeContext);
   const { category, postId } = useParams();
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
+
+  const nickname = localStorage.getItem("nickname");
+  const token = localStorage.getItem("token");
 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -19,24 +21,38 @@ function DetailPage() {
   };
 
   useEffect(() => {
-    axios.get(`/api/board/${category}/${postId}`)
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    axios
+      .get(`/api/board/${category}/${postId}`, { headers })
       .then((res) => {
-        console.log("full post payload:", res.data);
         setPost(res.data);
         setComments(res.data.comments || []);
       })
-      .catch((err) => console.error(err));
-  }, [category, postId]);
+      .catch((err) => console.error("게시글 로딩 실패:", err));
+  }, [category, postId, token]);
 
-  // 이미지 썸네일 처리
+  // 썸네일 이미지 처리
   useEffect(() => {
     if (!post) return;
-
     const contentEl = document.querySelector(".content");
     if (!contentEl) return;
 
-    contentEl.querySelectorAll("img").forEach((img) => {
-      const originalSrc = img.src;
+    const originalImages = contentEl.querySelectorAll("img");
+
+    originalImages.forEach((oldImg) => {
+      const originalSrc = oldImg.src;
+
+      const placeholder = document.createElement("div");
+      placeholder.style.width = oldImg.width + "px";
+      placeholder.style.height = oldImg.height + "px";
+      placeholder.style.display = "inline-block";
+      placeholder.style.background = "#eee";
+      placeholder.style.borderRadius = "8px";
+
+      oldImg.parentNode.insertBefore(placeholder, oldImg);
+      oldImg.style.display = "none";
+
       const image = new Image();
       image.crossOrigin = "anonymous";
       image.src = originalSrc;
@@ -46,38 +62,58 @@ function DetailPage() {
         const scale = Math.min(maxSize / image.width, maxSize / image.height);
         const scaledWidth = image.width * scale;
         const scaledHeight = image.height * scale;
-      
+
         const canvas = document.createElement("canvas");
         canvas.width = scaledWidth;
         canvas.height = scaledHeight;
-      
+
         const ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, scaledWidth, scaledHeight);
-      
+
         const thumbnail = canvas.toDataURL("image/jpeg");
-        img.src = thumbnail;
-        img.classList.add("thumbnail-image");
+
+        const newImg = new Image();
+        newImg.src = thumbnail;
+        newImg.className = "thumbnail-image";
+        newImg.style.maxWidth = "100%";
+        newImg.style.borderRadius = "8px";
+
+        placeholder.replaceWith(newImg);
       };
     });
 
     return () => {
-      contentEl.querySelectorAll("img").forEach((img) => (img.onclick = null));
+      originalImages.forEach((img) => {
+        img.onclick = null;
+      });
     };
   }, [post]);
 
-  // 댓글 등록
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!comment.trim()) return alert("댓글을 입력해주세요.");
+    if (!token) return alert("로그인이 필요합니다.");
 
     try {
-      await axios.post(`/api/comments/${postId}`, {
-        author: "관리자",
-        comment: comment,
-      });
+      await axios.post(
+        `/api/comments/${postId}`,
+        {
+          author: nickname,
+          comment: comment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setComment("");
 
-      const res = await axios.get(`/api/board/${category}/${postId}`);
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await axios.get(`/api/board/${category}/${postId}`, {
+        headers,
+      });
       setPost(res.data);
       setComments(res.data.comments || []);
     } catch (err) {
@@ -86,26 +122,40 @@ function DetailPage() {
     }
   };
 
+  const handleEditPost = () => {
+    navigate(`/edit/${category}/${postId}`);
+  };
+
+  const handleDeletePost = async () => {
+    const confirmDelete = window.confirm("정말로 게시글을 삭제하시겠습니까?");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`/api/board/${category}/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        navigate(`/${category}`);
+      } catch (err) {
+        console.error("게시글 삭제 실패:", err);
+        alert("게시글 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   if (!post) return <p>게시글을 불러오는 중입니다...</p>;
 
-  console.log("textContent", post.textContent);
-  console.log("imageUrls", post.imageUrls);
+  let html = post.textContent;
+  const imageUrls = Array.isArray(post?.imageUrls) ? post.imageUrls : [];
 
-// 본문 이미지 치환
-let html = post.textContent;
-const imageUrls = Array.isArray(post?.imageUrls) ? post.imageUrls : [];
+  imageUrls.forEach((url, idx) => {
+    const token = new RegExp(`\\[\\[IMG${idx}\\]\\]`, "g");
+    const fullUrl = url.startsWith("http")
+      ? url
+      : `${window.location.origin}/api/images/${url}`;
 
-imageUrls.forEach((url, idx) => {
-  const token = new RegExp(`\\[\\[IMG${idx}\\]\\]`, "g");  // 정규식 객체로 수정
-  const fullUrl = url.startsWith("http")
-    ? url
-    : `${window.location.origin}/api/images/${url}`;
-
-  html = html.replace(
-    token,
-    `<img src="${fullUrl}" alt="이미지${idx}"/>`
-  );
-});
+    html = html.replace(token, `<img src="${fullUrl}" alt="이미지${idx}"/>`);
+  });
 
   const isImageInHtml = html.includes("<img");
 
@@ -117,9 +167,16 @@ imageUrls.forEach((url, idx) => {
         <div className="title-section">
           <h2>{post.title}</h2>
           <div className="info">
-            <span>작성자: 관리자</span>
+            <span>작성자: {post.nickname}</span>
             <span>작성일: {formatDate(post.createDate)}</span>
           </div>
+
+          {nickname && post.nickname && nickname === post.nickname && (
+            <div className="edit-delete-buttons">
+              <button onClick={handleEditPost}>수정</button>
+              <button onClick={handleDeletePost}>삭제</button>
+            </div>
+          )}
         </div>
 
         {post.files?.length > 0 && (
@@ -142,7 +199,6 @@ imageUrls.forEach((url, idx) => {
 
         <div className="content" dangerouslySetInnerHTML={{ __html: html }} />
 
-        {/* 본문에 이미지가 없는 경우만 썸네일 보여줌 */}
         {!isImageInHtml && imageUrls.length > 0 && (
           <div className="images">
             {imageUrls.map((url, idx) => (
@@ -174,7 +230,7 @@ imageUrls.forEach((url, idx) => {
           ) : (
             comments.map((c, i) => (
               <div className="comments" key={i}>
-                <p className="com_author">{c.author || '관리자'}</p>
+                <p className="com_author">{c.author}</p>
                 <p className="com_comment">{c.comment}</p>
                 <p className="com_time">{formatDate(c.createdAt)}</p>
               </div>
