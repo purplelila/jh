@@ -74,6 +74,16 @@ const AdminList = () => {
     }
   };
 
+  useEffect(() => {
+    fetchPosts(); // 컴포넌트가 처음 렌더링될 때 게시물 데이터를 가져옴
+  }, []);
+
+  // 미리보기
+  const handleView = (id) => {
+    // 새 창에서 해당 게시물의 상세 페이지 열기
+    window.open(`/faq/${id}`, "_blank");
+  };
+
   const renderRows = () => {
     let filteredPosts = posts;
     
@@ -84,7 +94,7 @@ const AdminList = () => {
         return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
       });
     }
-    return currentPosts.map((item, index) => (
+    return filteredPosts.map((item, index) => (
       <tr key={item.id}>
         <td>{posts.length - ((activePage - 1) * usersPerPage + index)}</td>
         <td>{item.title}</td>
@@ -95,6 +105,9 @@ const AdminList = () => {
               ('0' + (new Date(item.createDate).getMonth() + 1)).slice(-2) + '-' + 
               ('0' + new Date(item.createDate).getDate()).slice(-2)
             }
+        </td>
+        <td>
+          <button className="board-view-btn" onClick={() => handleView(item.id)}>상세보기</button>
         </td>
         <td>
           <button >수정</button>{" "}
@@ -144,6 +157,7 @@ const AdminList = () => {
               <th>게시물 제목</th>
               <th>작성자</th>
               <th>작성일자</th>
+              <th>상세보기</th>
               <th>비고</th>
             </tr>
           </thead>

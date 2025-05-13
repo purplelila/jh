@@ -159,11 +159,25 @@ function DetailPage() {
 
   const isImageInHtml = html.includes("<img");
 
+  const categoryLabel = {
+  notice: "공지사항",
+  chat: "소통창",
+  faq: "자주하는 질문",
+  };
+  const categoryName = categoryLabel[category] || category; // 해당하는 한글이 없으면 원래 값을 사용
+
   return (
     <>
       <Tabs activeTab={category} setActiveTab={(tab) => navigate(`/${tab}`)} />
 
       <div className="main-container">
+        <div className="breadcrumb-list-board">
+            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">{categoryName}</span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">{post?.title}</span>
+        </div>
         <div className="title-section">
           <h2>{post.title}</h2>
           <div className="info">

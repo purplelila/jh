@@ -79,6 +79,11 @@ const FaqPage = () => {
     <div className="faq-container">
       <Tabs />
         <div className="faq-board">
+          <div className="breadcrumb-list-board">
+            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">자주하는 질문</span>
+          </div>
           <div className="faq-top">
             <div className="faq-title">
               <h2>자주하는 질문</h2>

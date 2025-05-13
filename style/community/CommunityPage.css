@@ -1,3 +1,10 @@
+.breadcrumb-list-board{
+  width: 1200px;
+  font-size: 16px;
+  color: #7c7c7c;
+  margin: 30px auto;
+}
+
 
 /*------------------------------------------------ notice-top -----------------------------------------------------------*/
 
@@ -41,7 +48,7 @@
 .community-top {
   display: flex;
   justify-content: space-between;
-  margin: 40px 0;
+  margin: 30px 0;
   align-items: center;
 }
 
@@ -65,7 +72,7 @@
 }
 
 .community-board  table tr th:nth-child(2) {
-    width: 40%;
+  width: 40%;
 } 
 
 .community-board  table tr td {

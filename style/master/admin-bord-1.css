@@ -80,6 +80,17 @@
     background-color: #c0392b; /* 삭제 버튼 호버 효과 */
 }
 
+.board-view-btn{
+    background-color: #34495e !important; 
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    margin: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
 /* 페이지네이션 */
 .admin-listboard-pagination-1 {
     display: flex;

@@ -205,7 +205,7 @@ const AdminList = () => {
   
   // 미리보기
   const handleView = (id) => {
-    navigate(`/cafedetail/${id}`);
+    window.open(`/cafedetail/${id}`, "_blank");
   };
 
   const handlePageClick = (page) => {
@@ -237,30 +237,38 @@ const AdminList = () => {
         <td>{cafe.regDate}</td>
         <td>{cafe.approvalAt}</td>
         <td>
-        <button className="view-btn" onClick={() => handleView(cafe.id)}>미리보기</button>
+        <button className="board4-view-btn" onClick={() => handleView(cafe.id)}>미리보기</button>
         </td>
         <td>
-          {cafe.approvalStatus === 'PENDING' ? '대기' : 
-          cafe.approvalStatus === 'APPROVED' ? '승인' : 
-          cafe.approvalStatus === 'REJECTED' ? '거절' : ''}
+          <span className={
+            cafe.approvalStatus === 'PENDING' ? 'status-pending' :
+            cafe.approvalStatus === 'APPROVED' ? 'status-approved' :
+            cafe.approvalStatus === 'REJECTED' ? 'status-rejected' :
+            ''
+          }>
+            {cafe.approvalStatus === 'PENDING' ? '대기' :
+            cafe.approvalStatus === 'APPROVED' ? '승인' :
+            cafe.approvalStatus === 'REJECTED' ? '거절' :
+            ''}
+          </span>
         </td>
         <td>
           {cafe.approvalStatus === 'PENDING' && (
             <>
-              <button className="approve-btn" onClick={() => approveCafe(cafe.id)}>승인</button>{" "}
-              <button className="reject-btn" onClick={() => rejectCafe(cafe.id)}>거절</button>
+              <button className="board4-approve-btn" onClick={() => approveCafe(cafe.id)}>승인</button>{" "}
+              <button className="board4-reject-btn" onClick={() => rejectCafe(cafe.id)}>거절</button>
             </>
           )}
             {cafe.approvalStatus === 'APPROVED' && (
             <>
-              <button className="return-btn" onClick={() => toggleCafeApproval(cafe.id, cafe.approvalStatus)}>반려</button>{" "}
-              <button className="delete-btn" onClick={() => deleteCafe(cafe.id)}>삭제</button>
+              <button className="board4-return-btn" onClick={() => toggleCafeApproval(cafe.id, cafe.approvalStatus)}>반려</button>{" "}
+              <button className="board4-delete-btn" onClick={() => deleteCafe(cafe.id)}>삭제</button>
             </>
           )}
           {cafe.approvalStatus === 'REJECTED' && (
             <>
-              <button className="return-btn" onClick={() => toggleCafeApproval(cafe.id, cafe.approvalStatus)}>반려</button>{" "}
-              <button className="delete-btn" onClick={() => deleteCafe(cafe.id)}>삭제</button>
+              <button className="board4-return-btn" onClick={() => toggleCafeApproval(cafe.id, cafe.approvalStatus)}>반려</button>{" "}
+              <button className="board4-delete-btn" onClick={() => deleteCafe(cafe.id)}>삭제</button>
             </>
           )}
         </td>

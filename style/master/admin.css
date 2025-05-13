@@ -126,6 +126,7 @@
     background-color: #3498db; /* 파란색 */
     color: #fff;
     transition: background-color 0.3s;
+    margin: 0 3px;
 }
 
 .board-table td button.delete-btn {

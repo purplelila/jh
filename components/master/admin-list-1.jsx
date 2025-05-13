@@ -4,6 +4,10 @@ import axios from "axios";
 import Sidebar from "./sidebar";
 
 const AdminList = () => {
+  const [searchTerm, setSearchTerm] = useState("");   // 검색기능
+  const [searchType, setSearchType] = useState("userid"); // 기본은 제목 검색
+  const [searchTriggered, setSearchTriggered] = useState(false); // 검색 버튼 눌러야 활성화
+
   const [users, setUsers] = useState([]); // ← 서버에서 받아올 회원 데이터;
   const [isAuthorized, setIsAuthorized] = useState(null); // ← 이거 추가!!
   const navigate = useNavigate();
@@ -136,11 +140,25 @@ const AdminList = () => {
       }
     };
   const renderRows = () => {
+    let filteredUsers  = users;
+
+    // 검색 필터링 적용
+    if (searchTriggered && searchTerm.trim() !== "") {
+      filteredUsers = users.filter((user) => {
+        const valueToSearch = searchType === "userid" ? user.userid : user.nickname; 
+        return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
+
+    // 페이징 적용
     const startIndex = (activePage - 1) * usersPerPage;
     const endIndex = startIndex + usersPerPage;
-    const usersOnCurrentPage = users.slice().reverse().slice(startIndex, endIndex); // reverse()로 순서 반전
+    const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex); // 필터된 배열에서 페이징 적용
 
-    return usersOnCurrentPage.map((item, index) => (
+    // 순서를 반전
+    const reversedUsersOnCurrentPage = usersOnCurrentPage.reverse();
+
+    return reversedUsersOnCurrentPage.map((item, index) => (
       <tr key={index}>
        <td>{users.length - (startIndex + index)}</td>
         <td>{item.userid}</td>
@@ -169,6 +187,11 @@ const AdminList = () => {
     ));
   };
 
+  // 검색
+  useEffect(() => {
+    setSearchTriggered(false); // 검색어 바꾸면 검색 버튼 다시 눌러야 작동함
+  }, [searchTerm, searchType]);
+
   return (
     <div className="admin-board">
            {/* 사이드바 */}
@@ -178,6 +201,19 @@ const AdminList = () => {
       {/* 메인 컨텐츠 */}
       <div className="mainlist-content">
         <h1 className="adminlist-h1">카페연구소 카페사장 회원 관리 목록</h1>
+
+        <div className="admin-search-write-row">
+          <div className="admin-4-search-container">
+            <select className="admin-4-search-select" value={searchType}  onChange={(e) => setSearchType(e.target.value)}>
+              <option value="userid">아이디</option>
+              <option value="nickname">닉네임</option>
+            </select>
+            <input type="text" className="admin-4-search-input" placeholder="검색어를 입력하세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+            <button className="admin-4-search-btn" onClick={() => {setSearchTriggered(true); setActivePage(1);}}>
+              검색
+            </button>
+          </div>
+        </div>
 
         <table className="admin-listboard-table">
           <thead>

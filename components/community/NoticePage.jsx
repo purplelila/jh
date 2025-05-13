@@ -75,6 +75,11 @@ const NoticePage = () => {
       <Tabs />
       <div className="tab-content">
         <div className="community-board">
+          <div className="breadcrumb-list-board">
+            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-arrow">&gt;</span>
+            <span className="breadcrumb-list-info">공지사항</span>
+          </div>
           <div className="community-top">
             <div className="community-title">
               <h2>공지사항</h2>
@@ -120,6 +125,9 @@ const NoticePage = () => {
                     </td>
                     <td>
                       {formatDate(p.createDate)}
+                    </td>
+                    <td>
+                      {p.views || 0}
                     </td>
                   </tr>
                 ))
