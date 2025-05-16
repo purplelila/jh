@@ -79,7 +79,7 @@ const MyCafeInfo = () => {
             {type === 'waiting' && <th className='mycafe-table-th'>신청일</th>}
             {type === 'approved' && <th className='mycafe-table-th'>승인일</th>}
             <th className='mycafe-table-th'>상태</th>
-            <th className='mycafe-table-th'>조치</th>
+            <th className='mycafe-table-th'>비고</th>
           </tr>
         </thead>
         <tbody>

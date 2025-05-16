@@ -1,8 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
-import { CafeContext } from "../CafeProvider";
-import React from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import React from "react";
 import Tabs from "../community/Tabs";
 
 function DetailPage() {
@@ -17,7 +16,11 @@ function DetailPage() {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    return `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, "0")}. ${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    return `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, "0")}. ${String(
+      d.getDate()
+    ).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(
+      d.getMinutes()
+    ).padStart(2, "0")}`;
   };
 
   useEffect(() => {
@@ -32,62 +35,50 @@ function DetailPage() {
       .catch((err) => console.error("게시글 로딩 실패:", err));
   }, [category, postId, token]);
 
-  // 썸네일 이미지 처리
-  useEffect(() => {
-    if (!post) return;
-    const contentEl = document.querySelector(".content");
-    if (!contentEl) return;
+  // 플레이스홀더( [[IMG0]] ) 기준으로 텍스트와 이미지를 분리해서 React 엘리먼트로 렌더링
+  const renderContentWithImages = (htmlString, imageUrls) => {
+    if (!htmlString) return null;
 
-    const originalImages = contentEl.querySelectorAll("img");
+    // 정규식으로 [[IMG숫자]] 기준 분리
+    const parts = htmlString.split(/\[\[IMG(\d+)\]\]/g);
 
-    originalImages.forEach((oldImg) => {
-      const originalSrc = oldImg.src;
+    const elements = [];
 
-      const placeholder = document.createElement("div");
-      placeholder.style.width = oldImg.width + "px";
-      placeholder.style.height = oldImg.height + "px";
-      placeholder.style.display = "inline-block";
-      placeholder.style.background = "#eee";
-      placeholder.style.borderRadius = "8px";
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 2 === 0) {
+        // 텍스트 부분 (HTML) dangerouslySetInnerHTML로 출력
+        elements.push(
+          <span key={`text-${i}`} dangerouslySetInnerHTML={{ __html: parts[i] }} />
+        );
+      } else {
+        // 이미지 인덱스
+        const imgIndex = parseInt(parts[i], 10);
+        if (!imageUrls || !imageUrls[imgIndex]) continue;
 
-      oldImg.parentNode.insertBefore(placeholder, oldImg);
-      oldImg.style.display = "none";
+        const url = imageUrls[imgIndex];
+        const src = url.startsWith("http")
+          ? url
+          : `${window.location.origin}/api/images/${url}`;
 
-      const image = new Image();
-      image.crossOrigin = "anonymous";
-      image.src = originalSrc;
+        elements.push(
+          <img
+            key={`img-${imgIndex}`}
+            src={src}
+            alt={`이미지${imgIndex}`}
+            className="thumbnail-image"
+            style={{ maxWidth: "600px", borderRadius: "8px", cursor: "pointer" }}
+            onClick={() => window.open(src, "_blank")}
+          />
+        );
+      }
+    }
+    return elements;
+  };
 
-      image.onload = () => {
-        const maxSize = 600;
-        const scale = Math.min(maxSize / image.width, maxSize / image.height);
-        const scaledWidth = image.width * scale;
-        const scaledHeight = image.height * scale;
+  if (!post) return <p>게시글을 불러오는 중입니다...</p>;
 
-        const canvas = document.createElement("canvas");
-        canvas.width = scaledWidth;
-        canvas.height = scaledHeight;
-
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(image, 0, 0, scaledWidth, scaledHeight);
-
-        const thumbnail = canvas.toDataURL("image/jpeg");
-
-        const newImg = new Image();
-        newImg.src = thumbnail;
-        newImg.className = "thumbnail-image";
-        newImg.style.maxWidth = "100%";
-        newImg.style.borderRadius = "8px";
-
-        placeholder.replaceWith(newImg);
-      };
-    });
-
-    return () => {
-      originalImages.forEach((img) => {
-        img.onclick = null;
-      });
-    };
-  }, [post]);
+  const imageUrls = Array.isArray(post?.imageUrls) ? post.imageUrls : [];
+  const contentElements = renderContentWithImages(post.textContent, imageUrls);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -98,7 +89,7 @@ function DetailPage() {
       await axios.post(
         `/api/comments/${postId}`,
         {
-          author: nickname,
+          nickname: nickname,
           comment: comment,
         },
         {
@@ -143,26 +134,10 @@ function DetailPage() {
     }
   };
 
-  if (!post) return <p>게시글을 불러오는 중입니다...</p>;
-
-  let html = post.textContent;
-  const imageUrls = Array.isArray(post?.imageUrls) ? post.imageUrls : [];
-
-  imageUrls.forEach((url, idx) => {
-    const token = new RegExp(`\\[\\[IMG${idx}\\]\\]`, "g");
-    const fullUrl = url.startsWith("http")
-      ? url
-      : `${window.location.origin}/api/images/${url}`;
-
-    html = html.replace(token, `<img src="${fullUrl}" alt="이미지${idx}"/>`);
-  });
-
-  const isImageInHtml = html.includes("<img");
-
   const categoryLabel = {
-  notice: "공지사항",
-  chat: "소통창",
-  faq: "자주하는 질문",
+    notice: "공지사항",
+    chat: "소통창",
+    faq: "자주하는 질문",
   };
   const categoryName = categoryLabel[category] || category; // 해당하는 한글이 없으면 원래 값을 사용
 
@@ -172,11 +147,11 @@ function DetailPage() {
 
       <div className="main-container">
         <div className="breadcrumb-list-board">
-            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
-            <span className="breadcrumb-list-arrow">&gt;</span>
-            <span className="breadcrumb-list-info">{categoryName}</span>
-            <span className="breadcrumb-list-arrow">&gt;</span>
-            <span className="breadcrumb-list-info">{post?.title}</span>
+          <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+          <span className="breadcrumb-list-arrow">&gt;</span>
+          <span className="breadcrumb-list-info">{categoryName}</span>
+          <span className="breadcrumb-list-arrow">&gt;</span>
+          <span className="breadcrumb-list-info">{post?.title}</span>
         </div>
         <div className="title-section">
           <h2>{post.title}</h2>
@@ -185,7 +160,7 @@ function DetailPage() {
             <span>작성일: {formatDate(post.createDate)}</span>
           </div>
 
-          {nickname && post.nickname && nickname === post.nickname && (
+          {(nickname && post.nickname && (nickname === post.nickname || nickname === "admin")) && (
             <div className="edit-delete-buttons">
               <button onClick={handleEditPost}>수정</button>
               <button onClick={handleDeletePost}>삭제</button>
@@ -211,60 +186,45 @@ function DetailPage() {
           </div>
         )}
 
-        <div className="content" dangerouslySetInnerHTML={{ __html: html }} />
-
-        {!isImageInHtml && imageUrls.length > 0 && (
-          <div className="images">
-            {imageUrls.map((url, idx) => (
-              <img
-                key={idx}
-                src={
-                  url.startsWith("http")
-                    ? url
-                    : `${window.location.origin}/api/images/${url}`
-                }
-                alt={`첨부이미지-${idx}`}
-                className="thumbnail-image"
-              />
-            ))}
-          </div>
-        )}
+        <div className="content">{contentElements}</div>
 
         <div className="list-btn">
           <button onClick={() => navigate(`/${category}`)}>목록</button>
         </div>
       </div>
 
-      <div className="comment-section">
-        <h4>댓글</h4>
+      {category === "chat" && (
+        <div className="comment-section">
+          <h4>댓글 {comments.length}개</h4>
 
-        <div className="commentlist-section">
-          {comments.length === 0 ? (
-            <p>댓글이 없습니다.</p>
-          ) : (
-            comments.map((c, i) => (
-              <div className="comments" key={i}>
-                <p className="com_author">{c.author}</p>
-                <p className="com_comment">{c.comment}</p>
-                <p className="com_time">{formatDate(c.createdAt)}</p>
-              </div>
-            ))
-          )}
-        </div>
-
-        <form className="add-comment write-section" onSubmit={handleCommentSubmit}>
-          <h4>댓글작성</h4>
-          <textarea
-            placeholder="댓글을 입력해주세요."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            required
-          />
-          <div className="write-btn">
-            <button type="submit">등록</button>
+          <div className="commentlist-section">
+            {comments.length === 0 ? (
+              <p>댓글이 없습니다.</p>
+            ) : (
+              comments.map((c, i) => (
+                <div className="comments" key={i}>
+                  <p className="com_author">{c.nickname}</p>
+                  <p className="com_comment">{c.comment}</p>
+                  <p className="com_time">{formatDate(c.createdAt)}</p>
+                </div>
+              ))
+            )}
           </div>
-        </form>
-      </div>
+
+          <form className="add-comment write-section" onSubmit={handleCommentSubmit}>
+            <h4>댓글작성</h4>
+            <textarea
+              placeholder="댓글을 입력해주세요."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              required
+            />
+            <div className="write-btn">
+              <button type="submit">등록</button>
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 }

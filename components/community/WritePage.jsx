@@ -132,11 +132,19 @@ const WritePage = () => {
     navigate(`/${category}`);
   };
 
+  const categoryLabel = {
+    notice: "공지사항",
+    chat: "소통창",
+    faq: "자주하는 질문",
+  };
+  const categoryName = categoryLabel[category] || category; // 해당하는 한글이 없으면 원래 값을 사용
+
+
   return (
     <>
       <Tabs activeTab={location.pathname} />
       <div className="add-board-wrapper">
-        <h1 className="form-title">게시물 등록</h1>
+        <h1 className="form-title">{categoryName} 게시물 등록</h1>
         <form className="form-container" onSubmit={handleSubmit}>
           <div className="file-title">
             <label htmlFor="title">제목</label>

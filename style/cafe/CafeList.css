@@ -35,6 +35,8 @@
   font-size: 40px;
 }
 
+/* 버튼 디자인 */
+
 .cafe-btn{
   display: flex;
   justify-content: right;
@@ -44,42 +46,32 @@
   padding-top: 20px;
 }
 
-.search-container {
+.cafe-search-container {
+  margin-top: 10px;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
 .cafesearch-input {
-  width: 300px;
-  padding: 0 15px;
-  border: 1px solid #e0e0e0;
-  transition: all 0.2s ease-in-out;
-  height: 49px;
-  font-size: 15px;
-  /* border-radius: 5px 0 0 5px; */
+  width: 350px;
+  height: 40px;
+  padding: 0 10px;
+  outline: none;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-.cafesearch-input:focus{
-  border-color: lightslategray;
-}
 
 .search-btn{
-  /* padding: 12px 20px; */
-  width: 75px;
-  height: 49px;
+  width: 60px;
+  height: 40px;
+  background-color: #FFA128;
   border: none;
-  /* border-radius: 0 5px 5px 0; */
-  border-radius: 5px;
   margin-left: 5px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  background-color: #FFA128;
-  color: #eee;
-  font-size: 17px;
-}
-
-.search-btn:hover {
-  background-color: #FFA128;
   color: #eee;
 }
 
@@ -161,10 +153,10 @@
   font-size: 17px;
 }
 
-.cafelist-info button:hover {
+/* .cafelist-info button:hover {
   background-color: #FFA128;
   color: #eee;
-}
+} */
 
 .scroll-to-top{
   position: fixed;
@@ -180,10 +172,10 @@
   border-radius: 50%;
 }
 
-.scroll-to-top:hover {
+/* .scroll-to-top:hover {
   background-color: #FFA128;
   color: #eee;
-}
+} */
 
 .scroll-to-top i{
   font-size: 20px;

@@ -8,7 +8,7 @@ const AdminList = () => {
   const [searchType, setSearchType] = useState("userid"); // 기본은 제목 검색
   const [searchTriggered, setSearchTriggered] = useState(false); // 검색 버튼 눌러야 활성화
 
-  const [users, setUsers] = useState([]); // ← 서버에서 받아올 회원 데이터
+  const [users, setUsers] = useState([]); // ← 서버에서 받아올 회원 데이터;
   const [isAuthorized, setIsAuthorized] = useState(null); // ← 이거 추가!!
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState(1);
@@ -17,33 +17,31 @@ const AdminList = () => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUserType, setEditedUserType] = useState(null);
 
-  const handlePageClick = (page) => {
-    setActivePage(page);
-  };
-
-   // ✅ 관리자 인증 체크
-   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userType = parseInt(localStorage.getItem("userType"));
-  
-    if (!token || userType !== 3) {
-      setIsAuthorized(false); // 상태만 설정
-    } else {
-      console.log("✅ 관리자 권한 확인 완료");
-      setIsAuthorized(true);
-    }
-  }, []);
-  
+   // 관리자가 맞는지 확인하는 useEffect
+     useEffect(() => {
+       const token = localStorage.getItem("token");
+       const userType = parseInt(localStorage.getItem("userType"));
+   
+       if (!token || userType !== 3) {
+         setIsAuthorized(false);  // ❗관리자가 아님
+       } else {
+         setIsAuthorized(true);  // ✅관리자 맞음
+       }
+     }, []); // 컴포넌트 처음 렌더링 시 한 번만 실행
+   
+     // 권한 없으면 로그인 페이지로 이동하는 useEffect
+     useEffect(() => {
+       if (isAuthorized === false) {
+         if (window.confirm("잘못된 경로입니다. 메인 페이지로 이동합니다.")) {
+           navigate("/");  // 메인 페이지로 리디렉션
+         }
+       }
+     }, [isAuthorized, navigate]); // isAuthorized가 false일 때만 실행
+   
   useEffect(() => {
-    if (isAuthorized === false) {
-      alert("정상적인 접근경로가 아닙니다.");
-      navigate("/login"); // navigate는 따로!
-    }
-  }, [isAuthorized, navigate]);
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/users?userType=0")
+    axios.get("http://localhost:8080/api/users?userType=3")
       .then((response) => {
-        console.log("일반회원:", response.data); // 카페사장 데이터만 콘솔에 출력
+        console.log("관리자들:", response.data); // 콘솔에 출력
         setUsers(response.data); // 회원 리스트 저장
         // 전체 회원 수로 총 페이지 수 계산
         const totalUsers = response.data.length;
@@ -51,10 +49,15 @@ const AdminList = () => {
         setTotalPages(totalPagesCalculated); // 총 페이지 수 상태 업데이트
       })
       .catch((error) => {
-        console.error("회원 데이터를 불러오지 못했습니다.", error);
-        alert("회원 데이터를 불러오지 못했습니다."); // 오류 메시지 표시
+        console.error("관리자 데이터를 불러오지 못했습니다.", error);
+        alert("관리자 데이터를 불러오지 못했습니다."); // 오류 메시지 표시
       });
   }, []);
+
+    // 검색
+    useEffect(() => {
+      setSearchTriggered(false); // 검색어 바꾸면 검색 버튼 다시 눌러야 작동함
+    }, [searchTerm, searchType]);
 
 
   // 수정 또는 저장 핸들러
@@ -125,71 +128,77 @@ const AdminList = () => {
       }
     };
 
-    const renderRows = () => {
-      let filteredUsers  = users;
-
-      // 검색 필터링 적용
-      if (searchTriggered && searchTerm.trim() !== "") {
-        filteredUsers = users.filter((user) => {
-          const valueToSearch = searchType === "userid" ? user.userid : user.nickname; 
-          return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
-        });
+    const handlePageClick = (page) => {
+      if (page >= 1 && page <= totalPages) {
+        setActivePage(page);
       }
-
-      // 페이징 적용
-      const startIndex = (activePage - 1) * usersPerPage;
-      const endIndex = startIndex + usersPerPage;
-      const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex); // 필터된 배열에서 페이징 적용
-
-      // 순서를 반전
-      const reversedUsersOnCurrentPage = usersOnCurrentPage.reverse();
-
-      return reversedUsersOnCurrentPage.map((item, index) => (
-        <tr key={index}>
-          <td>{users.length - (startIndex + index)}</td>
-          <td>{item.userid}</td>
-          <td>{item.username}</td>
-          <td>{item.email}</td>
-          <td>{item.nickname}</td>
-          <td>
-            {editingUserId === item.userid ? (
-              <select value={editedUserType} onChange={(e) => setEditedUserType(parseInt(e.target.value))}>
-                <option value={0}>일반회원</option>
-                <option value={1}>카페사장</option>
-                <option value={3}>관리자</option>
-              </select>
-              ) :( item.userType === 0 ? ( "일반회원") : item.userType === 1 ? ("카페사장") : 
-              item.userType === 3 ? "관리자" : "알 수 없음"  )} 
-          </td>
-          <td> {new Date(item.createdAt).getFullYear()}-
-               {('0' + (new Date(item.createdAt).getMonth() + 1)).slice(-2)}-
-               {('0' + new Date(item.createdAt).getDate()).slice(-2)}
-          </td>
-          <td>
-          <button className="list-rem-btn" onClick={() => handleEditClick(item)} >
-            {editingUserId === item.userid ? "저장" : "변경"}
-            </button>{" "}
-            <button className="list-delete-btn" onClick={() => handleDelete(item.userid)}>탈퇴</button>
-          </td>
-        </tr>
-      ));
     };
 
-  // 검색
-  useEffect(() => {
-    setSearchTriggered(false); // 검색어 바꾸면 검색 버튼 다시 눌러야 작동함
-  }, [searchTerm, searchType]);
+    // 관리자 아닌 경우 아무것도 렌더링하지 않음
+    if (isAuthorized === null || isAuthorized === false) {
+      return null;
+    }
+  
+  
+  const renderRows = () => {
+    let filteredUsers  = users;
+
+    // 검색 필터링 적용
+    if (searchTriggered && searchTerm.trim() !== "") {
+      filteredUsers = users.filter((user) => {
+        const valueToSearch = searchType === "userid" ? user.userid : user.nickname; 
+        return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
+
+    // 페이징 적용
+    const startIndex = (activePage - 1) * usersPerPage;
+    const endIndex = startIndex + usersPerPage;
+    const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex); // 필터된 배열에서 페이징 적용
+
+    // 순서를 반전
+    const reversedUsersOnCurrentPage = usersOnCurrentPage.reverse();
+
+    return reversedUsersOnCurrentPage.map((item, index) => (
+      <tr key={index}>
+       <td>{users.length - (startIndex + index)}</td>
+        <td>{item.userid}</td>
+        <td>{item.username}</td>
+        <td>{item.email}</td>
+        <td>{item.nickname}</td>
+        <td>
+          {editingUserId === item.userid ? (
+            <select value={editedUserType} onChange={(e) => setEditedUserType(parseInt(e.target.value))}>
+              <option value={0}>일반회원</option>
+              <option value={1}>카페사장</option>
+              <option value={3}>관리자</option>
+            </select>
+            ) :( item.userType === 0 ? ( "일반회원") : item.userType === 1 ? ("카페사장") : 
+             item.userType === 3 ? "관리자" : "알 수 없음"  )} 
+        </td>
+        <td> {new Date(item.createdAt).getFullYear()}-
+             {('0' + (new Date(item.createdAt).getMonth() + 1)).slice(-2)}-
+             {('0' + new Date(item.createdAt).getDate()).slice(-2)}
+        </td>
+        <td>
+          <button className="list-rem-btn" onClick={() => handleEditClick(item)} >
+            {editingUserId === item.userid ? "저장" : "수정"}
+            </button>{" "}
+          <button className="list-delete-btn" onClick={() => handleDelete(item.userid)} >탈퇴</button>
+        </td>
+      </tr>
+    ));
+  };
 
   return (
     <div className="admin-board">
-         {/* 사이드바 */}
-         <div className="sidebar-allbox-main">
+
+     <div className="sidebar-allbox-main">
       <Sidebar />
      </div>
-
       {/* 메인 컨텐츠 */}
       <div className="mainlist-content">
-        <h1 className="adminlist-h1">카페연구소 일반회원 관리 목록</h1>
+        <h1 className="adminlist-h1">카페연구소 관리자 목록</h1>
 
         <div className="admin-search-write-row">
           <div className="admin-4-search-container">
@@ -221,7 +230,9 @@ const AdminList = () => {
         </table>
 
         <div className="pagination">
-          <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
+        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} >
+          <i class="fas fa-angle-left"></i>
+          </button>
           {[...Array(totalPages)].map((_, index) => (
               <span
                 key={index}
@@ -231,7 +242,9 @@ const AdminList = () => {
                 {index + 1}
               </span>
           ))}
-          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
+          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}>
+            <i class="fas fa-angle-right"></i>
+          </button>
         </div>
       </div>
     </div>

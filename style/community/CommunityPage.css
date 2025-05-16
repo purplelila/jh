@@ -12,30 +12,43 @@
   font-size: 40px;
 }
 
+.search-box {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .search-box select {
-    width: 100px;
-    height: 40px;
-    margin-right: 5px;
-    font-size: 16px;
+  width: 100px;
+  height: 40px;
+  margin-right: 5px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0 10px;
 }
   
 .search-box input {
-    width: 350px;
-    height: 40px;
-    padding: 0 5px;
-    outline: 0;
-    font-size: 16px;
+  width: 350px;
+  height: 40px;
+  padding: 0 10px;
+  outline: none;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
   
 .search-box button {
-    width: 60px;
-    height: 40px;
-    background-color: #FFA128;
-    border: 0;
-    margin-left: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #eee;
+  width: 60px;
+  height: 40px;
+  background-color: #FFA128;
+  border: none;
+  margin-left: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #eee;
 }
 
 /*------------------------------------------------ notice-board table -----------------------------------------------------------*/

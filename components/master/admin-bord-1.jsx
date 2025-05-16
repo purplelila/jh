@@ -116,7 +116,7 @@ const AdminList = () => {
         </td>
         <td>
           <button>수정</button>{" "}
-          <button className="delete-btn">탈퇴</button>
+          <button className="delete-btn">삭제</button>
         </td>
       </tr>
     ));

@@ -16,7 +16,7 @@
     background-color: #fff;
 }
 
-.adminlist-h1 {
+.adminboard4-h1 {
     margin-bottom: 30px;
     color: #333;
     font-weight: 600;
@@ -59,11 +59,7 @@
     height: 38px;
     transition: background-color 0.3s ease;
   }
-  
-  .admin-4-search-btn:hover {
-    background-color: #0056b3;
-  }
-  
+
 
 /* 게시판 테이블 */
 .admin-listboard-table {
@@ -157,11 +153,6 @@
   margin: 0 3px;
   cursor: pointer;
   font-size: 14px;
-}
-
-/* 호버 효과 */
-button:hover {
-  opacity: 0.8;
 }
 
 

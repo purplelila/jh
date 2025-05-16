@@ -65,6 +65,13 @@ useEffect(() => {
       } else {
         navigate("/notice");    // 일반회원
       }
+    } else {
+      // `/mypage` 외의 다른 경로에서
+      if (userType === "1") {
+        navigate("/cafelist");  // 카페사장일 때
+      } else {
+        navigate("/notice");    // 일반회원일 때
+      }
     }
   };
 
@@ -127,7 +134,7 @@ useEffect(() => {
   // 마이페이지 클릭 시 관리자 페이지로 리디렉션하는 함수
   const handleMyPageClick = () => {
     if (userType === "3") { // 관리자(3)일 경우
-      navigate("/admin/1"); // 관리자 페이지로 이동
+      navigate("/admin/dash"); // 관리자 페이지로 이동
     } else if (userType === "1") { // 카페 사장(1)일 경우
       navigate("/mypage"); // 카페 사장의 마이페이지로 이동
     } else if (userType === "0") { // 일반 회원(0)일 경우

@@ -10,7 +10,7 @@
     border-top: 1px solid black ;
     border-bottom: 1px solid black ;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 40px;
     padding: 5px 10px;
 }
 
@@ -71,6 +71,7 @@
 .list-btn {
     padding: 5px 0;
     text-align: right;
+    margin-bottom: 10px;
 }
 
 .list-btn button {
@@ -88,7 +89,7 @@
 
 .comment-section {
     width: 1200px;
-    margin: 10px auto;
+    margin: 0px auto;
     align-items: center;
     border-top: 1px solid black;
 }

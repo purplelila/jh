@@ -57,7 +57,7 @@ const LoginPage = () => {
                 alert("카페사장으로 로그인되었습니다.");
                 break;
               case 3:
-                navigate("/admin/1");
+                navigate("/admin/dash");
                 alert("관리자님 로그인되었습니다.");
                 break;
               default:

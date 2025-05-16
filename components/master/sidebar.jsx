@@ -54,7 +54,7 @@ const Sidebar = () => {
                 <ul className="sidebar-ul">
                 <li>
                     <div className="sidebar-item">
-                        <a href="/admin/1">대시보드</a>
+                        <a href="/admin/dash">대시보드</a>
                     </div>
                 </li>
 
@@ -66,8 +66,9 @@ const Sidebar = () => {
 
                         {openMenu.member && (
                             <ul className="dropdown-list">
-                                <li><a href="/admin/list-0" className="dropdown-list-a"> - 일반회원 목록</a></li>
-                                <li><a href="/admin/list-1" className="dropdown-list-a"> - 카페사장 목록</a></li>
+                                <li><a href="/admin/list/0" className="dropdown-list-a"> - 일반회원 목록</a></li>
+                                <li><a href="/admin/list/1" className="dropdown-list-a"> - 카페사장 목록</a></li>
+                                <li><a href="/admin/list/3" className="dropdown-list-a"> - 관리자 목록</a></li>
                             </ul>
                         )}
                     </li>
@@ -79,17 +80,17 @@ const Sidebar = () => {
                         </div>
                         {openMenu.board && (
                             <ul className="dropdown-list">
-                                <li> <a href="/admin/Bord-1" className="dropdown-list-a"> - 공지사항 목록</a></li>
-                                <li ><a href="/admin/Bord-2" className="dropdown-list-a">- 자주 묻는 질문 목록</a></li>
-                                <li><a href="/admin/Bord-3" className="dropdown-list-a">- 커뮤니티 목록</a></li>
-                                <li><a href="/admin/Bord-4" className="dropdown-list-a">- 카페등록 목록</a></li>
+                                <li> <a href="/admin/Bord/1" className="dropdown-list-a"> - 공지사항 목록</a></li>
+                                <li ><a href="/admin/Bord/2" className="dropdown-list-a">- 자주 묻는 질문 목록</a></li>
+                                <li><a href="/admin/Bord/3" className="dropdown-list-a">- 커뮤니티 목록</a></li>
+                                <li><a href="/admin/Bord/4" className="dropdown-list-a">- 카페등록 목록</a></li>
                             </ul>
                         )}
                     </li>
 
                     <li>
                         <div className="sidebar-item">
-                            <a href="/admin/1">설정</a>
+                            <a href="/admin/dash">설정</a>
                         </div>
                     </li>
                     <li className="sidebar-logout">

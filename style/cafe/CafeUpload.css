@@ -211,10 +211,10 @@
     font-size: 17px;
   }
   
-  .upload-form-img-choose:hover {
+  /* .upload-form-img-choose:hover {
     background-color: #FFA128;
     color: #eee;
-  }
+  } */
 
   .upload-form-imgtext{
     font-size: 13px;
@@ -239,7 +239,7 @@
     font-size: 17px;
   }
   
-  .upload-form-btn button:hover {
+  /* .upload-form-btn button:hover {
     background-color: #FFA128;
     color: #eee;
-  }
+  } */

@@ -285,7 +285,7 @@ const AdminList = () => {
 
     {/* 메인 컨텐츠 */}
     <div className="mainlist-content">
-        <h1 className="adminlist-h1">카페연구소 카페등록 목록</h1>
+        <h1 className="adminboard4-h1">카페연구소 카페등록 목록</h1>
 
         <div className="admin-4-search-container">
           <select className="admin-4-search-select" value={searchType}  onChange={(e) => setSearchType(e.target.value)}>

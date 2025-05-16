@@ -70,7 +70,8 @@
 
 .cafe-font {
     font-weight: bold;
-    color: rgb(255, 255, 255);
+    /* color: rgb(255, 255, 255); */
+    color: #FFA128;
     z-index: 0; /* 텍스트가 이미지 위에 표시되도록 */
     transition: transform 0.3s ease, color 0.5s ease;
 }
@@ -90,8 +91,9 @@
 }
 
 .cafe:hover .cafe-font {
-    transform: translateY(-30px); /* 텍스트가 위로 올라감 */
-    color: rgb(0, 0, 0); /* 텍스트 색이 검정으로 변함 */
+    transform: translateY(-40px); /* 텍스트가 위로 올라감 */
+    /* color: rgb(0, 0, 0); 텍스트 색이 검정으로 변함 */
+    color: rgb(255, 255, 255);
 }
 
 .comm {
@@ -109,7 +111,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/coffeemain4.jpg'); /* 배경 이미지 */
+    background-image: url('/rightmain3.jpg'); /* 배경 이미지 */
     background-size: cover;
     background-position: center;
     opacity: 0.5; /* 기본적으로 이미지가 보이지 않음 */
@@ -122,7 +124,8 @@
 
 .comm-font {
     font-weight: bold;
-    color: rgb(255, 255, 255);
+    /* color: rgb(255, 255, 255); */
+    color: #FFA128;
     z-index: 1; /* 텍스트가 이미지 위에 표시되도록 */
     transition: transform 0.3s ease, color 0.5s ease;
 }
@@ -140,8 +143,9 @@
     border: 2px solid rgb(255, 255, 255);
 }
 .comm:hover .comm-font {
-    transform: translateY(-30px); /* 텍스트가 위로 올라감 */
-    color: rgb(0, 0, 0); /* 텍스트 색이 흰색으로 변함 */
+    transform: translateY(-40px); /* 텍스트가 위로 올라감 */
+    /* color: rgb(0, 0, 0); 텍스트 색이 검정으로 변함 */
+    color: rgb(255, 255, 255);
 }
 
 .btn {

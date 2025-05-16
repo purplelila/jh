@@ -9,35 +9,39 @@
     background-color: #103481d3;
     color: white;
     text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
+    border-radius: 4px;
+    font-size: 0.9rem;
   }
 
 .mycafe-table-section {
     background-color: #fff;
     padding: 24px;
     margin-bottom: 32px;
-    border-radius: 16px;
+    border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   
   .mycafe-table-section-h2 {
-    margin-bottom: 16px;
-    font-size: 25px;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
   }
   
   .mycafe-table {
     width: 100%;
     border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    border-radius: 8px; 
   }
   
   .mycafe-table-th,
   .mycafe-table-td,
   .mycafe-table-td-date {
     padding: 12px 16px;
-    border-bottom: 1px solid #eee;
+    border: 1px solid #ddd; 
   }
   
   .mycafe-table-th {
@@ -45,6 +49,10 @@
     font-weight: 600;
     color: #555;
   }
+
+  .mycafe-table tr:nth-child(even) {
+  background-color: #f7f7f7;
+}
   
   .mycafe-table-tr:hover {
     background-color: #f5f5f5;
@@ -59,6 +67,24 @@
     text-align: center;
   }
 
+  /* 예: 번호 열 */
+.mycafe-table th:first-child,
+.mycafe-table td:first-child {
+  width: 20%;
+  text-align: center;
+}
+
+/* 예: 날짜 열 */
+.mycafe-table td:nth-child(3) {
+  text-align: center;
+  width: 20%;
+}
+
+/* 비고 버튼 열 */
+.mycafe-table td:last-child {
+  width: 20%;
+}
+
 
   /* 버튼 css*/
 
@@ -67,7 +93,7 @@
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 0.875rem;
     margin-right: 5px;
@@ -78,7 +104,7 @@
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 0.875rem;
   }
@@ -88,7 +114,7 @@
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 0.875rem;
     margin-right: 5px;
@@ -99,7 +125,7 @@
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 0.875rem;
   }

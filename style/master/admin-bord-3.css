@@ -73,13 +73,6 @@
     background-color: #e74c3c; /* 빨간색 삭제 버튼 */
 }
 
-.admin-listboard-table-3 td .bord3-re-button:hover {
-    background-color: #2980b9; /* 청록색 호버 효과 */
-}
-
-.admin-listboard-table-3 td .bord3-delete-btn:hover {
-    background-color: #c0392b; /* 삭제 버튼 호버 효과 */
-}
 
 /* 페이지네이션 */
 .pagination-bord-3 {

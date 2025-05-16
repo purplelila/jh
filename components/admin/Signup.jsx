@@ -160,29 +160,34 @@ const Signup = () => {
   };
 
     //닉네임관련내용
-    const checkNicknameDuplicate = async () => {
-      if (!nickname) {
-        alert('닉네임을 입력해주세요!');
-        return;
-      }
-      setIsLoading(true); // 로딩 시작
-      try {
-        const response = await axios.get(`http://localhost:8080/api/users/check-nickname?nickname=${nickname}`);
-        
-        if (response.data.isDuplicate) {
-          alert(`"${nickname}" 이미 사용 중이에요!`);
-          setIsNicknameValid(false); // ❌ 중복이면 false
-        } else {
-          alert(`"${nickname}"  사용 가능합니다!`);
-          setIsNicknameValid(true); // ✅ 중복 아니면 true
-        }
-      } catch (error) {
-        console.error('중복 확인 오류:', error);
-        alert('닉네임 중복 확인에 실패했어요! 잠시 후 다시 이용해주세요.');
-      } finally {
-        setIsLoading(false); // 로딩 종료
-      }
-    };
+const checkNicknameDuplicate = async () => {
+  if (!nickname) {
+    alert('닉네임을 입력해주세요!');
+    return;
+  }
+
+  setIsLoading(true); // 로딩 시작
+
+  try {
+    const response = await axios.get(`http://localhost:8080/api/users/check-nickname?nickname=${nickname}`);
+
+    const isDuplicate = response.data; // 응답은 Boolean 값 (true 또는 false)
+
+    if (isDuplicate) {
+      alert(`"${nickname}" 이미 사용 중이에요!`);
+      setIsNicknameValid(false); // ❌ 중복이면 false
+    } else {
+      alert(`"${nickname}" 사용 가능합니다!`);
+      setIsNicknameValid(true); // ✅ 중복 아니면 true
+    }
+  } catch (error) {
+    console.error('중복 확인 오류:', error);
+    alert('닉네임 중복 확인에 실패했어요! 잠시 후 다시 이용해주세요.');
+  } finally {
+    setIsLoading(false); // 로딩 종료
+  }
+};
+
   return (
     <div className="signup-total-box">
       <div className="showdow-box">
@@ -215,7 +220,7 @@ const Signup = () => {
 
           <input className='signup-email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={validateEmail} placeholder="이메일" required />
           {isEmailValid === false && (<p className="signup-error-text">❌ 올바른 이메일 형식을 입력해주세요.</p>)}
-          {isEmailValid === true && (<p className="signup-success-text">✅ 사용 가능한 이메일입니다.</p>)}
+          {isEmailValid === true && (<p className="signup-success-text">✅ 사용 가능한 이메일 형식입니다.</p>)}
           <input className='signup-username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} onBlur={validateUsername} placeholder="이름" required/>
           {isUsernameValid === false && (<p className="signup-error-text">❌이름에 숫자나 특수기호를 사용할 수 없습니다.</p>)}
           {isUsernameValid === true && (<p className="signup-success-text">✅ 유효한 이름입니다.</p>)}
