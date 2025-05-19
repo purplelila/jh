@@ -66,6 +66,21 @@
     color: red;
   }
 
+  .upload-form-place{
+    width: 100px;
+    height: 60px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 17px;
+    margin-right: 7px;
+    margin-top: 11px;
+    background-color: #FFA128;
+    color: #eee;
+    font-size: 17px;
+  }
+
   .upload-cafehour{
     display: felx;
     flex-wrap: wrap;
@@ -104,6 +119,66 @@
     background-color: #f1f3f5;
     overflow: hidden;         /* 스크롤 제거 */
   }
+
+/*---------------------------------------------------------------------------------------------*/
+
+/* 주소 입력 필드와 버튼 */
+.upload-form-address {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.upload-form-address label {
+  width: 200px;
+  text-align: center;
+  /* font-size: 16px; */
+}
+
+.upload-form-address-container {
+  display: flex;
+  align-items: center;
+}
+
+.upload-form-address-input {
+  width: 883px; /* 기존 input과 동일한 넓이 */
+  padding: 20px;  /* 높이 맞추기 */
+  margin: 15px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 15px;
+  background-color: #f1f3f5;
+  box-sizing: border-box;
+}
+
+.upload-form-address-btn {
+  width: 100px;
+  height: 56px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #FFA128;
+  color: #eee;
+  font-size: 17px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 주소 입력필드에 포커스시 스타일 변경 */
+.upload-form-address-input:focus {
+  outline: none;
+  border: 1px solid #FFA128;
+  background-color: #fff;
+}
+
+.upload-form-address-btn:focus {
+  outline: none;
+}
+
+
 
 /*---------------------------------------------------------------------------------------------*/
   

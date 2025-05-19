@@ -192,10 +192,14 @@ const Admin = () => {
             {Array.isArray(pendingCafes) && pendingCafes.length > 0 ? (
               paginatedCafes.map((cafe, index) => (
                 <tr key={cafe.id} className="list-tr">
-                  <td>{totalCafes - (startIndex + index)}</td>
+                  <td>{(totalCafes) - ((currentPage - 1) * cafelistPerPage + index)}</td>
                   <td>{cafe.title}</td>
                   <td>{cafe.name}</td>
-                  <td>{cafe.regDate}</td>
+                  <td>
+                    {new Date(cafe.regDate).getFullYear()}-
+                    {('0' + (new Date(cafe.regDate).getMonth() + 1)).slice(-2)}-
+                    {('0' + new Date(cafe.regDate).getDate()).slice(-2)}
+                  </td>
                   <td>
                     <button onClick={() => approveCafe(cafe.id)}>승인</button>
                     <button className="delete-btn" onClick={() => rejectCafe(cafe.id)}>거절</button>
@@ -212,7 +216,7 @@ const Admin = () => {
 
         <div className="pagination">
           <button
-            className="prev-btn"
+            className="pagination-btn_prev-btn"
             disabled={currentPage === 1}
             onClick={() => handlePageClick(currentPage - 1)}
           >
@@ -228,7 +232,7 @@ const Admin = () => {
             </span>
           ))}
           <button
-            className="next-btn"
+            className="pagination-btn_next-btn"
             disabled={currentPage === totalPages}
             onClick={() => handlePageClick(currentPage + 1)}
           >

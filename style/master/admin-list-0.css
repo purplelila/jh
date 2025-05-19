@@ -87,12 +87,13 @@
     margin-top: 20px;
 }
 
-.pagination button, .pagination span {
+.pagination-btn_prev-btn, .pagination-btn_next-btn {
     padding: 8px 16px;
     height: 40px;
     line-height: 32px;
     border: 1px solid #ddd;
     background: #fff;
+    color: #000;
     cursor: pointer;
     margin: 0 3px;
     display: flex;
@@ -102,16 +103,23 @@
     border-radius: 4px;
 }
 
-.pagination button {
+.pagination span {
+    padding: 8px 16px;
+    height: 40px;
+    line-height: 32px;
+    border: 1px solid #ddd;
     color: #2c3e50;
+    cursor: pointer;
+    margin: 0 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: 4px;
 }
-
-.pagination .prev-btn, .pagination .next-btn {
-    background-color: #2c3e50;
-    color: #fff;
-}
-
 
 .pagination span.active {
     font-weight: bold;
+    color: #fff;
+    background-color: #2c3e50;
 }

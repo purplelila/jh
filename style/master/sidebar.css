@@ -17,7 +17,7 @@
 .sidebar-tap h2.sidebar-h2 {
   font-size: 22px;
   margin-bottom: 20px;
-  color: #bdc3c7;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,17 +40,17 @@
 /* 개별 메뉴 아이템 */
 .sidebar-tap ul.sidebar-ul li .sidebar-item {
   font-size: 16px;
-  color: #ecf0f1;
+  color: #fff;
   padding: 10px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.2s;
+  transition: ackground-colo 0.2s;
 }
 
 /* 링크 스타일 */
 .sidebar-tap ul.sidebar-ul li .sidebar-item a {
   text-decoration: none;
-  color: #ecf0f1;
+  color: #fff;
   display: block;
   padding: 6px 0;
   border-radius: 5px;
@@ -73,7 +73,7 @@
 /* 드롭다운 항목 링크 */
 .sidebar-tap ul.sidebar-ul li ul.dropdown-list li .dropdown-list-a {
   font-size: 16px;
-  color: #ecf0f1;
+  color: #fff;
   text-decoration: none;
   padding: 10px 15px;
   display: block;
@@ -103,7 +103,7 @@
 .sidebar-tap ul.sidebar-ul li.sidebar-logout button.sidebar-logout-btn {
   background: none;
   border: none;
-  color: #ecf0f1;
+  color: #fff;
   font-size: 16px;
   cursor: pointer;
   padding: 0;

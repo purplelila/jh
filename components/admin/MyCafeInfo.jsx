@@ -74,6 +74,7 @@ const MyCafeInfo = () => {
       <table className="mycafe-table">
         <thead>
           <tr className='mycafe-table-tr'>
+            <th className='mycafe-table-th'>번호</th>
             <th className='mycafe-table-th'>카페명</th>
             <th className='mycafe-table-th'>제목</th>
             {type === 'waiting' && <th className='mycafe-table-th'>신청일</th>}
@@ -83,44 +84,51 @@ const MyCafeInfo = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((cafe) => (
-            <tr key={cafe.id}>
-              <td className='mycafe-table-td'>{cafe.name}</td>
-              <td className='mycafe-table-td'>{cafe.title}</td>
-              <td className='mycafe-table-td-date'>{type === 'waiting' ? 
-                new Date(cafe.regDate).getFullYear() + '-' + 
-                ('0' + (new Date(cafe.regDate).getMonth() + 1)).slice(-2) + '-' + 
-                ('0' + new Date(cafe.regDate).getDate()).slice(-2)
-                :
-                new Date(cafe.approvalAt).getFullYear() + '-' + 
-                ('0' + (new Date(cafe.approvalAt).getMonth() + 1)).slice(-2) + '-' + 
-                ('0' + new Date(cafe.approvalAt).getDate()).slice(-2)
-                }
-              </td>
-              <td className='mycafe-table-td'>
-                  {cafe.approvalStatus === 'PENDING' ? '승인 대기' :
-                  cafe.approvalStatus === 'APPROVED' ? '승인 완료' :
-                  cafe.approvalStatus === 'REJECTED' ? '승인 거절' : '알 수 없음'}
-              </td>
-              <td className='mycafe-table-td'>
-                {cafe.approvalStatus !== 'REJECTED' && (
-                  <div className='mycafe-table-td-btns'>
-                    {type === 'waiting' ? (
-                    <>
-                    <button className='mycafe-table-td-showbtn' onClick={() => handleView(cafe.id)}>미리보기</button>
-                    {/* <button className='mycafe-table-td-cancelbtn' onClick={() => handleCancel(cafe.id)}>취소요청</button> */}
-                    </>
-                ) : (
-                  <>
-                    <button className='mycafe-table-td-editbtn' onClick={() => handleEdit(cafe.id)}>수정</button>
-                    <button className='mycafe-table-td-deletebnt' onClick={() => handleDelete(cafe.id)}>삭제</button>
-                  </>
-                )}
-                </div>
-                )}
-              </td>
+          {/* 카페 목록이 비었을 경우 메시지 출력 */}
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan="6" className='mycafe-empty-message'>해당 카페가 없습니다.</td>
             </tr>
-          ))}
+          ) : (
+            data.map((cafe, index) => (
+              <tr key={cafe.id}>
+                <td className='mycafe-table-td'>{index + 1}</td>
+                <td className='mycafe-table-td'>{cafe.name}</td>
+                <td className='mycafe-table-td'>{cafe.title}</td>
+                <td className='mycafe-table-td-date'>{type === 'waiting' ? 
+                  new Date(cafe.regDate).getFullYear() + '-' + 
+                  ('0' + (new Date(cafe.regDate).getMonth() + 1)).slice(-2) + '-' + 
+                  ('0' + new Date(cafe.regDate).getDate()).slice(-2)
+                  :
+                  new Date(cafe.approvalAt).getFullYear() + '-' + 
+                  ('0' + (new Date(cafe.approvalAt).getMonth() + 1)).slice(-2) + '-' + 
+                  ('0' + new Date(cafe.approvalAt).getDate()).slice(-2)
+                  }
+                </td>
+                <td className='mycafe-table-td'>
+                    {cafe.approvalStatus === 'PENDING' ? '승인 대기' :
+                    cafe.approvalStatus === 'APPROVED' ? '승인 완료' :
+                    cafe.approvalStatus === 'REJECTED' ? '승인 거절' : '알 수 없음'}
+                </td>
+                <td className='mycafe-table-td'>
+                  {cafe.approvalStatus !== 'REJECTED' && (
+                    <div className='mycafe-table-td-btns'>
+                      {type === 'waiting' ? (
+                      <>
+                      <button className='mycafe-table-td-showbtn' onClick={() => handleView(cafe.id)}>미리보기</button>
+                      </> 
+                      ) : (
+                      <>
+                      <button className='mycafe-table-td-editbtn' onClick={() => handleEdit(cafe.id)}>수정</button>
+                      <button className='mycafe-table-td-deletebtn' onClick={() => handleDelete(cafe.id)}>삭제</button>
+                      </>
+                      )}
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

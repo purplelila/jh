@@ -134,97 +134,110 @@ function DetailPage() {
     }
   };
 
-  const categoryLabel = {
-    notice: "공지사항",
-    chat: "소통창",
-    faq: "자주하는 질문",
-  };
-  const categoryName = categoryLabel[category] || category; // 해당하는 한글이 없으면 원래 값을 사용
+  const handleCommentDelete = (commentId) => {
+  const confirmed = window.confirm("댓글을 삭제하시겠습니까?");
+  if (!confirmed) return;
+
+  axios
+    .delete(`/api/comments/${commentId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then(() => {
+      alert("댓글이 삭제되었습니다.");
+      setComments(prev => prev.filter(comment => comment.id !== commentId));
+    })
+    .catch((err) => {
+      console.error("댓글 삭제 실패", err);
+      alert("댓글 삭제에 실패했습니다.");
+    });
+};
 
   return (
     <>
-      <Tabs activeTab={category} setActiveTab={(tab) => navigate(`/${tab}`)} />
-
-      <div className="main-container">
-        <div className="breadcrumb-list-board">
-          <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
-          <span className="breadcrumb-list-arrow">&gt;</span>
-          <span className="breadcrumb-list-info">{categoryName}</span>
-          <span className="breadcrumb-list-arrow">&gt;</span>
-          <span className="breadcrumb-list-info">{post?.title}</span>
-        </div>
-        <div className="title-section">
-          <h2>{post.title}</h2>
-          <div className="info">
-            <span>작성자: {post.nickname}</span>
-            <span>작성일: {formatDate(post.createDate)}</span>
+      <Tabs activeCategory={category} />
+      <div className="allcontainer">
+        <div className="main-container">
+          <div className="title-section">
+            <h2>{post.title}</h2>
+            <div className="info">
+              <span>작성자: {post.nickname}</span>
+              <span>작성일: {formatDate(post.createDate)}</span>
+            </div>
           </div>
 
-          {(nickname && post.nickname && (nickname === post.nickname || nickname === "admin")) && (
-            <div className="edit-delete-buttons">
-              <button onClick={handleEditPost}>수정</button>
-              <button onClick={handleDeletePost}>삭제</button>
+          {post.files?.length > 0 && (
+            <div className="attached-files">
+              <p>첨부파일:</p>
+              <ul>
+                {post.files.map((f, i) => (
+                  <li key={i}>
+                    <a href={`http://localhost:8080/api/board/download/${f.savedName}`}
+                      download
+                    >
+                      {f.originalName}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
+
+          <div className="content">{contentElements}</div>
         </div>
 
-        {post.files?.length > 0 && (
-          <div className="attached-files">
-            <p>첨부파일:</p>
-            <ul>
-              {post.files.map((f, i) => (
-                <li key={i}>
-                  <a
-                    href={`http://localhost:8080/api/board/download/${f.savedName}`}
-                    download
-                  >
-                    {f.originalName}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {category === "chat" && (
+          <div className="comment-section">
+            <h4>댓글 {comments.length}개</h4>
+
+            <div className="commentlist-section">
+              {comments.length === 0 ? (
+                <p>댓글이 없습니다.</p>
+              ) : (
+                comments.map((c, i) => (
+                  <div className="comments" key={i}>
+                    <p className="com_author">{c.nickname}</p>
+                    <p className="com_comment">{c.comment}</p>
+                    <div className="com-footer">
+                      <p className="com_time">{formatDate(c.createdAt)}</p>
+                      {(nickname === c.nickname || nickname === "admin") && (
+                        <button
+                          className="com-delete-btn"
+                          onClick={() => handleCommentDelete(c.id)}
+                        >
+                          삭제
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <form className="add-comment" onSubmit={handleCommentSubmit}>
+              <textarea
+                placeholder="댓글을 입력해주세요."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                required
+              />
+              <div className="write-btn">
+                <button type="submit">등록</button>
+              </div>
+            </form>
+        </div>
         )}
-
-        <div className="content">{contentElements}</div>
-
+      </div>
+      <div className="list-btn-section">
         <div className="list-btn">
+          {(nickname && post.nickname && (nickname === post.nickname || nickname === "admin")) && (
+          <div className="edit-delete-buttons">
+            <button className="com-edit-btn" onClick={handleEditPost}>수정</button>
+            <button className="com-delete-btn" onClick={handleDeletePost}>삭제</button>
+          </div>
+          )}
           <button onClick={() => navigate(`/${category}`)}>목록</button>
         </div>
-      </div>
-
-      {category === "chat" && (
-        <div className="comment-section">
-          <h4>댓글 {comments.length}개</h4>
-
-          <div className="commentlist-section">
-            {comments.length === 0 ? (
-              <p>댓글이 없습니다.</p>
-            ) : (
-              comments.map((c, i) => (
-                <div className="comments" key={i}>
-                  <p className="com_author">{c.nickname}</p>
-                  <p className="com_comment">{c.comment}</p>
-                  <p className="com_time">{formatDate(c.createdAt)}</p>
-                </div>
-              ))
-            )}
-          </div>
-
-          <form className="add-comment write-section" onSubmit={handleCommentSubmit}>
-            <h4>댓글작성</h4>
-            <textarea
-              placeholder="댓글을 입력해주세요."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              required
-            />
-            <div className="write-btn">
-              <button type="submit">등록</button>
-            </div>
-          </form>
-        </div>
-      )}
+      </div>  
     </>
   );
 }

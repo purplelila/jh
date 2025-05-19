@@ -1,50 +1,19 @@
-// // CafeKakaoMap.jsx
-// import React, { useEffect } from 'react';
-
-// const CafeKakaoMap = ({ address }) => {
-//   useEffect(() => {
-//     if (!window.kakao || !address) return;
-
-//     const container = document.getElementById('map');
-//     const options = {
-//       center: new window.kakao.maps.LatLng(33.450701, 126.570667), // 기본 좌표
-//       level: 3,
-//     };
-
-//     const map = new window.kakao.maps.Map(container, options);
-
-//     // 주소로 좌표를 검색
-//     const geocoder = new window.kakao.maps.services.Geocoder();
-//     geocoder.addressSearch(address, function (result, status) {
-//       if (status === window.kakao.maps.services.Status.OK) {
-//         const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-
-//         // 마커 찍기
-//         const marker = new window.kakao.maps.Marker({
-//           map: map,
-//           position: coords,
-//         });
-
-//         // 중심좌표 옮기기
-//         map.setCenter(coords);
-//       }
-//     });
-//   }, [address]);
-
-//   return (
-//     <div
-//       id="map"
-//       style={{ width: '100%', height: '300px', borderRadius: '12px', marginTop: '10px' }}
-//     ></div>
-//   );
-// };
-
-// export default CafeKakaoMap;
 import React, { useEffect } from 'react';
 
 const CafeKakaoMap = ({ address }) => {
   useEffect(() => {
-    if (!window.kakao || !address) return;
+    console.log(window.kakao);
+
+    // 카카오 지도 API가 로드되어 있는지 확인
+    if (!window.kakao) {
+      console.error("Kakao Maps API가 로드되지 않았습니다.");
+      return;
+    }
+
+    if (!address) {
+      console.error("주소가 제공되지 않았습니다.");
+      return;
+    }
 
     const container = document.getElementById('map');
     const options = {

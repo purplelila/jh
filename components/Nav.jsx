@@ -85,7 +85,7 @@ useEffect(() => {
       title : 'STORE',
       subtitle : '좋은 커피와 서비스를 제공하는 카페 정보를 제공합니다'
     }
-  } else if (location.pathname === '/notice' || location.pathname === '/chat' || location.pathname === '/faq') {
+  } else if (location.pathname === '/notice' || location.pathname === '/chat' || location.pathname === '/faq' || location.pathname.startsWith('/edit/')) {
     heroImage = `url(/c6.jpg)`;
     heroText = {
       title: 'COMMUNITY',
@@ -125,10 +125,11 @@ useEffect(() => {
   
     // `/cafe...` 도 제외
     if (path.startsWith('/cafe')) return false;
+    
   
     // 그 외의 1차 경로는 커뮤니티일 확률 높음
     const firstPath = path.split('/')[1];
-    return ['notice', 'faq', 'free', 'event', 'chat'].includes(firstPath);
+    return ['notice', 'faq', 'free', 'event', 'chat', 'edit'].includes(firstPath);
   })();
 
   // 마이페이지 클릭 시 관리자 페이지로 리디렉션하는 함수

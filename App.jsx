@@ -107,6 +107,7 @@ const Main = () => {
 
         <Route path="/:category" element={<BoardPage />} /> */
         <Route path="/:category/add" element={<WritePage />} />
+        <Route path="/edit/:category/:postId" element={<WritePage />} />
         <Route path="/:category/:postId" element={<DetailPage />} />
 
         <Route path='/login' element={<Login />} />

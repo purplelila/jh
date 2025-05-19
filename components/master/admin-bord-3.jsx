@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Sidebar from "./sidebar";
+import axios from "axios";
+
 
 const AdminList = () => {
   const [searchTerm, setSearchTerm] = useState("");   // 검색기능
@@ -13,7 +15,7 @@ const AdminList = () => {
   const [posts, setPosts] = useState([]); // 게시물 데이터를 저장할 상태
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
-  const usersPerPage = 10; // 한 페이지에 보여줄 회원 수
+  const usersPerPage = 8; // 한 페이지에 보여줄 회원 수
 
   const navigate = useNavigate();
   const location = useLocation(); // ✅ 현재 경로 정보 가져오기
@@ -35,11 +37,6 @@ const AdminList = () => {
       [menu]: !prev[menu]
     }));
   };
-
-    // 페이지네이션 계산
-    const indexOfLastCafe = activePage * usersPerPage;
-    const indexOfFirstCafe = indexOfLastCafe - usersPerPage;
-    const currentPosts = posts.slice(indexOfFirstCafe, indexOfLastCafe);
 
   const handlePageClick = (page) => {
     setActivePage(page);
@@ -81,10 +78,35 @@ const AdminList = () => {
     // 새 창에서 해당 게시물의 상세 페이지 열기
     window.open(`/chat/${id}`, "_blank");
   };
+
+  // 게시글 수정 함수
+  const handleEditPost = (category, postId) => {
+    navigate(`/edit/${category}/${postId}`);
+  };
+
+  // 게시글 삭제 함수
+  const handleDeletePost = async (postId, category) => {
+    const confirmDelete = window.confirm("커뮤니티 게시글을 삭제하시겠습니까?");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`/api/board/${category}/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        alert("커뮤니티 게시글이 삭제되었습니다.");
+        // 삭제된 게시글을 상태에서 제거
+        setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+      } catch (err) {
+        console.error("게시글 삭제 실패:", err);
+        alert("게시글 삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
   
     const renderRows = () => {
       let filteredPosts = posts;
-  
+
       // 검색 필터링 적용
       if (searchTriggered && searchTerm.trim() !== "") {
         filteredPosts = posts.filter((post) => {
@@ -92,9 +114,27 @@ const AdminList = () => {
           return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
         });
       }
-      return filteredPosts.map((item, index) => (
+
+      // 현재 페이지에 맞는 게시물만 추출
+      const indexOfLastPost = activePage * usersPerPage;
+      const indexOfFirstPost = indexOfLastPost - usersPerPage;
+      const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+
+      // 게시물이 없을 때 메시지 출력
+      if (filteredPosts.length === 0) {
+        return (
+          <tr>
+            <td colSpan="6" className="admin-empty-message">
+              게시글이 없습니다.
+            </td>
+          </tr>
+        );
+      }
+
+      return currentPosts.map((item, index) => (
         <tr key={item.id}>
-          <td>{posts.length - ((activePage - 1) * usersPerPage + index)}</td>
+          <td>{filteredPosts.length - ((activePage - 1) * usersPerPage + index)}</td>
           <td>{item.title}</td>
           <td>{item.nickname}</td>
           <td>
@@ -108,8 +148,8 @@ const AdminList = () => {
             <button className="board-view-btn" onClick={() => handleView(item.id)}>상세보기</button>
           </td>
           <td>
-            <button className="bord3-re-btn">수정</button>{" "}
-            <button className="bord3-delete-btn">삭제</button>
+            <button className="bord3-re-btn" onClick={() => handleEditPost(item.category, item.id)}>수정</button>{" "}
+            <button className="bord3-delete-btn" onClick={() => handleDeletePost(item.id, item.category)}>삭제</button>
           </td>
         </tr>
     ));
@@ -135,7 +175,7 @@ const AdminList = () => {
 
       {/* 메인 컨텐츠 */}
       <div className="mainlist-bord3-content">
-        <h1 className="adminbord3-h1">카페연구소 커뮤니티 목록</h1>
+        <h1 className="adminbord3-h1">카페연구소 소통창 목록</h1>
 
         <div className="admin-4-search-container">
           <select className="admin-4-search-select" value={searchType}  onChange={(e) => setSearchType(e.target.value)}>
@@ -168,8 +208,10 @@ const AdminList = () => {
           </div>
 
         <div className="pagination">
-          <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
-            {[...Array(totalPages)].map((_, index) => (
+          <button className="pagination-btn_prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
+          {/* 페이지 숫자 처리 */}
+            {totalPages > 0 ? (
+              [...Array(totalPages)].map((_, index) => (
                 <span
                   key={index}
                   className={activePage === index + 1 ? "active" : ""}
@@ -177,9 +219,14 @@ const AdminList = () => {
                 >
                   {index + 1}
                 </span>
-            ))}
-          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
+              ))
+            ) : (
+              <span className="active">1</span> // 게시글이 없을 때 페이지는 기본적으로 1로 표시
+            )}
+          <button className="pagination-btn_next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
         </div>
+
+
       </div>
     </div>
   );

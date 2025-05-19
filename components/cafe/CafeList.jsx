@@ -1,97 +1,85 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from "axios";
-
-import { useContext, useState, useEffect } from "react";
 import { CafeContext } from "../CafeProvider";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 let CafeList = () => {
-    let { cafes, setCafes, searchTerm, setSearchTerm, filteredData, setFilteredData } = useContext(CafeContext);
-    const [scrollTop, setScrollTop] = useState(false)
-    const [numofRows, setNumOfRows] = useState(6)
+  let { cafes, setCafes, searchTerm, setSearchTerm, filteredData, setFilteredData } = useContext(CafeContext);
+  const [scrollTop, setScrollTop] = useState(false);
+  const [numofRows, setNumOfRows] = useState(6);
 
-    // 카페 DB저장된거 보여지기
-    useEffect(()=> {
-      axios.get("http://localhost:8080/api/cafes")
+  // 카페 DB에서 승인된 카페만 가져오기
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/cafes")
       .then(res => {
-        console.log("카페 리스트 확인:", res.data);
-        res.data.forEach(cafe => {
-        console.log(`카페 ${cafe.title}의 승인 상태: ${cafe.approvalStatus}, id: ${cafe.id}`);
-        });
         const approvedCafes = res.data.filter(cafe => cafe.approvalStatus === "APPROVED");
-        
-        console.log("승인된 카페들:", approvedCafes); // 승인된 카페 확인
-        setCafes(approvedCafes);         // ✅ 승인된 카페만 저장
-        setFilteredData(approvedCafes);  // ✅ 승인된 카페만 보여줌
+        setCafes(approvedCafes); // 승인된 카페만 상태에 저장
+        setFilteredData(approvedCafes); // 필터링된 데이터 설정
       })
       .catch(err => {
         console.error("카페 데이터 불러오기 실패:", err);
       });
+  }, [setCafes, setFilteredData]);
+
+  // 더보기 기능
+  const loadMore = () => {
+    setNumOfRows(prevNum => prevNum + 6);
+  };
+
+  // 스크롤 상태 체크
+  const handleScroll = () => {
+    if (window.scrollY > 300) {
+      setScrollTop(true);
+    } else {
+      setScrollTop(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
-  // 토큰 확인
-  // useEffect(() => {
-  //   // 로컬 스토리지에서 토큰 가져오기
-  //   const token = localStorage.getItem("token");
+  // 맨 위로 스크롤
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
-  //   if (token) {
-  //     console.log("저장된 JWT 토큰:", token);
-  //   } else {
-  //     console.log("JWT 토큰이 존재하지 않습니다.");
-  //   }
-  // }, []);
-
-    // 더보기 보여주는 갯수
-    let loadMore = () => {
-      setNumOfRows(prevNum => prevNum + 6);
+  // 검색 기능
+  const handleSearch = () => {
+    if (searchTerm) {
+      const filtered = cafes.filter(item =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredData(filtered); // 필터링된 데이터 설정
+    } else {
+      setFilteredData(cafes); // 검색어가 없으면 전체 카페 표시
     }
+  };
 
-    let handleScroll = ()=>{
-      if(window.scrollY > 300){
-        setScrollTop(true)
-      }else{
-        setScrollTop(false)
-      }
-    }
+  // 검색 초기화
+  const handleResetFilter = () => {
+    setSearchTerm(""); // 검색어 초기화
+    setFilteredData(cafes); // 전체 카페 표시
+  };
 
-    useEffect(()=>{
-      window.addEventListener("scroll", handleScroll)
-      return ()=> {window.removeEventListener("scroll", handleScroll)}
-    }, [])
+  // 카페 승인 상태 변경 시 필터링 재적용
+  useEffect(() => {
+    const approvedCafes = cafes.filter(cafe => cafe.approvalStatus === "APPROVED");
+    setFilteredData(approvedCafes);
+  }, [cafes, setFilteredData]);
 
-    let scrollToTop = () => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      })
-    }
-
-    // 검색
-    const handleSearch = ()=> {
-      if(searchTerm){
-        let filteredData = cafes.filter((item) => {
-          let title = item.title ? item.title.toLowerCase():"";
-          return title.includes(searchTerm.toLowerCase());
-        })
-        setFilteredData(filteredData);
-      }else{
-        setFilteredData(cafes)
-      }
-    }
-
-    // 클릭시 검색 초기화
-    const handleResetFilter = ()=> {
-      setSearchTerm("");
-      setFilteredData(cafes);
-    }
-
-
-    return(
-      <>
+  return (
+    <>
       <div className="cafe-search">
         <div className="cafelist-top">
           <div className="breadcrumb-list">
-            <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
+            <span className="breadcrumb-list-home"><i className="fa-solid fa-house"></i></span>
             <span className="breadcrumb-list-arrow">&gt;</span>
             <span className="breadcrumb-list-info">카페정보</span>
           </div>
@@ -100,7 +88,13 @@ let CafeList = () => {
           </h2>
           <div className="cafe-btn">
             <div className="cafe-search-cotainer">
-              <input type="text" placeholder='매장명을 입력하세요.' className='cafesearch-input' onChange={(e)=> setSearchTerm(e.target.value)} value={searchTerm}/>
+              <input
+                type="text"
+                placeholder='매장명을 입력하세요.'
+                className='cafesearch-input'
+                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+              />
               <button className='search-btn' onClick={handleSearch}>검색</button>
             </div>
           </div>
@@ -108,28 +102,32 @@ let CafeList = () => {
       </div>
 
       <div className="cafelist-info">
-        <div className='cafe-list'>
+        <div className="cafe-list">
           {filteredData.length === 0 ? (
-            searchTerm==="" ? (
-              // 검색어 없을 때                     // 검색어 있을때 검색결과 없을때
-            <p>카페 정보가 없습니다.</p> ): <p>검색된 카페 정보가 없습니다.</p>)
-            : (
+            searchTerm === "" ? (
+              <p>카페 정보가 없습니다.</p>
+            ) : (
+              <p>검색된 카페 정보가 없습니다.</p>
+            )
+          ) : (
             filteredData
-              .filter(p => p.approvalStatus === "APPROVED")  // 승인된 카페만 필터링
               .map((p, idx) => {
-                if (idx < numofRows){
-                  return(
-                    <div key={idx} className='cafe-item'>
+                if (idx < numofRows) {
+                  return (
+                    <div key={idx} className="cafe-item">
                       <div className="cafe-item-img">
-                        {/* 이미지 표시 */}
                         <Link to={`/cafedetail/${p.id}`}>
-                          <p><img src={p.imgURLs && p.imgURLs.length > 0 ? p.imgURLs[0] : "/default-image.jpg"} /></p>
+                          <p>
+                            <img
+                              src={p.imgURLs && p.imgURLs.length > 0 ? p.imgURLs[0] : "/default-image.jpg"}
+                              alt={p.title}
+                            />
+                          </p>
                         </Link>
                       </div>
                       <div className="cafe-item-text">
                         <h3>{p.title}</h3>
                         <p>{p.content}</p>
-                        {/* <p>{p.place}</p> */}
                         <div className="cafe-item-detail">
                           <Link to={`/cafedetail/${p.id}`}>
                             <p>자세히 보기+</p>
@@ -137,23 +135,24 @@ let CafeList = () => {
                         </div>
                       </div>
                     </div>
-                  )
+                  );
                 }
-              return null
-            })
+                return null;
+              })
           )}
         </div>
-        {filteredData.length > 6 && (
+        {filteredData.length > numofRows && (
           <button onClick={loadMore}>더보기</button>
         )}
       </div>
 
-      {
-      scrollTop && (<button className='scroll-to-top' onClick={scrollToTop}>
-        <i class="fa-solid fa-chevron-up"></i></button>)
-      }
-      </>
-    )
-  }
+      {scrollTop && (
+        <button className='scroll-to-top' onClick={scrollToTop}>
+          <i className="fa-solid fa-chevron-up"></i>
+        </button>
+      )}
+    </>
+  );
+};
 
-  export default CafeList;
+export default CafeList;

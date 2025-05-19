@@ -74,7 +74,8 @@ const Signup = () => {
   
       alert(response.data); // "회원가입 성공!" 메시지
       navigate('/login'); //로그인 페이지로 이동
-    } catch (error) {
+    }
+     catch (error) {
       console.error('회원가입 실패:', error);
       setErrorMessage('회원가입에 실패했습니다.');
     }
@@ -116,12 +117,12 @@ const Signup = () => {
           alert(`"${userid}" 이미 사용 중인 아이디입니다!`);
           setIsUseridDuplicate(true); // 중복 아이디일 경우
         } else {
-          alert(`"${userid}" ✅ 사용 가능한 아이디입니다!`);
+          alert(`"${userid}"  사용 가능한 아이디입니다!`);
           setIsUseridDuplicate(false); // 사용 가능한 아이디일 경우
         }
       } catch (error) {
         console.error('아이디 중복 확인 오류:', error);
-        alert('아이디 중복 확인에 실패했어요! 잠시 후 다시 이용해주세요.');
+        alert('아이디 중복 확인에 실패했습니다! 잠시 후 다시 이용해주세요.');
       } finally {
         setIsLoading(false);
       }
@@ -174,7 +175,7 @@ const checkNicknameDuplicate = async () => {
     const isDuplicate = response.data; // 응답은 Boolean 값 (true 또는 false)
 
     if (isDuplicate) {
-      alert(`"${nickname}" 이미 사용 중이에요!`);
+      alert(`"${nickname}" 이미 사용 중입니다!`);
       setIsNicknameValid(false); // ❌ 중복이면 false
     } else {
       alert(`"${nickname}" 사용 가능합니다!`);
@@ -182,7 +183,7 @@ const checkNicknameDuplicate = async () => {
     }
   } catch (error) {
     console.error('중복 확인 오류:', error);
-    alert('닉네임 중복 확인에 실패했어요! 잠시 후 다시 이용해주세요.');
+    alert('닉네임 중복 확인에 실패했습니다! 잠시 후 다시 이용해주세요.');
   } finally {
     setIsLoading(false); // 로딩 종료
   }
@@ -203,33 +204,33 @@ const checkNicknameDuplicate = async () => {
           <input className='signup-userid' type="text" value={userid} onChange={(e) => setUserid(e.target.value)} onBlur={validateUserid} placeholder="아이디" required  autoComplete="off"/>
           <button className='dck-btn' type="button" onClick={checkUseridDuplicate} disabled={isLoading}>{isLoading ? '확인 중...' : '중복 확인'}</button>
         </div>
-        {isUseridValid === false && (<p className="signup-error-text">❌ 아이디를 다시 입력해주세요.</p>)}
-         {isUseridValid === true && isUseridDuplicate === true && (<p className="signup-error-text">❌ 아이디가 이미 사용 중입니다.</p>)}
-        {isUseridValid === true && isUseridDuplicate === false && (<p className="signup-success-text">✅ 사용 가능한 아이디입니다.</p>)}
+        {isUseridValid === false && (<p className="signup-error-text"> 아이디를 다시 입력해주세요.</p>)}
+         {isUseridValid === true && isUseridDuplicate === true && (<p className="signup-error-text"> 아이디가 이미 사용 중입니다.</p>)}
+        {isUseridValid === true && isUseridDuplicate === false && (<p className="signup-success-text"> 사용 가능한 아이디입니다.</p>)}
           <input className='signup-pwd' type="password" value={password} onChange={
             (e) =>  {const newPassword = e.target.value;
               setPassword(newPassword);
               setIsPasswordValid(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*])[A-Za-z\d~!@#$%^&*]{8,}$/.test(newPassword)); // 즉시 검증
             }} onBlur={validatePassword} placeholder="비밀번호" required autoComplete="new-password"/>
-          {isPasswordValid === false && (<p className="signup-error-text">❌ 8자 이상, 영문자와 숫자, 특수기호(~,!,@,# 등)를 포함해주세요.</p>)}
-          {isPasswordValid === true && (<p className="signup-success-text">✅ 사용 가능한 비밀번호입니다.</p>)}
+          {isPasswordValid === false && (<p className="signup-error-text"> 8자 이상, 영문자와 숫자, 특수기호(~,!,@,# 등)를 포함해주세요.</p>)}
+          {isPasswordValid === true && (<p className="signup-success-text"> 사용 가능한 비밀번호입니다.</p>)}
 
           <input className='signup-pwd-ck' type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onBlur={validateConfirmPassword} placeholder="비밀번호 확인" required autoComplete="new-password"/>
-          {isConfirmPasswordValid === false && (<p className="signup-error-text">❌ 비밀번호가 일치하지 않습니다.</p>)}
-          {isConfirmPasswordValid === true && (<p className="signup-success-text">✅ 비밀번호가 일치합니다.</p>)}
+          {isConfirmPasswordValid === false && (<p className="signup-error-text"> 비밀번호가 일치하지 않습니다.</p>)}
+          {isConfirmPasswordValid === true && (<p className="signup-success-text"> 비밀번호가 일치합니다.</p>)}
 
           <input className='signup-email' type="email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={validateEmail} placeholder="이메일" required />
-          {isEmailValid === false && (<p className="signup-error-text">❌ 올바른 이메일 형식을 입력해주세요.</p>)}
-          {isEmailValid === true && (<p className="signup-success-text">✅ 사용 가능한 이메일 형식입니다.</p>)}
+          {isEmailValid === false && (<p className="signup-error-text"> 올바른 이메일 형식을 입력해주세요.</p>)}
+          {isEmailValid === true && (<p className="signup-success-text"> 사용 가능한 이메일 형식입니다.</p>)}
           <input className='signup-username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} onBlur={validateUsername} placeholder="이름" required/>
-          {isUsernameValid === false && (<p className="signup-error-text">❌이름에 숫자나 특수기호를 사용할 수 없습니다.</p>)}
-          {isUsernameValid === true && (<p className="signup-success-text">✅ 유효한 이름입니다.</p>)}
+          {isUsernameValid === false && (<p className="signup-error-text">이름에 숫자나 특수기호를 사용할 수 없습니다.</p>)}
+          {isUsernameValid === true && (<p className="signup-success-text"> 유효한 이름입니다.</p>)}
           <div className="dubleck-box">
             <input className="signup-niname" type="text" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="닉네임" /> {/* 값업데이트 */}
             <button className='dck-btn' type="button" onClick={checkNicknameDuplicate} disabled={isLoading} >{isLoading ? '확인 중...' : '중복 확인'}</button>  {/* 중복 확인 버튼 */}
           </div>
-          {isNicknameValid === true && (<p className="signup-success-text">✅ 사용 가능한 닉네임입니다.</p>)}
-          {isNicknameValid === false && (<p className="signup-error-text">❌ 닉네임이 이미 사용 중입니다.</p>)}
+          {isNicknameValid === true && (<p className="signup-success-text"> 사용 가능한 닉네임입니다.</p>)}
+          {isNicknameValid === false && (<p className="signup-error-text"> 닉네임이 이미 사용 중입니다.</p>)}
 
           <div className="signup-user-type">
             <label className='signup-radio-n'>
@@ -238,7 +239,7 @@ const checkNicknameDuplicate = async () => {
               </label>
             <label className='signup-radio-c'>
               <input className='signup-radio-c' type="radio" name="userType" value="1" checked={userType === '1'} onChange={handleUserTypeChange} required />
-              카페사장
+              카페점주
             </label> 
           </div>
           {userType === '1' && (

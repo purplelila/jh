@@ -12,7 +12,7 @@ const AdminList = () => {
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
-  const usersPerPage = 10; // 한 페이지에 보여줄 회원 수
+  const usersPerPage = 8; // 한 페이지에 보여줄 회원 수
   const [searchTerm, setSearchTerm] = useState("");   // 검색기능
   const [searchType, setSearchType] = useState("title"); // 기본은 제목 검색
   const [searchTriggered, setSearchTriggered] = useState(false); // 검색 버튼 눌러야 활성화
@@ -229,13 +229,34 @@ const AdminList = () => {
     const indexOfFirstCafe = indexOfLastCafe - usersPerPage;
     const currentCafes = sortedCafes.slice(indexOfFirstCafe, indexOfLastCafe);
 
+    console.log("✅ 정렬 후:", sortedCafes.map(c => `${c.title} - ${c.regDate}`));    
+
+    // 카페가 없을 때 메시지 출력
+    if (filteredCafes.length === 0) {
+      return (
+        <tr>
+          <td colSpan="8" className="cafelist-empty-message">
+            등록된 카페가 없습니다.
+          </td>
+        </tr>
+      );
+    }
+
     return currentCafes.map((cafe, index) => (
       <tr key={cafe.id}>
         <td>{pendingCafes.length - (index + (activePage - 1) * usersPerPage)}</td>
         <td>{cafe.title}</td>
         <td>{cafe.name}</td>
-        <td>{cafe.regDate}</td>
-        <td>{cafe.approvalAt}</td>
+        <td>
+          {new Date(cafe.regDate).getFullYear()}-
+          {('0' + (new Date(cafe.regDate).getMonth() + 1)).slice(-2)}-
+          {('0' + new Date(cafe.regDate).getDate()).slice(-2)}
+        </td>
+        <td>
+          {cafe.approvalStatus === 'APPROVED' && cafe.approvalAt 
+            ? `${new Date(cafe.approvalAt).getFullYear()}-${('0' + (new Date(cafe.approvalAt).getMonth() + 1)).slice(-2)}-${('0' + new Date(cafe.approvalAt).getDate()).slice(-2)}`
+            : '-'}
+        </td>
         <td>
         <button className="board4-view-btn" onClick={() => handleView(cafe.id)}>미리보기</button>
         </td>
@@ -315,18 +336,25 @@ const AdminList = () => {
         </table>
 
         <div className="pagination">
-        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
-          {[...Array(totalPages)].map((_, index) => (
-              <span
-                key={index}
-                className={activePage === index + 1 ? "active" : ""}
-                onClick={() => handlePageClick(index + 1)}
-              >
-                {index + 1}
-              </span>
-          ))}
-          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
+          <button className="pagination-btn_prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
+          {/* 페이지 숫자 처리 */}
+            {totalPages > 0 ? (
+              [...Array(totalPages)].map((_, index) => (
+                <span
+                  key={index}
+                  className={activePage === index + 1 ? "active" : ""}
+                  onClick={() => handlePageClick(index + 1)}
+                >
+                  {index + 1}
+                </span>
+              ))
+            ) : (
+              <span className="active">1</span> // 게시글이 없을 때 페이지는 기본적으로 1로 표시
+            )}
+          <button className="pagination-btn_next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
         </div>
+
+
       </div>
     </div>
   );

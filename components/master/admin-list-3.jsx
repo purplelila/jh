@@ -13,7 +13,7 @@ const AdminList = () => {
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState(1);
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
-  const usersPerPage = 10; // 한 페이지에 보여줄 회원 수
+  const usersPerPage = 8; // 한 페이지에 보여줄 회원 수
   const [editingUserId, setEditingUserId] = useState(null);
   const [editedUserType, setEditedUserType] = useState(null);
 
@@ -143,25 +143,37 @@ const AdminList = () => {
   const renderRows = () => {
     let filteredUsers  = users;
 
-    // 검색 필터링 적용
-    if (searchTriggered && searchTerm.trim() !== "") {
-      filteredUsers = users.filter((user) => {
-        const valueToSearch = searchType === "userid" ? user.userid : user.nickname; 
-        return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
-      });
-    }
+      // 검색 필터링 적용
+      if (searchTriggered && searchTerm.trim() !== "") {
+        filteredUsers = users.filter((user) => {
+          const valueToSearch = searchType === "userid" ? user.userid : user.nickname;
+          return valueToSearch.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+      }
 
-    // 페이징 적용
-    const startIndex = (activePage - 1) * usersPerPage;
-    const endIndex = startIndex + usersPerPage;
-    const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex); // 필터된 배열에서 페이징 적용
+      filteredUsers = filteredUsers.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    // 순서를 반전
-    const reversedUsersOnCurrentPage = usersOnCurrentPage.reverse();
+      // 페이징 적용
+      const indexOfLastUser = activePage * usersPerPage;
+      const indexOfFirstUser = indexOfLastUser - usersPerPage;
+      const usersOnCurrentPage = filteredUsers.slice(indexOfFirstUser, indexOfLastUser); // 필터된 배열에서 페이징 적용
 
-    return reversedUsersOnCurrentPage.map((item, index) => (
-      <tr key={index}>
-       <td>{users.length - (startIndex + index)}</td>
+
+      // 회원이 없을 경우 메시지 표시
+      if (filteredUsers.length === 0) {
+        return (
+          <tr>
+            <td colSpan="8" className="admin-empty-message">
+              가입한 회원이 없습니다.
+            </td>
+          </tr>
+        );
+      }
+
+
+    return usersOnCurrentPage.map((item, index) => (
+      <tr key={item.userid}>
+        <td>{filteredUsers.length - ((activePage - 1) * usersPerPage + index)}</td>
         <td>{item.userid}</td>
         <td>{item.username}</td>
         <td>{item.email}</td>
@@ -170,10 +182,10 @@ const AdminList = () => {
           {editingUserId === item.userid ? (
             <select value={editedUserType} onChange={(e) => setEditedUserType(parseInt(e.target.value))}>
               <option value={0}>일반회원</option>
-              <option value={1}>카페사장</option>
+              <option value={1}>카페점주</option>
               <option value={3}>관리자</option>
             </select>
-            ) :( item.userType === 0 ? ( "일반회원") : item.userType === 1 ? ("카페사장") : 
+            ) :( item.userType === 0 ? ( "일반회원") : item.userType === 1 ? ("카페점주") : 
              item.userType === 3 ? "관리자" : "알 수 없음"  )} 
         </td>
         <td> {new Date(item.createdAt).getFullYear()}-
@@ -230,22 +242,24 @@ const AdminList = () => {
         </table>
 
         <div className="pagination">
-        <button className="prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} >
-          <i class="fas fa-angle-left"></i>
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
-              <span
-                key={index}
-                className={activePage === index + 1 ? "active" : ""}
-                onClick={() => handlePageClick(index + 1)}
-              >
-                {index + 1}
-              </span>
-          ))}
-          <button className="next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}>
-            <i class="fas fa-angle-right"></i>
-          </button>
+          <button className="pagination-btn_prev-btn"   disabled={activePage === 1} onClick={() => handlePageClick(activePage - 1)} ><i class="fas fa-angle-left"></i>  </button>
+          {/* 페이지 숫자 처리 */}
+            {totalPages > 0 ? (
+              [...Array(totalPages)].map((_, index) => (
+                <span
+                  key={index}
+                  className={activePage === index + 1 ? "active" : ""}
+                  onClick={() => handlePageClick(index + 1)}
+                >
+                  {index + 1}
+                </span>
+              ))
+            ) : (
+              <span className="active">1</span> // 게시글이 없을 때 페이지는 기본적으로 1로 표시
+            )}
+          <button className="pagination-btn_next-btn" disabled={activePage === totalPages} onClick={() => handlePageClick(activePage + 1)}><i class="fas fa-angle-right"></i></button>
         </div>
+
       </div>
     </div>
   );

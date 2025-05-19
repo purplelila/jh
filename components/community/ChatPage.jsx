@@ -75,7 +75,7 @@ const ChatPage = () => {
 
   return (
     <div className="community-container">
-      <Tabs />
+      <Tabs activeCategory={category} />
       <div className="tab-content">
         <div className="community-board">
           <div className="breadcrumb-list-board">
@@ -151,23 +151,28 @@ const ChatPage = () => {
         </div>
       </div>
 
-      <div className="pagination">
-        <button
+      <div className="pagination-comm">
+        <button className='pagination-comm-left'
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}
         >
           <i class="fas fa-angle-left"></i> 
         </button>
-        {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => handlePageClick(index + 1)}
-            className={currentPage === index + 1 ? 'active' : ''}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button
+        
+      {filteredPosts.length > 0 ? (
+          [...Array(Math.ceil(filteredPosts.length / postsPerPage))].map((_, index) => (
+            <span
+              key={index + 1}
+              className={currentPage === index + 1 ? "notice-active" : ""}
+              onClick={() => handlePageClick(index + 1)}
+            >
+              {index + 1}
+            </span>
+          ))
+        ) : (
+          <span className="notice-active">1</span> // 게시글이 없을 때 페이지는 기본적으로 1로 표시
+        )}
+        <button className='pagination-comm-right'
           onClick={() =>
             setCurrentPage((p) =>
               p < Math.ceil(filteredPosts.length / postsPerPage) ? p + 1 : p

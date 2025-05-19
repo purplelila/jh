@@ -13,10 +13,12 @@
     font-size: 0.9rem;
   }
 
+  /* 본문 테이블 */
+
 .mycafe-table-section {
-    background-color: #fff;
-    padding: 24px;
-    margin-bottom: 32px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
@@ -29,18 +31,26 @@
     border-bottom: 2px solid #ddd;
     padding-bottom: 10px;
   }
-  
+
+  /* 게시글없다 css */
+  .mycafe-empty-message{
+    padding: 12px;
+  }
+
   .mycafe-table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px; 
+    border: 1px solid #ddd;  /* 테이블 전체 경계선 추가 */
   }
   
   .mycafe-table-th,
   .mycafe-table-td,
   .mycafe-table-td-date {
-    padding: 12px 16px;
+    padding: 12px;
+    text-align: center;
     border: 1px solid #ddd; 
   }
   
@@ -50,7 +60,7 @@
     color: #555;
   }
 
-  .mycafe-table tr:nth-child(even) {
+.mycafe-table tr:nth-child(even) {
   background-color: #f7f7f7;
 }
   
@@ -70,21 +80,38 @@
   /* 예: 번호 열 */
 .mycafe-table th:first-child,
 .mycafe-table td:first-child {
-  width: 20%;
+  width: 9%;
   text-align: center;
 }
 
-/* 예: 날짜 열 */
+  /* 카페명 */
+.mycafe-table th:nth-child(2),
+.mycafe-table td:nth-child(2) {
+  width: 16%;
+}
+
+/* 예: 제목 열 */
 .mycafe-table td:nth-child(3) {
-  text-align: center;
-  width: 20%;
+  width: 25%;
 }
 
-/* 비고 버튼 열 */
-.mycafe-table td:last-child {
-  width: 20%;
+/* 예: 신청일, 승인일 열 */
+.mycafe-table th:nth-child(4),
+.mycafe-table td:nth-child(4) {
+  width: 15%;
 }
 
+/* 예: 상태 열 */
+.mycafe-table th:nth-child(5),
+.mycafe-table td:nth-child(5) {
+  width: 12%;
+}
+
+/* 예: 비고 열 */
+.mycafe-table th:nth-child(6),
+.mycafe-table td:nth-child(6) {
+  width: 20%;
+}
 
   /* 버튼 css*/
 
@@ -92,42 +119,41 @@
     background-color: #103481d3;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.875rem;
-    margin-right: 5px;
+    font-size: 0.9rem;
   }
 
   .mycafe-table-td-cancelbtn {
     background-color: #ef4444;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
   }
   
   .mycafe-table-td-editbtn{
     background-color: #103481d3;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     margin-right: 5px;
   }
 
-  .mycafe-table-td-deletebnt {
+  .mycafe-table-td-deletebtn {
     background-color: #ef4444;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
   }
 
   

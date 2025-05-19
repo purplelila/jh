@@ -16,7 +16,6 @@
 .mypage-h2 {
   font-size: 1.5rem;
   color: #333;
-  margin-bottom: 15px;
   border-bottom: 2px solid #ddd;
   padding-bottom: 10px;
 }
@@ -25,7 +24,6 @@
 .mypage-comment table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 30px;
   background-color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -46,8 +44,7 @@
   background-color: #f7f7f7;
 }
 
-.mypage-content button,
-.mypage-comment button {
+.mycommunity-showbtn{
   padding: 8px 15px;
   background-color: #103481d3;
   color: white;
@@ -55,7 +52,6 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.3s ease;
 }
 
 
@@ -78,5 +74,28 @@
 .mypage-content  table tr td:nth-child(2),
 .mypage-comment  table tr td:nth-child(2) {
     text-align: left;
-    width: 40%;
+    width: 30%;
+}
+
+
+/* button style */
+.mycommunity-editbtn{
+    background-color: #103481d3;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-right: 5px;
+}
+
+.mycommunity-deletebtn{
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
 }

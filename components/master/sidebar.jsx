@@ -67,7 +67,7 @@ const Sidebar = () => {
                         {openMenu.member && (
                             <ul className="dropdown-list">
                                 <li><a href="/admin/list/0" className="dropdown-list-a"> - 일반회원 목록</a></li>
-                                <li><a href="/admin/list/1" className="dropdown-list-a"> - 카페사장 목록</a></li>
+                                <li><a href="/admin/list/1" className="dropdown-list-a"> - 카페점주 목록</a></li>
                                 <li><a href="/admin/list/3" className="dropdown-list-a"> - 관리자 목록</a></li>
                             </ul>
                         )}
@@ -81,8 +81,8 @@ const Sidebar = () => {
                         {openMenu.board && (
                             <ul className="dropdown-list">
                                 <li> <a href="/admin/Bord/1" className="dropdown-list-a"> - 공지사항 목록</a></li>
+                                <li><a href="/admin/Bord/3" className="dropdown-list-a">- 소통창 목록</a></li>
                                 <li ><a href="/admin/Bord/2" className="dropdown-list-a">- 자주 묻는 질문 목록</a></li>
-                                <li><a href="/admin/Bord/3" className="dropdown-list-a">- 커뮤니티 목록</a></li>
                                 <li><a href="/admin/Bord/4" className="dropdown-list-a">- 카페등록 목록</a></li>
                             </ul>
                         )}

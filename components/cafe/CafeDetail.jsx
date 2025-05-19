@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { CafeContext } from "../CafeProvider";
 import { useParams, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import CafeKakaoMap from "./CafeKaKaoMap";
+import CafeKakaoMap from "./CafeKakaoMap";
 
 let CafeDetail = () => {
     const[mainImage, setMainImage] = useState(null);

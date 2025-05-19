@@ -1,14 +1,13 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React from 'react'; // ✅ 꼭 필요
 
-const Tabs = () => {
+const Tabs = ({ activeCategory }) => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const tabList = [
-    { name: '공지사항', path: '/notice' },
-    { name: '소통창', path: '/chat' },
-    { name: '자주하는 질문', path: '/faq' },
+    { name: "공지사항", path: "/notice", category: "notice" },
+    { name: "소통창", path: "/chat", category: "chat" },
+    { name: "자주하는 질문", path: "/faq", category: "faq" },
   ];
 
   return (
@@ -18,7 +17,7 @@ const Tabs = () => {
           <button
             key={tab.name}
             onClick={() => navigate(tab.path)}
-            className={location.pathname.startsWith(tab.path) ? 'active' : ''}
+            className={activeCategory === tab.category ? "active" : ""}
           >
             {tab.name}
           </button>

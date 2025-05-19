@@ -7,6 +7,7 @@ import RegisterChange from "./RegisterChange";
 import RegisterCheck from "./RegisterCheck";
 import MyCafeInfo from "./MyCafeInfo";
 import MyCommunitys from "./MyCommunitys ";
+import CustomerCenter from "./CustomerCenter";
 
 const MyPage = () => {
   const [imageSrc, setImageSrc] = useState("/default_profile.png");
@@ -179,7 +180,7 @@ useEffect(() => {
             </li>
           )}
           <li>
-            <a href="#" className="mypage-sidebar-item" onClick={() => toggleSection("question")}>
+            <a href="#customer-center" className="mypage-sidebar-item" onClick={() => toggleSection("question")}>
               고객센터
             </a>
           </li>
@@ -248,6 +249,7 @@ useEffect(() => {
         ) : (
           <RegisterCheck realPassword={realPassword} onSuccess={() => setIsPasswordVerified(true)} />
         ))}
+        {activeSection === "question" && <CustomerCenter />}
       </main>
     </div>
   );

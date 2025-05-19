@@ -77,7 +77,7 @@ const FaqPage = () => {
 
   return (
     <div className="faq-container">
-      <Tabs />
+      <Tabs activeCategory={category} />
         <div className="faq-board">
           <div className="breadcrumb-list-board">
             <span className="breadcrumb-list-home"><i class="fa-solid fa-house"></i></span>
@@ -130,37 +130,6 @@ const FaqPage = () => {
             )}
           </div>
         </div>
-
-
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <i class="fas fa-angle-left"></i>  
-        </button>
-
-        {Array.from({ length: Math.ceil(filteredPosts.length / postsPerPage) }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => handlePageClick(index + 1)}
-            className={currentPage === index + 1 ? "active" : ""}
-          >
-            {index + 1}
-          </button>
-        ))}
-
-        <button
-          onClick={() =>
-            setCurrentPage((p) =>
-              p < Math.ceil(filteredPosts.length / postsPerPage) ? p + 1 : p
-            )
-          }
-          disabled={currentPage === Math.ceil(filteredPosts.length / postsPerPage)}
-        >
-          <i class="fas fa-angle-right"></i>
-        </button>
-      </div>
     </div>
   );
 };

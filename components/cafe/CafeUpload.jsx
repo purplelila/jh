@@ -126,6 +126,22 @@ let CafeUpload = () => {
       setImgURL((prev) => prev.filter((_, i) => i !== indexToRemove)); // imgURL에서 삭제
     };
 
+
+    // 주소
+    const handlePostcodeSearch = () => {
+    if (!window.daum || !window.daum.Postcode) {
+      alert("주소 API가 아직 로드되지 않았어요. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        setPlace(data.address);  // ✅ 주소만 저장
+      },
+    }).open();
+  };
+
+
     // 카페 수정전 데이터 불러오는거
     const { id } = useParams(); // /edit/:id 이런 URL에서 가져오기
     const isEdit = Boolean(id); // id가 있으면 수정모드
@@ -209,6 +225,14 @@ let CafeUpload = () => {
         return;
       }
 
+      // 수정 모드일 때 재승인 요청 여부 확인
+      if (isEdit) {
+        const shouldProceed = window.confirm("수정 시 재승인 요청됩니다. 수정하시겠습니까?");
+        if (!shouldProceed) {
+          return; // 수정 진행을 취소
+        }
+      }
+
 
       
 
@@ -236,7 +260,7 @@ let CafeUpload = () => {
         sns,
         phone,
         cafeHours,
-        approvalStatus : "PENDING",// 승인 상태
+        approvalStatus : "PENDING",// 승인 상태(대기)
       };
 
       // JSON 문자열로 변환해 FormData에 추가
@@ -274,7 +298,7 @@ let CafeUpload = () => {
           navigate("/mypage");
 
         } else {
-          alert("카페가 수정되었습니다.");
+          alert("카페가 재승인 요청되었습니다.");
           navigate(`/cafedetail/${id}`);  // 수정 후 디테일 페이지로 이동
         }
 
@@ -323,10 +347,22 @@ let CafeUpload = () => {
                 </div>
                 </div>
 
-              <div className="upload-form-cafe">
-                <label>카페위치<span className="upload-required">*</span></label>
-                <input type="text" placeholder='카페위치를 입력해주세요'onChange={(e)=> setPlace(e.target.value)} value={place}/>
+              <div className="upload-form-address">
+                <label>카페주소<span className="upload-required">*</span></label>
+                <div className="upload-form-address-container">
+                  <input
+                    type="text"
+                    value={place}
+                    placeholder="주소를 검색해주세요"
+                    readOnly
+                    className="upload-form-address-input"
+                  />
+                  <button className="upload-form-address-btn" onClick={handlePostcodeSearch}>
+                    주소 찾기
+                  </button>
+                </div>
               </div>
+
 
               <div className="upload-form-cafe">
                 <label>연락처<span className="upload-required">*</span></label>

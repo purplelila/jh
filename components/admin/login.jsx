@@ -54,11 +54,11 @@ const LoginPage = () => {
                 break;
               case 1:
                 navigate("/cafelist");
-                alert("카페사장으로 로그인되었습니다.");
+                alert("카페점주로 로그인되었습니다.");
                 break;
               case 3:
                 navigate("/admin/dash");
-                alert("관리자님 로그인되었습니다.");
+                alert("관리자로 로그인되었습니다.");
                 break;
               default:
                 navigate("/");
