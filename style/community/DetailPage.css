@@ -164,11 +164,14 @@
   margin-top: 10px;
 }
 
-.com-footer {
+.com-top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-top: 5px;
+}
+
+.com-top p {
+    margin-right: 5px;
 }
 
 .com-delete-btn {
@@ -182,6 +185,10 @@
 .com-delete-btn:hover {
     color: red;
     font-weight: bold;
+}
+
+.com-edit-btn {
+    margin-right: 10px;
 }
 
 /*------------------------------------------------ 댓글등록 -----------------------------------------------------------*/

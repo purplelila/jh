@@ -194,7 +194,7 @@ const AdminList = () => {
         </td>
         <td>
           <button className="list-rem-btn" onClick={() => handleEditClick(item)} >
-            {editingUserId === item.userid ? "저장" : "수정"}
+            {editingUserId === item.userid ? "저장" : "변경"}
             </button>{" "}
           <button className="list-delete-btn" onClick={() => handleDelete(item.userid)} >탈퇴</button>
         </td>

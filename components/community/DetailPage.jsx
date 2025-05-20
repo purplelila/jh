@@ -194,11 +194,9 @@ function DetailPage() {
                 <p>댓글이 없습니다.</p>
               ) : (
                 comments.map((c, i) => (
-                  <div className="comments" key={i}>
-                    <p className="com_author">{c.nickname}</p>
-                    <p className="com_comment">{c.comment}</p>
-                    <div className="com-footer">
-                      <p className="com_time">{formatDate(c.createdAt)}</p>
+                  <div className="comments" key={i}>                   
+                    <div className="com-top">
+                      <p className="com_author">{c.nickname}</p>
                       {(nickname === c.nickname || nickname === "admin") && (
                         <button
                           className="com-delete-btn"
@@ -208,6 +206,8 @@ function DetailPage() {
                         </button>
                       )}
                     </div>
+                    <p className="com_comment">{c.comment}</p>
+                    <p className="com_time">{formatDate(c.createdAt)}</p>
                   </div>
                 ))
               )}
