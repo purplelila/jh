@@ -205,13 +205,13 @@ let CafeUpload = () => {
         return;
       }
 
-      if(!place){
+      if (!place || place.trim() === "") {
         alert("카페 위치를 입력해주세요.");
         return;
       }
 
       if(!content){
-        alert("내용을 50자 이내로 입력해주세요");
+        alert("내용을 100자 이내로 입력해주세요");
         return;
       }
 
@@ -316,9 +316,9 @@ let CafeUpload = () => {
           <span className="breadcrumb-list-arrow">&gt;</span>
           <span className="breadcrumb-list-info">카페정보</span>
           <span className="breadcrumb-list-arrow">&gt;</span>
-          <span className="breadcrumb-list-info">카페등록</span>
+          <span className="breadcrumb-list-info">{isEdit ? "카페수정" : "카페등록"}</span>
         </div>
-        <h2>카페 등록</h2>
+        <h2>{isEdit ? "카페 수정" : "카페 등록"}</h2>
 
         <div className="upload-form-container">
           <h3>카페 정보 작성</h3>
@@ -376,7 +376,7 @@ let CafeUpload = () => {
 
               <div className="upload-form-cafe">
                 <label>소개글<span className="upload-required">*</span></label>
-                <input type="text" placeholder='내용을 50자 이내로 입력해주세요' onChange={(e)=> setContent(e.target.value)} value={content} maxLength={50} />
+                <input type="text" placeholder='내용을 50자 이내로 입력해주세요' onChange={(e)=> setContent(e.target.value)} value={content} maxLength={100} />
               </div>
 
             </div>

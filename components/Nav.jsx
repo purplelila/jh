@@ -39,7 +39,7 @@ const onLogout = () => {
 
 useEffect(() => {
   const token = localStorage.getItem("token");
-  const storedNickname = localStorage.getItem("name");
+  const storedNickname = localStorage.getItem("nickname");
   const storedUserId = localStorage.getItem("userid");
   const storedUserType = localStorage.getItem("userType");
 
@@ -168,7 +168,7 @@ useEffect(() => {
                   <div className="menu-login">
                   {isLoggedIn ? (
                   <>
-                    <span className='nav-nickname'>{userId}</span>
+                    <span className='nav-nickname'>{nickname}</span>
                     <span className="nav-nim">님</span>
                     <span className="nav-divider">|</span>
                     <Link to="#" onClick={(e) => {e.preventDefault(); handleLogout();}}>LOGOUT</Link>

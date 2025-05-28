@@ -110,8 +110,6 @@ header {
 }
 
   .nav-nickname {
-    text-decoration: underline;
-    text-underline-offset: 3px;
     font-size: 13px;
     color: #333; 
     margin-right: 2px;

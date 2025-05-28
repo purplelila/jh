@@ -71,14 +71,14 @@ useEffect(() => {
       if (response.data) {
         // true = 중복됨
         setIsNicknameValid(false);
-        alert(`"${nickname}" ❌ 닉네임은 이미 사용 중이에요!`);
+        alert(`"${nickname}" 닉네임은 이미 사용 중이에요!`);
       } else {
         setIsNicknameValid(true);
-        alert(`"${nickname}" ✅ 닉네임은 사용 가능합니다!`);
+        alert(`"${nickname}" 닉네임은 사용 가능합니다!`);
       }
     } catch (error) {
       console.error('중복 확인 오류:', error);
-      alert('닉네임 중복 확인에 실패했어요!❌ 잠시 후 다시 이용해주세요.');
+      alert('닉네임 중복 확인에 실패하셨습니다. 잠시 후 다시 이용해주세요.');
     } finally {
       setIsLoading(false);
     }
@@ -191,10 +191,10 @@ useEffect(() => {
         </div>
         {/* 닉네임 중복확인 결과 */}
         {isNicknameValid === false && (
-          <p className="signup-error-text">❌ 이미 사용 중인 닉네임입니다.</p>
+          <p className="signup-error-text">이미 사용 중인 닉네임입니다.</p>
         )}
         {isNicknameValid === true && (
-          <p className="signup-success-text">✅ 사용 가능한 닉네임입니다.</p>
+          <p className="signup-success-text">사용 가능한 닉네임입니다.</p>
         )}
 
 
@@ -210,10 +210,10 @@ useEffect(() => {
           required
         />
         {isEmailValid === false && (
-          <p className="signup-error-text">❌ 올바른 이메일 형식을 입력해주세요.</p>
+          <p className="signup-error-text">올바른 이메일 형식을 입력해주세요.</p>
         )}
         {isEmailValid === true && (
-          <p className="signup-success-text">✅ 사용 가능한 이메일입니다.</p>
+          <p className="signup-success-text">사용 가능한 이메일입니다.</p>
         )}
 
         {/* 버튼 */}

@@ -175,7 +175,7 @@ useEffect(() => {
           {userInfo.userType === "1" && (
             <li>
               <a href="#my-cafe-info" className="mypage-sidebar-item" onClick={(e) => { e.preventDefault(); toggleSection("my-cafe-info"); }}>
-                카페 등록
+                카페 목록
               </a>
             </li>
           )}
@@ -208,7 +208,7 @@ useEffect(() => {
                   <p className="mypage-username">{userInfo.nickname} 님</p>
                   <p>{userId}</p>
                   <p>{userInfo.name}</p>
-                  <p>{userInfo.userType === "1" ? "카페회원" : userInfo.userType === "3" ? "관리자" : "일반회원"}</p>
+                  <p>{userInfo.userType === "1" ? "카페점주" : userInfo.userType === "3" ? "관리자" : "일반회원"}</p>
                   <p>{userInfo.email}</p>
                 </div>
                 <button className="mypage-outline-button" onClick={() => { setActiveSection("change-member"); alert("회원정보 수정 페이지로 이동합니다."); }}>회원수정</button>

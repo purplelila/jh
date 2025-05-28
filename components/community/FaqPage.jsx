@@ -129,6 +129,38 @@ const FaqPage = () => {
               ))
             )}
           </div>
+          <div className="pagination-comm">
+        <button className='pagination-comm-left'
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          <i class="fas fa-angle-left"></i> 
+        </button>
+        
+      {filteredPosts.length > 0 ? (
+          [...Array(Math.ceil(filteredPosts.length / postsPerPage))].map((_, index) => (
+            <span
+              key={index + 1}
+              className={currentPage === index + 1 ? "notice-active" : ""}
+              onClick={() => handlePageClick(index + 1)}
+            >
+              {index + 1}
+            </span>
+          ))
+        ) : (
+          <span className="notice-active">1</span> // 게시글이 없을 때 페이지는 기본적으로 1로 표시
+        )}
+        <button className='pagination-comm-right'
+          onClick={() =>
+            setCurrentPage((p) =>
+              p < Math.ceil(filteredPosts.length / postsPerPage) ? p + 1 : p
+            )
+          }
+          disabled={currentPage === Math.ceil(filteredPosts.length / postsPerPage)}
+        >
+          <i class="fas fa-angle-right"></i>
+        </button>
+      </div>
         </div>
     </div>
   );

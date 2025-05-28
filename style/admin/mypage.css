@@ -30,10 +30,6 @@
   margin: 0;
 }
 
-.mypage-sidebar-menu li {
-  margin-bottom: 16px;
-}
-
 .mypage-sidebar-item {
   font-size: 18px;
   color: #333;
@@ -53,14 +49,17 @@
 .mypage-sidebar-item-content {
   font-size: 16px;
   color: #333;
-  padding-left: 16px;
+  padding: 8px;
+  margin-left: 16px;
   cursor: pointer;
   display: block;
-  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
 }
 
 .mypage-sidebar-item-content:hover {
-  color: #103481d3;
+  background-color: #103481d3;
+  color: white;
 }
 
 .mypage-sidebar-bye-box {
